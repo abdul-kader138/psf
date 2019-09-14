@@ -632,6 +632,19 @@
                                             <span class="text"> <?= lang('Add_Zone_Target'); ?></span>
                                         </a>
                                     </li>
+                                    <li id="sales_target_sales_officer">
+                                        <a class="submenu" href="<?= admin_url('sales_target/sales_officer'); ?>">
+                                            <i class="fa fa-plus-circle"></i>
+                                            <span class="text"> <?= lang('Sales_Officer_Target'); ?></span>
+                                        </a>
+                                    </li>
+                                    <li id="sales_target_sales_officer_add">
+                                        <a class="submenu" href="<?= admin_url('sales_target/sales_officer_add'); ?>">
+                                            <i class="fa fa-plus-circle"></i>
+                                            <span class="text"> <?= lang('Add_Sales_Officer_Target'); ?></span>
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
                             <?php if ($Owner) { ?>
@@ -697,6 +710,12 @@
                                         <li id="system_settings_zones">
                                             <a style="padding-left: 30px" href="<?= admin_url('system_settings/zones') ?>">
                                                 <i class="fa fa-folder-open"></i><span class="text"> <?= lang('Zones'); ?></span>
+                                            </a>
+                                        </li>
+
+                                        <li id="system_settings_sales_officer">
+                                            <a style="padding-left: 30px" href="<?= admin_url('system_settings/sales_officer') ?>">
+                                                <i class="fa fa-folder-open"></i><span class="text"> <?= lang('Sales_Officer'); ?></span>
                                             </a>
                                         </li>
 
@@ -777,11 +796,19 @@
                                         </a>
                                     </li>
 
+                                    <li id="reports_target_sales_officer_zone">
+                                        <a href="<?= admin_url('reports/sales_officer_zone') ?>">
+                                            <i class="fa fa-line-chart"></i><span class="text"> <?= lang('Sales_Officer_Target_(Zone)'); ?></span>
+                                        </a>
+                                    </li>
+
                                     <li id="reports_target_zone">
                                         <a href="<?= admin_url('reports/target_zone') ?>">
                                             <i class="fa fa-line-chart"></i><span class="text"> <?= lang('Zone_Wise_Target'); ?></span>
                                         </a>
                                     </li>
+
+
                                     <?php if (POS) { ?>
                                     <li id="reports_register">
                                         <a style="padding-left: 30px" href="<?= admin_url('reports/register') ?>">

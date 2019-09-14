@@ -834,6 +834,42 @@ class Settings_model extends CI_Model
         return FALSE;
     }
 
+    public function addSalesOfficer($data)
+    {
+        if ($this->db->insert("sales_officer", $data)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateSalesOfficer($id, $data = array())
+    {
+        if ($this->db->update("sales_officer", $data, array('id' => $id))) {
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteSalesOfficer($id)
+    {
+        if ($this->db->delete("sales_officer", array('id' => $id))) {
+            return true;
+        }
+        return FALSE;
+    }
+
+    public function getSalesOfficerAction($id){
+        $this->db
+            ->select("sales_officer.*,users.first_name,users.last_name,zones.name as zname")
+            ->join("zones", 'zones.id=sales_officer.zone_id', 'left')
+            ->join("users", 'users.id=sales_officer.user_id', 'left')->where('sales_officer.id',$id);
+        $q = $this->db->get('sales_officer');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
 }
 
 

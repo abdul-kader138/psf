@@ -1047,6 +1047,8 @@ class system_settings extends MY_Controller
                 'slug' => $this->input->post('slug'),
                 'description' => $this->input->post('description'),
                 'parent_id' => $this->input->post('parent'),
+                'created_by' => $this->session->userdata('user_id'),
+                'created_date' => date("Y-m-d H:i:s")
                 );
 
             if ($_FILES['userfile']['size'] > 0) {
@@ -1141,6 +1143,8 @@ class system_settings extends MY_Controller
                 'slug' => $this->input->post('slug'),
                 'description' => $this->input->post('description'),
                 'parent_id' => $this->input->post('parent'),
+                'updated_by' => $this->session->userdata('user_id'),
+                'updated_date' => date("Y-m-d H:i:s")
                 );
 
             if ($_FILES['userfile']['size'] > 0) {
@@ -1324,6 +1328,8 @@ class system_settings extends MY_Controller
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'parent_id' => $this->input->post('parent'),
+                'created_by' => $this->session->userdata('user_id'),
+                'created_date' => date("Y-m-d H:i:s")
             );
 
         } elseif ($this->input->post('add_zone')) {
@@ -1363,6 +1369,8 @@ class system_settings extends MY_Controller
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'parent_id' => $this->input->post('parent'),
+                'updated_by' => $this->session->userdata('user_id'),
+                'updated_date' => date("Y-m-d H:i:s")
             );
         } elseif ($this->input->post('edit_zone')) {
             $this->session->set_flashdata('error', validation_errors());
@@ -1454,6 +1462,187 @@ class system_settings extends MY_Controller
             redirect($_SERVER["HTTP_REFERER"]);
         }
     }
+
+
+    function sales_officer()
+    {
+
+        $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('Sales_Officer')));
+        $meta = array('page_title' => lang('Sales_Officer'), 'bc' => $bc);
+        $this->page_construct('settings/sales_officer', $meta, $this->data);
+    }
+
+    function getSalesOfficer()
+    {
+
+        $this->load->library('datatables');
+        $this->datatables
+            ->select("{$this->db->dbprefix('sales_officer')}.id as id, u.username,concat(u.first_name,' ',u.last_name) as full_name , z.name as zname,{$this->db->dbprefix('sales_officer')}.code, {$this->db->dbprefix('sales_officer')}.name, {$this->db->dbprefix('sales_officer')}.description,{$this->db->dbprefix('sales_officer')}.dealer", FALSE)
+            ->from("sales_officer")
+            ->join("zones z", 'z.id=sales_officer.zone_id', 'left')
+            ->join("users u", 'u.id=sales_officer.user_id', 'left')
+            ->group_by('sales_officer.id')
+            ->add_column("Actions", "<div class=\"text-center\"> <a href='" . admin_url('system_settings/edit_sales_officer/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('system_settings/delete_sales_officer/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+
+        echo $this->datatables->generate();
+    }
+
+    function add_sales_officer()
+    {
+
+        $this->load->helper('security');
+        $this->form_validation->set_rules('code', lang("Code"), 'trim|is_unique[zones.code]|required');
+        $this->form_validation->set_rules('name', lang("Name"), 'required|min_length[3]');
+        $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('zone_id', lang("zone_id"), 'trim|required');
+        $this->form_validation->set_rules('user_id', lang("user_id"), 'trim|required');
+
+        if ($this->form_validation->run() == true) {
+            $data = array(
+                'name' => $this->input->post('name'),
+                'code' => $this->input->post('code'),
+                'description' => $this->input->post('description'),
+                'dealer' => $this->input->post('dealer'),
+                'zone_id' => $this->input->post('zone_id'),
+                'user_id' => $this->input->post('user_id'),
+                'created_by' => $this->session->userdata('user_id'),
+                'created_date' => date("Y-m-d H:i:s")
+            );
+
+        } elseif ($this->input->post('add_sales_officer')) {
+            $this->session->set_flashdata('error', validation_errors());
+            admin_redirect("system_settings/add_sales_officer");
+        }
+
+        if ($this->form_validation->run() == true && $this->settings_model->addSalesOfficer($data)) {
+            $this->session->set_flashdata('message', lang("Info_Added_Successfully."));
+            admin_redirect("system_settings/sales_officer");
+        } else {
+
+            $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
+            $this->data['zones'] = $this->site->getAllZones();
+            $this->data['categories'] = $this->site->getAllCategories();
+            $this->data['users'] = $this->site->getAllUsers();
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'settings/add_sales_officer', $this->data);
+
+        }
+    }
+
+    function edit_sales_officer($id = NULL)
+    {
+        $this->load->helper('security');
+        $this->form_validation->set_rules('code', lang("Code"), 'trim|required');
+        $pr_details = $this->site->getSalesOfficerById($id);
+        if ($this->input->post('code') != $pr_details->code) {
+            $this->form_validation->set_rules('code', lang("Code"), 'required|is_unique[sales_officer.code]');
+        }
+        $this->form_validation->set_rules('name', lang("Name"), 'required|min_length[3]');
+        $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('zone_id', lang("zone_id"), 'trim|required');
+        $this->form_validation->set_rules('user_id', lang("user_id"), 'trim|required');
+
+        if ($this->form_validation->run() == true) {
+
+            $data = array(
+                'name' => $this->input->post('name'),
+                'code' => $this->input->post('code'),
+                'description' => $this->input->post('description'),
+                'dealer' => $this->input->post('dealer'),
+                'zone_id' => $this->input->post('zone_id'),
+                'user_id' => $this->input->post('user_id'),
+                'updated_by' => $this->session->userdata('user_id'),
+                'updated_date' => date("Y-m-d H:i:s")
+            );
+        } elseif ($this->input->post('edit_sales_officer')) {
+            $this->session->set_flashdata('error', validation_errors());
+            admin_redirect("system_settings/edit_sales_officer");
+        }
+
+        if ($this->form_validation->run() == true && $this->settings_model->updateSalesOfficer($id, $data)) {
+            $this->session->set_flashdata('message', lang("Info_Updated_Successfully"));
+            admin_redirect("system_settings/sales_officer");
+        } else {
+
+            $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
+            $this->data['zones'] = $this->site->getAllZones();
+            $this->data['categories'] = $this->site->getAllCategories();
+            $this->data['sf'] = $pr_details;
+            $this->data['users'] = $this->site->getAllUsers();
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'settings/edit_sales_officer', $this->data);
+
+        }
+    }
+
+    function delete_sales_officer($id = NULL)
+    {
+
+        if ($this->settings_model->deleteSalesOfficer($id)) {
+            $this->sma->send_json(array('error' => 0, 'msg' => lang("Info_Deleted_Successfully")));
+        }
+    }
+
+    function sales_officer_actions()
+    {
+
+        $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
+
+        if ($this->form_validation->run() == true) {
+
+            if (!empty($_POST['val'])) {
+                if ($this->input->post('form_action') == 'delete') {
+                    foreach ($_POST['val'] as $id) {
+                        $this->settings_model->deleteSalesOfficer($id);
+                    }
+                    $this->session->set_flashdata('message', lang("Info_Deleted_Successfully"));
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+
+                if ($this->input->post('form_action') == 'export_excel') {
+
+                    $this->load->library('excel');
+                    $this->excel->setActiveSheetIndex(0);
+                    $this->excel->getActiveSheet()->setTitle(lang('zones'));
+                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('Full_Name'));
+                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('Zone_Name'));
+                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('Code'));
+                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('Name'));
+                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('Description'));
+                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('Dealer'));
+
+                    $row = 2;
+                    foreach ($_POST['val'] as $id) {
+                        $sc = $this->settings_model->getSalesOfficerAction($id);
+                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $sc->first_name. " ".$sc->last_name);
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sc->zname);
+                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sc->code);
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sc->name);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sc->description);
+                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sc->dealer);
+
+                        $row++;
+                    }
+
+                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+                    $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $filename = 'zones_' . date('Y_m_d_H_i_s');
+                    $this->load->helper('excel');
+                    create_excel($this->excel, $filename);
+                }
+            } else {
+                $this->session->set_flashdata('error', lang("no_record_selected"));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        } else {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+    }
+
+
 
     function tax_rates()
     {

@@ -88,4 +88,56 @@ class Sales_target_model extends CI_Model
         return FALSE;
     }
 
+
+    public function getSalesOfficerTarget($month, $year, $category_id, $zone_id,$bu)
+    {
+        $q = $this->db->get_where('sales_officer_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id, 'business_unit' => $bu), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getUserByCode($id)
+    {
+        $q = $this->db->get_where('users', array('username' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
+
+    public function addSalesOfficerTarget($data)
+    {
+        if ($this->db->insert_batch('sales_officer_target', $data)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getAllOfficersTargetDetails($ref)
+    {
+        $this->db->select('sales_officer_target.*,users.*,categories.name as nam,zones.name as zname')
+            ->join('categories', 'sales_officer_target.category_id=categories.id', 'left')
+            ->join('zones', 'sales_officer_target.zone_id=zones.id', 'left')
+            ->join('users', 'users.username=sales_officer_target.user_code', 'left')->order_by('sales_officer_target.id','asc');
+        $q = $this->db->get_where('sales_officer_target', array('reference_no' => $ref));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+    public function deleteSalesOfficerTarget($id)
+    {
+        if ($this->db->delete('sales_officer_target', array('reference_no' => $id))) return true;
+        else return FALSE;
+    }
+
 }

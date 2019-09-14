@@ -248,6 +248,42 @@ class Reports extends MY_Controller
         }
     }
 
+
+    public function sales_officer_zone($month = NULL,$year=Null,$zone=null)
+    {
+        $this->sma->checkPermissions('products');
+
+        $month = $this->input->post('month') ? $this->input->post('month') : NULL;
+        $year = $this->input->post('year') ? $this->input->post('year') : NULL;
+        $zone_id = $this->input->post('zone_id') ? $this->input->post('zone_id') : NULL;
+
+        $month_name=date('m');
+        $year_name=date('Y');
+        $convert =DateTime::createFromFormat('!m', $month_name);
+        $month_name= $convert->format('F');
+
+        if(isset($month)) $month_name=$month;
+        if(isset($year)) $year_name=$year;
+        if(empty($zone_id)) $zone_id=0;
+        $poultry_target = $this->reports_model->getZoneTargetAll($month_name, $year_name);
+        $poultry_target = $this->reports_model->getZoneSalesOfficerTarget($month_name, $year_name,$zone_id);
+        $this->data['m5bs'] = $poultry_target;
+        $this->data['m1'] = $month_name.", ".$year_name;
+        $this->data['m1_c'] = "Poultry";
+        $this->data['um'] = isset($poultry_target)?$poultry_target[0]->um:'';
+
+
+        $this->data['totals'] = $this->reports_model->getZoneCategoryTarget($month_name, $year_name);
+        $this->data['zones'] = $this->site->getAllZones();
+        $this->data['totals_qty'] = $this->reports_model->getZoneCategoryTargetQty($month_name, $year_name);
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sales_Officer_Wise_Target')));
+        $meta = array('page_title' => lang('Sales_Officer_Wise_Target'), 'bc' => $bc);
+        $this->page_construct('reports/sales_officer_zone', $meta, $this->data);
+
+    }
+
+
+
     public function target_zone_wise($month = NULL,$year=Null)
     {
         $this->sma->checkPermissions('products');

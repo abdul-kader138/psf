@@ -1244,4 +1244,38 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getAllUsers()
+    {
+        $this->db->where("group_id !=",1);
+        $q = $this->db->get("users");
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getAllZones() {
+        $this->db->where('parent_id', NULL)->or_where('parent_id', 0)->order_by('name');
+        $q = $this->db->get("zones");
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getSalesOfficerById($id)
+    {
+        $q = $this->db->get_where('sales_officer', array('id' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
 }
