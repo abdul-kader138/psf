@@ -265,17 +265,25 @@ class Reports extends MY_Controller
         if(isset($month)) $month_name=$month;
         if(isset($year)) $year_name=$year;
         if(empty($zone_id)) $zone_id=0;
-        $poultry_target = $this->reports_model->getZoneTargetAll($month_name, $year_name);
         $poultry_target = $this->reports_model->getZoneSalesOfficerTarget($month_name, $year_name,$zone_id);
+        $this->data['zone'] = $this->site->getZoneById($zone_id);
         $this->data['m5bs'] = $poultry_target;
-        $this->data['m1'] = $month_name.", ".$year_name;
-        $this->data['m1_c'] = "Poultry";
         $this->data['um'] = isset($poultry_target)?$poultry_target[0]->um:'';
 
 
-        $this->data['totals'] = $this->reports_model->getZoneCategoryTarget($month_name, $year_name);
+        //Cattle
+        $poultry_target_cattle = $this->reports_model->getZoneSalesOfficerCattleTarget($month_name, $year_name,$zone_id);
+        $this->data['m1bs'] = $poultry_target_cattle;
+
+        //Fish
+        $poultry_target_fish = $this->reports_model->getZoneSalesOfficerFishTarget($month_name, $year_name,$zone_id);
+        $this->data['m2bs'] = $poultry_target_fish;
+
+        //Cattle
+        $poultry_target_poultry = $this->reports_model->getZoneSalesOfficerPoultryTarget($month_name, $year_name,$zone_id);
+        $this->data['m3bs'] = $poultry_target_poultry;
+
         $this->data['zones'] = $this->site->getAllZones();
-        $this->data['totals_qty'] = $this->reports_model->getZoneCategoryTargetQty($month_name, $year_name);
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sales_Officer_Wise_Target')));
         $meta = array('page_title' => lang('Sales_Officer_Wise_Target'), 'bc' => $bc);
         $this->page_construct('reports/sales_officer_zone', $meta, $this->data);
@@ -300,10 +308,19 @@ class Reports extends MY_Controller
         if(isset($year)) $year_name=$year;
 
 
+// All
+        $poultry_target = $this->reports_model->getZoneTargetAll($month_name, $year_name);
+        $this->data['m5bs'] = $poultry_target;
+        $this->data['m1'] = $month_name.", ".$year_name;
+        $this->data['m1_c'] = "Poultry";
+        $this->data['um'] = isset($poultry_target)?$poultry_target[0]->um:'';
+
+
+
 //        poultry
 
         $poultry_target = $this->reports_model->getZoneTarget($month_name, $year_name,'Poultry');
-        $this->data['m5bs'] = $poultry_target;
+        $this->data['m1bs'] = $poultry_target;
         $this->data['m1'] = $month_name.", ".$year_name;
         $this->data['m1_c'] = "Poultry";
         $this->data['um'] = isset($poultry_target)?$poultry_target[0]->um:'';

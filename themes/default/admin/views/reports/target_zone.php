@@ -28,10 +28,11 @@
                 type: 'category',
                 labels: {rotation: -45, style: {fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}
             },
-            yAxis: {min: 0, title: {text: 'Target Quantity'}},
+            yAxis: {min: 0, title: {text: <?php echo "'Target Quantity (" . $um . ")'"; ?>}},
             legend: {enabled: false},
             series: [{
                 name: '<?=lang('Target_Quantity');?>',
+                color:'#35b0ab',
                 data: [<?php
                     foreach ($m5bs as $r) {
                         if ($r->target_quantity > 0) {
@@ -84,7 +85,7 @@
             },
             series: [{
                 type: 'pie',
-                name: '<?php echo $this->lang->line("Target_Quantity"); ?>',
+                name: '<?php echo $this->lang->line("Target_Quantity")." ".$um; ?>',
                 data: [<?php
                         foreach ($totals as $r1) {
                             if ($r->target_quantity > 0) {
@@ -183,7 +184,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <?php if ($totals) { ?>
-                            <div class="small-box padding1010 col-sm-12 byellow">
+                            <div class="small-box padding1010 col-sm-12" style="background-color: #83b582">
                                 <div class="inner clearfix">
                                         <p style="color: black;font-size: 20px;"><b>Total Target Quantity : <?= $this->sma->formatQuantity($totals_qty->target_quantity) ?></b></p>
                                 </div>

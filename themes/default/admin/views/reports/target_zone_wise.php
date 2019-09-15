@@ -1,4 +1,76 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php
+if ($m5bs) {
+    $array_field = "[";
+    $array_field_c = "[";
+    $array_length = count($m5bs);
+    $init = 0;
+    foreach ($m5bs as $r) {
+        $init = $init + 1;
+        if ($r->target_quantity > 0) {
+            $array_field .= ("'" . $r->zone_name. "<br>(Total Dealer-" . $r->dealer . ")"."'");
+
+        }
+        $array_field_c .= 0;
+        if ($init < $array_length) {
+            $array_field .= ",";
+            $array_field_c .= ",";
+        }
+
+    }
+    $array_field .= "]";
+    $array_field_c .= "]";
+}
+if ($m3bs) {
+    $array_field3 = "[";
+    $array_length3 = count($m5bs);
+    $init3 = 0;
+    foreach ($m3bs as $r) {
+        $init3 = $init3 + 1;
+        if ($r->target_quantity > 0) {
+            $array_field3 .= $r->target_quantity;
+        } else {
+            $array_field3 .= 0;
+        }
+        if ($init3 < $array_length3) $array_field3 .= ",";
+    }
+    $array_field3 .= "]";
+} else $array_field3 = $array_field_c;
+
+
+if ($m2bs) {
+    $array_field2 = "[";
+    $array_length2 = count($m5bs);
+    $init2 = 0;
+    foreach ($m2bs as $r) {
+        $init2 = $init2 + 1;
+        if ($r->target_quantity > 0) {
+            $array_field2 .= $r->target_quantity;
+        } else {
+            $array_field2 .= 0;
+        }
+        if ($init2 < $array_length2) $array_field2 .= ",";
+    }
+    $array_field2 .= "]";
+} else $array_field2 = $array_field_c;
+
+if ($m1bs) {
+    $array_field1 = "[";
+    $array_length1 = count($m5bs);
+    $init1 = 0;
+    foreach ($m1bs as $r) {
+        $init1 = $init1 + 1;
+        if ($r->target_quantity > 0) {
+            $array_field1 .= $r->target_quantity;
+        } else {
+            $array_field1 .= 0;
+        }
+        if ($init1 < $array_length1) $array_field1 .= ",";
+    }
+    $array_field1 .= "]";
+} else $array_field1 = $array_field_c;
+
+?>
 <script src="<?= $assets; ?>js/hc/highcharts.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -19,97 +91,70 @@
                 stops: [[0, color], [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]]
             };
         });
-        <?php if ($m5bs) { ?>
-        $('#m1bschart').highcharts({
-            chart: {type: 'column'},
-            title: {text: "Poultry"},
-            credits: {enabled: false},
-            xAxis: {
-                type: 'category',
-                labels: {rotation: -45, style: {fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}
+        $('#m7bschart').highcharts({
+            chart: {
+                type: 'column'
             },
-            yAxis: {min: 0, title: {text: 'Target Quantity'}},
-            legend: {enabled: false},
-            series: [{
-                name: '<?=lang('Target_Quantity');?>',
-                data: [<?php
-                    foreach ($m5bs as $r) {
-                        if ($r->target_quantity > 0) {
-                            echo "['" . $r->zone_name . "<br>(Total Dealer-" . $r->dealer . ")', " . $r->target_quantity . "],";
-                        }
-                    }
-                    ?>],
-                dataLabels: {
+            title: {
+                text: 'Zone Wise Target(Category)'
+            }, credits: {enabled: false},
+            xAxis: {
+                categories: <?php echo $array_field; ?>
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: <?php echo "'Target Quantity (" . $um . ")'"; ?>
+                },
+                stackLabels: {
                     enabled: true,
-                    rotation: -90,
-                    color: '#000',
-                    align: 'right',
-                    y: -25,
-                    style: {fontSize: '12px'}
+                    style: {
+                        fontWeight: 'bold',
+                        //color: ( // theme
+                        //    Highcharts.defaultOptions.title.style &&
+                        //     Highcharts.defaultOptions.title.style.color
+                        // ) || 'gray'
+                    }
                 }
+            },
+            legend: {
+                align: 'right',
+                x: -30,
+                verticalAlign: 'top',
+                y: 45,
+                floating: true,
+                backgroundColor:
+                    'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: true
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            },
+            series: [{
+                color:'#3c9d9b',
+                name: 'Poultry',
+                data: <?php echo $array_field1; ?>
+            }, {
+                color:'#ed5107',
+                name: 'Fish',
+                data: <?php echo $array_field2; ?>
+            }, {
+                color:'#241663',
+                name: 'Cattle',
+                data: <?php echo $array_field3; ?>
             }]
         });
-        <?php }if ($m2bs) { ?>
-        $('#m2bschart').highcharts({
-            chart: {type: 'column'},
-            title: {text: "Fish"},
-            credits: {enabled: false},
-            xAxis: {
-                type: 'category',
-                labels: {rotation: -45, style: {fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}
-            },
-            yAxis: {min: 0, title: {text: 'Target Quantity'}},
-            legend: {enabled: false},
-            series: [{
-                name: '<?=lang('Target_Quantity');?>',
-                data: [<?php
-                    foreach ($m2bs as $r) {
-                        if ($r->target_quantity > 0) {
-                            echo "['" . $r->zone_name . "<br>(Total Dealer-" . $r->dealer . ")', " . $r->target_quantity . "],";
-                        }
-                    }
-                    ?>],
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#000',
-                    align: 'right',
-                    y: -25,
-                    style: {fontSize: '12px'}
-                }
-            }]
-        });
-        <?php } if ($m3bs) { ?>
-        $('#m3bschart').highcharts({
-            chart: {type: 'column'},
-            title: {text: "Cattle"},
-            credits: {enabled: false},
-            xAxis: {
-                type: 'category',
-                labels: {rotation: -45, style: {fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}
-            },
-            yAxis: {min: 0, title: {text: 'Target Quantity'}},
-            legend: {enabled: false},
-            series: [{
-                name: '<?=lang('Target_Quantity');?>',
-                data: [<?php
-                    foreach ($m3bs as $r) {
-                        if ($r->target_quantity > 0) {
-                            echo "['" . $r->zone_name . "<br>(Total Dealer-" . $r->dealer . ")', " . $r->target_quantity . "],";
-                        }
-                    }
-                    ?>],
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#000',
-                    align: 'right',
-                    y: -25,
-                    style: {fontSize: '12px'}
-                }
-            }]
-        });
-        <?php } ?>
     });
 </script>
 <div class="box">
@@ -150,7 +195,7 @@
                             <div class="form-group">
                                 <?= lang("year", "year"); ?>
                                 <?php
-                                $opt = array( 2018 => "2018", 2019 => "2019", 2020 => "2020", 2021 => "2021", 2022 => "2022", 2023 => "2023", 2024 => "2024", 2025 => "2025", 2026 => "2026", 2027 => "2027", 2028 => "2028", 2029 => "2029", 2030 => "2030");
+                                $opt = array(2018 => "2018", 2019 => "2019", 2020 => "2020", 2021 => "2021", 2022 => "2022", 2023 => "2023", 2024 => "2024", 2025 => "2025", 2026 => "2026", 2027 => "2027", 2028 => "2028", 2029 => "2029", 2030 => "2030");
                                 echo form_dropdown('year', $opt, (isset($_POST['year']) ? $_POST['year'] : ''), 'id="year" required="required" class="form-control input-tip select" style="width:100%;"');
                                 ?>
                             </div>
@@ -167,43 +212,8 @@
         </div>
     </div>
 </div>
-<div class="box">
-    <div class="box-content">
-        <div class="row" style="margin-bottom: 15px;">
-            <div class="col-sm-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h2 class="blue"><?= $m1; ?>
-                        </h2>
-                    </div>
-                    <div class="box-content">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="m1bschart" style="width:100%; height:450px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<?php if ($m5bs) { ?>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h2 class="blue"><?= $m2; ?>
-                        </h2>
-                    </div>
-                    <div class="box-content">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="m2bschart" style="width:100%; height:450px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="box">
@@ -214,10 +224,12 @@
                     <div class="box-content">
                         <div class="row">
                             <div class="col-md-12">
-                                <div id="m3bschart" style="width:100%; height:450px;"></div>
+                                <div id="m7bschart" style="width:100%; height:450px;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+<?php }?>

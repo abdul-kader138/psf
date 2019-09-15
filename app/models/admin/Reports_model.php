@@ -740,8 +740,67 @@ class Reports_model extends CI_Model
     {
         if(empty($zone)) $zone=0;
         $this->db
-            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit")->select_sum('target_quantity')->select_sum('dealer')
+            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
 //            ->join('zones', 'sales_officer_target.zone_id = zones.id', 'left')
+            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
+            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
+            ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_target');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+
+    public function getZoneSalesOfficerCattleTarget($month_name,$year,$zone)
+    {
+        if(empty($zone)) $zone=0;
+        $this->db
+            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Cattle')
+            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
+            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
+            ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_target');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getZoneSalesOfficerFishTarget($month_name,$year,$zone)
+    {
+        if(empty($zone)) $zone=0;
+        $this->db
+            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Fish')
+            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
+            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
+            ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_target');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getZoneSalesOfficerPoultryTarget($month_name,$year,$zone)
+    {
+        if(empty($zone)) $zone=0;
+        $this->db
+            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Poultry')
             ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
             ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
             ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
