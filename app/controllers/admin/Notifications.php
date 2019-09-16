@@ -11,10 +11,7 @@ class Notifications extends MY_Controller
             $this->session->set_userdata('requested_page', $this->uri->uri_string());
             $this->sma->md('login');
         }
-        if (!$this->Owner && !$this->Admin) {
-            $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect($_SERVER["HTTP_REFERER"]);
-        }
+        $this->permission_details = $this->site->checkPermissions();
         $this->lang->admin_load('notifications', $this->Settings->user_language);
         $this->load->library('form_validation');
         $this->load->admin_model('cmt_model');
@@ -24,8 +21,12 @@ class Notifications extends MY_Controller
     function index()
     {
         if (!$this->Owner && !$this->Admin) {
-            $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect($_SERVER["HTTP_REFERER"]);
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['notifications-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
         }
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
@@ -37,11 +38,24 @@ class Notifications extends MY_Controller
     function getNotifications()
     {
 
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['notifications-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+        $date = date('Y-m-d H:i:s', time());
+
         $this->load->library('datatables');
         $this->datatables
             ->select("id, comment, date, from_date, till_date")
-            ->from("notifications")
-            //->where('notification', 1)
+            ->from("notifications");
+
+        if (!$this->Owner && !$this->Admin) $this->datatables->where("from_date <=", $date);
+        if (!$this->Owner && !$this->Admin)    $this->datatables->where("till_date >=", $date);
+        $this->datatables
             ->add_column("Actions", "<div class=\"text-center\"><a href='" . admin_url('notifications/edit/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit_notification") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . $this->lang->line("delete_notification") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('notifications/delete/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         $this->datatables->unset_column('id');
         echo $this->datatables->generate();
@@ -49,6 +63,15 @@ class Notifications extends MY_Controller
 
     function add()
     {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['notifications-add'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
 
         $this->form_validation->set_rules('comment', lang("comment"), 'required|min_length[3]');
 
@@ -86,9 +109,13 @@ class Notifications extends MY_Controller
 
     function edit($id = NULL)
     {
-        if (!$this->Owner) {
-            $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect($_SERVER["HTTP_REFERER"]);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['notifications-edit'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
         }
 
         if ($this->input->post('id')) {
@@ -138,6 +165,15 @@ class Notifications extends MY_Controller
 
     function delete($id = NULL)
     {
+
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['notifications-delete'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
             redirect($_SERVER["HTTP_REFERER"]);

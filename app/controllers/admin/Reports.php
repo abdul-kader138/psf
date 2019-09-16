@@ -15,6 +15,7 @@ class Reports extends MY_Controller
         $this->lang->admin_load('reports', $this->Settings->user_language);
         $this->load->library('form_validation');
         $this->load->admin_model('reports_model');
+        $this->permission_details = $this->site->checkPermissions();
         $this->data['pb'] = array(
             'cash' => lang('cash'),
             'CC' => lang('CC'),
@@ -251,7 +252,14 @@ class Reports extends MY_Controller
 
     public function sales_officer_zone($month = NULL,$year=Null,$zone=null)
     {
-        $this->sma->checkPermissions('products');
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-sales_officer_zone'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $month = $this->input->post('month') ? $this->input->post('month') : NULL;
         $year = $this->input->post('year') ? $this->input->post('year') : NULL;
@@ -294,7 +302,14 @@ class Reports extends MY_Controller
 
     public function target_zone_wise($month = NULL,$year=Null)
     {
-        $this->sma->checkPermissions('products');
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-target_zone_wise'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $month = $this->input->post('month') ? $this->input->post('month') : NULL;
         $year = $this->input->post('year') ? $this->input->post('year') : NULL;
@@ -347,7 +362,15 @@ class Reports extends MY_Controller
 
     public function target_zone($month = NULL,$year=Null)
     {
-        $this->sma->checkPermissions('products');
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-target_zone'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
 
         $month = $this->input->post('month') ? $this->input->post('month') : NULL;
         $year = $this->input->post('year') ? $this->input->post('year') : NULL;

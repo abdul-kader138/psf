@@ -24,6 +24,7 @@ class Sales_target extends MY_Controller
         $this->image_types = 'gif|jpg|jpeg|png|tif';
         $this->digital_file_types = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
         $this->allowed_file_size = '1024';
+        $this->permission_details = $this->site->checkPermissions();
         $this->load->library('form_validation');
         $this->load->admin_model('sales_target_model');
     }
@@ -36,7 +37,7 @@ class Sales_target extends MY_Controller
             if ((!$get_permission['sales_target-zone_add'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-                admin_redirect($_SERVER["HTTP_REFERER"]);
+                redirect($_SERVER["HTTP_REFERER"]);
             }
         }
         $this->load->helper('security');
@@ -157,14 +158,14 @@ class Sales_target extends MY_Controller
 
     function zones()
     {
-//        if (!$this->Owner && !$this->Admin) {
-//            $get_permission = $this->permission_details[0];
-//            if ((!$get_permission['employees-bill_index'])) {
-//                $this->session->set_flashdata('warning', lang('access_denied'));
-//                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-//                redirect($_SERVER["HTTP_REFERER"]);
-//            }
-//        }
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['sales_target-zones'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('Zones_Target')));
@@ -176,7 +177,7 @@ class Sales_target extends MY_Controller
     {
         if (!$this->Owner && !$this->Admin) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_index'])) {
+            if ((!$get_permission['sales_target-zones'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 redirect($_SERVER["HTTP_REFERER"]);
@@ -212,15 +213,14 @@ class Sales_target extends MY_Controller
 
     function delete_zone_target($id = NULL)
     {
-        if (!$this->Owner && !$this->Admin) {
+        if (!$this->Owner) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_delete'])) {
+            if ((!$get_permission['sales_target-delete_zone_target'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-                admin_redirect($_SERVER["HTTP_REFERER"]);
+                redirect($_SERVER["HTTP_REFERER"]);
             }
         }
-
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
@@ -240,10 +240,10 @@ class Sales_target extends MY_Controller
     {
         if (!$this->Owner && !$this->Admin) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_index'])) {
+            if ((!$get_permission['sales_target-zones'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-                admin_redirect($_SERVER["HTTP_REFERER"]);
+                redirect($_SERVER["HTTP_REFERER"]);
             }
         }
 
@@ -265,7 +265,7 @@ class Sales_target extends MY_Controller
     {
         if (!$this->Owner && !$this->Admin) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['sales_target-zone_add'])) {
+            if ((!$get_permission['sales_target-sales_officer_add'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 admin_redirect($_SERVER["HTTP_REFERER"]);
@@ -374,7 +374,7 @@ class Sales_target extends MY_Controller
 
 
         if ($this->form_validation->run() == true && $this->sales_target_model->addSalesOfficerTarget($target)) {
-            $this->session->set_flashdata('message', lang("bill_added"));
+            $this->session->set_flashdata('message', lang("Info_Added"));
             admin_redirect("sales_target/sales_officer");
         } else {
 
@@ -393,14 +393,14 @@ class Sales_target extends MY_Controller
 
     function sales_officer()
     {
-//        if (!$this->Owner && !$this->Admin) {
-//            $get_permission = $this->permission_details[0];
-//            if ((!$get_permission['employees-bill_index'])) {
-//                $this->session->set_flashdata('warning', lang('access_denied'));
-//                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-//                redirect($_SERVER["HTTP_REFERER"]);
-//            }
-//        }
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['sales_target-sales_officer'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('Sales_Officer_Target')));
@@ -412,7 +412,7 @@ class Sales_target extends MY_Controller
     {
         if (!$this->Owner && !$this->Admin) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_index'])) {
+            if ((!$get_permission['sales_target-sales_officer'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 redirect($_SERVER["HTTP_REFERER"]);
@@ -448,7 +448,7 @@ class Sales_target extends MY_Controller
     {
         if (!$this->Owner && !$this->Admin) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_index'])) {
+            if ((!$get_permission['sales_target-sales_officer'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 admin_redirect($_SERVER["HTTP_REFERER"]);
@@ -471,9 +471,9 @@ class Sales_target extends MY_Controller
 
     function delete_sales_officer_target($id = NULL)
     {
-        if (!$this->Owner && !$this->Admin) {
+        if (!$this->Owner) {
             $get_permission = $this->permission_details[0];
-            if ((!$get_permission['employees-bill_delete'])) {
+            if ((!$get_permission['sales_target-delete_sales_officer_target'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 admin_redirect($_SERVER["HTTP_REFERER"]);

@@ -31,67 +31,72 @@ function row_status($x)
 
     <div class="row" style="margin-bottom: 15px;">
         <div class="col-sm-12">
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="small-box padding1010 borange">
-                    <h4 class="bold"><?= lang('purchases') ?></h4>
+                    <h4 class="bold"><?= lang('Zone') ?></h4>
                     <i class="icon fa fa-star"></i>
-
-                    <h3 class="bold"><?= $this->sma->formatMoney($total_purchases->total_amount) ?></h3>
-
-                    <p class="bold"><?= $total_purchases->total . ' ' . lang('purchases') ?> </p>
+                    <h3 class="bold"><?= $total_zones->total?></h3>
+                    <p>&nbsp;</p>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="small-box padding1010 bdarkGreen">
-                    <h4 class="bold"><?= lang('sales') ?></h4>
+                    <h4 class="bold"><?= lang('Categories') ?></h4>
                     <i class="icon fa fa-heart"></i>
 
-                    <h3 class="bold"><?= $this->sma->formatMoney($total_sales->total_amount) ?></h3>
-
-                    <p class="bold"><?= $total_sales->total . ' ' . lang('sales') ?> </p>
+                    <h3 class="bold"><?= $total_cate->total?></h3>
+                    <p>&nbsp;</p>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="small-box padding1010 bpurple">
-                    <h4 class="bold"><?= lang('expenses') ?></h4>
+                    <h4 class="bold"><?= lang('Sales_Officer') ?></h4>
                     <i class="icon fa fa-usd"></i>
 
-                    <h3 class="bold"><?= $this->sma->formatMoney($total_expenses->total_amount) ?></h3>
-
-                    <p class="bold"><?= $total_expenses->total . ' ' . lang('expenses') ?></p>
+                    <h3 class="bold"><?= $total_users->total?></h3>
+                    <p>&nbsp;</p>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="small-box padding1010 bred">
-                    <h4 class="bold"><?= lang('Profit_Loss') ?></h4>
-                    <i class="icon fa fa-money"></i>
-
-                    <h3 class="bold"><?= $this->sma->formatMoney($total_sales->total_amount - $total_purchases->total_amount) ?></h3>
-                    <p>
-                        &nbsp;
-                        &nbsp;
-                    </p>
-                </div>
-
             </div>
         </div>
 
     </div>
-    <div class="box" style="margin-bottom: 15px;">
-        <div class="box-header">
-            <h2 class="blue"><i class="fa-fw fa fa-bar-chart-o"></i><?= lang('overview_chart'); ?></h2>
-        </div>
-        <div class="box-content">
-            <div class="row">
-                <div class="col-md-12">
-                    <p class="introtext"><?php echo lang('overview_chart_heading'); ?></p>
+<!--    <div class="box" style="margin-bottom: 15px;">-->
+<!--        <div class="box-header">-->
+<!--            <h2 class="blue"><i class="fa-fw fa fa-bar-chart-o"></i>--><?//= lang('overview_chart'); ?><!--</h2>-->
+<!--        </div>-->
+<!--        <div class="box-content">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <p class="introtext">--><?php //echo lang('overview_chart_heading'); ?><!--</p>-->
+<!---->
+<!--                    <div id="ov-chart" style="width:100%; height:450px;"></div>-->
+<!--                    <p class="text-center">--><?//= lang("chart_lable_toggle"); ?><!--</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<?php } ?>
 
-                    <div id="ov-chart" style="width:100%; height:450px;"></div>
-                    <p class="text-center"><?= lang("chart_lable_toggle"); ?></p>
+<?php if ($createYearTarget) {?>
+
+<div class="row" style="margin-bottom: 15px;">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <h2 class="blue"><i
+                            class="fa-fw fa fa-line-chart"></i>
+                </h2>
+            </div>
+            <div class="box-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="bschart1" style="width:100%; height:450px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <?php } ?>
 
 <div class="row" style="margin-bottom: 15px;">
@@ -436,7 +441,7 @@ function row_status($x)
     });
 </script>
 
-<?php if (($Owner || $Admin) && $chatData) { ?>
+<?php if ($chatData || $createYearTarget) { ?>
     <style type="text/css" media="screen">
         .tooltip-inner {
             max-width: 500px;
@@ -451,6 +456,62 @@ function row_status($x)
                     stops: [[0, color], [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]]
                 };
             });
+
+
+            $('#bschart1').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Feed\'s Yearly Sales Analysis - <?php echo date('Y');?>'
+                },
+                credits: {enabled: false},
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Quantity'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value + ' ';
+                        }
+                    }
+                },
+                tooltip: {
+                    crosshairs: true,
+                    shared: true
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            radius: 4,
+                            lineColor: '#666666',
+                            lineWidth: 1
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Target',
+                    marker: {
+                        symbol: 'square'
+                    },
+                    data: <?php echo $createYearTarget; ?>
+
+                }, {
+                    name: 'Achievement',
+                    marker: {
+                        symbol: 'diamond'
+                    },
+                    data:<?php echo $createYearSales; ?>
+                }]
+            });
+
             $('#ov-chart').highcharts({
                 chart: {},
                 credits: {enabled: false},
@@ -607,8 +668,9 @@ function row_status($x)
             <?php } ?>
         });
     </script>
+
     <div class="row" style="margin-bottom: 15px;">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
                     <h2 class="blue"><i
@@ -618,23 +680,7 @@ function row_status($x)
                 <div class="box-content">
                     <div class="row">
                         <div class="col-md-12">
-                            <div id="bschart" style="width:100%; height:450px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="box">
-                <div class="box-header">
-                    <h2 class="blue"><i
-                                class="fa-fw fa fa-line-chart"></i><?= lang('best_sellers') . ' (' . date('M-Y', strtotime('-1 month')) . ')'; ?>
-                    </h2>
-                </div>
-                <div class="box-content">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="lmbschart" style="width:100%; height:450px;"></div>
+                            <div id="bschart1" style="width:100%; height:450px;"></div>
                         </div>
                     </div>
                 </div>

@@ -801,6 +801,29 @@ class system_settings extends MY_Controller
                 'returns-email' => $this->input->post('returns-email'),
                 'returns-pdf' => $this->input->post('returns-pdf'),
                 'reports-tax' => $this->input->post('reports-tax'),
+
+                'calendar-index' => $this->input->post('calendar-index'),
+                'calendar-add' => $this->input->post('calendar-add'),
+                'calendar-edit' => $this->input->post('calendar-edit'),
+                'calendar-delete' => $this->input->post('calendar-delete'),
+
+                'notifications-index' => $this->input->post('notifications-index'),
+                'notifications-add' => $this->input->post('notifications-add'),
+                'notifications-edit' => $this->input->post('notifications-edit'),
+                'notifications-delete' => $this->input->post('notifications-delete'),
+
+                'sales_target-zone_add' => $this->input->post('sales_target-zone_add'),
+                'sales_target-zones' => $this->input->post('sales_target-zones'),
+                'sales_target-delete_zone_target' => $this->input->post('sales_target-delete_zone_target'),
+
+                'sales_target-sales_officer' => $this->input->post('sales_target-sales_officer'),
+                'sales_target-sales_officer_add' => $this->input->post('sales_target-sales_officer_add'),
+                'sales_target-delete_sales_officer_target' => $this->input->post('sales_target-delete_sales_officer_target'),
+                'reports-sales_officer_zone' => $this->input->post('reports-sales_officer_zone'),
+                'reports-target_zone_wise' => $this->input->post('reports-target_zone_wise'),
+                'reports-target_zone' => $this->input->post('reports-target_zone'),
+
+
             );
 
             if (POS) {

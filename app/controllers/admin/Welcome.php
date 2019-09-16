@@ -42,6 +42,15 @@ class Welcome extends MY_Controller
         $this->data['total_expenses'] = $this->db_model->getTotalExpenses();
         $lmsdate = date('Y-m-d', strtotime('first day of last month')) . ' 00:00:00';
         $lmedate = date('Y-m-d', strtotime('last day of last month')) . ' 23:59:59';
+
+        $this->data['total_zones'] = $this->db_model->getTotalZone();
+        $this->data['total_cate'] = $this->db_model->getTotalCategory();
+        $this->data['total_users'] = $this->db_model->getTotalUsers();
+        $year = date('Y');
+        $getAllYearTarget = $this->db_model->getAllYearTarget($year);
+        $getAllYearSales = $this->db_model->getAllYearSales($year);
+        $this->data['createYearTarget']  = $this->createYearTarget($getAllYearTarget);
+        $this->data['createYearSales']  = $this->createYearTarget($getAllYearSales);
 //        $this->data['lmbs'] = $this->db_model->getBestSeller($lmsdate, $lmedate);
         $bc = array(array('link' => '#', 'page' => lang('dashboard')));
         $meta = array('page_title' => lang('dashboard'), 'bc' => $bc);
@@ -141,18 +150,46 @@ class Welcome extends MY_Controller
 
     function download($file)
     {
-        if (file_exists('./files/'.$file)) {
+        if (file_exists('./files/' . $file)) {
             $this->load->helper('download');
-            force_download('./files/'.$file, NULL);
+            force_download('./files/' . $file, NULL);
             exit();
         }
         $this->session->set_flashdata('error', lang('file_x_exist'));
         redirect($_SERVER["HTTP_REFERER"]);
     }
 
-    public function slug() {
+    public function slug()
+    {
         echo $this->sma->slug($this->input->get('title', TRUE), $this->input->get('type', TRUE));
         exit();
+    }
+
+    public function createYearTarget($month_target)
+    {
+        $val = "[";
+        $data = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+        foreach ($data as $de) {
+            $val .= $this->getMonthTarget($de,$month_target);
+            if( $de != 'December') $val .= ",";
+        }
+
+        $val .= "]";
+        return $val;
+
+    }
+
+    function getMonthTarget($month, $month_target)
+    {
+        $value = 0;
+        foreach ($month_target as $val) {
+            if ($val->month == trim($month)) {
+                $value = $val->target_quantity;
+                break;
+            }
+        }
+        return $value;
     }
 
 }

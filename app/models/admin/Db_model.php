@@ -13,18 +13,18 @@ class Db_model extends CI_Model
         if ($this->Settings->restrict_user && !$this->Owner && !$this->Admin) {
             $this->db->where('created_by', $this->session->userdata('user_id'));
         }
-                $this->db->select('sales.*,companies.name as nam')
-                ->from('sales')
-                ->join('companies', 'sales.customer_id = companies.id', 'left')
-                ->limit(5);
-            $this->db->order_by('sales.id', 'desc');
-            $q = $this->db->get();
-            if ($q->num_rows() > 0) {
-                foreach (($q->result()) as $row) {
-                    $data[] = $row;
-                }
-                return $data;
+        $this->db->select('sales.*,companies.name as nam')
+            ->from('sales')
+            ->join('companies', 'sales.customer_id = companies.id', 'left')
+            ->limit(5);
+        $this->db->order_by('sales.id', 'desc');
+        $q = $this->db->get();
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
             }
+            return $data;
+        }
 
     }
 
@@ -201,6 +201,71 @@ class Db_model extends CI_Model
     {
         $this->db->select('count(id) as total, sum(COALESCE(amount, 0)) as total_amount', FALSE);
         $q = $this->db->get('expenses');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getAllYearSales($year)
+    {
+
+        $year = '2018';
+        $this->db->select("month")->select_sum('target_quantity');
+        $q = $this->db->get_where("sales_officer_target", array('year' => $year));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+
+    public function getAllYearTarget($year)
+    {
+
+        $this->db->select("month")->select_sum('target_quantity');
+
+        if (!$this->Owner && !$this->Admin) {
+
+            if ($this->session->userdata('view_right') == '0') $this->db->where('user_code', $this->session->userdata('username'));
+        }
+        $this->db->where('year',$year)->group_by('month');
+        $q = $this->db->get("sales_officer_target");
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+
+    public function getTotalZone()
+    {
+        $this->db->select('count(id) as total', FALSE);
+        $q = $this->db->get('zones');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getTotalCategory()
+    {
+        $this->db->select('count(id) as total', FALSE);
+        $q = $this->db->get('categories');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getTotalUsers()
+    {
+        $this->db->select('count(id) as total', FALSE);
+        $this->db->where('group_id!=',1);
+        $this->db->where('group_id!=',2);
+        $q = $this->db->get('users');
         if ($q->num_rows() > 0) {
             return $q->row();
         }
