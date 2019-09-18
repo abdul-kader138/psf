@@ -1,78 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php $z_name = "text: 'All Category (" . $zone->name . " Zone)'"; ?>
-<?php
-if ($m5bs) {
-    $array_field = "[";
-    $array_field_c = "[";
-    $array_length = count($m5bs);
-    $init = 0;
-    foreach ($m5bs as $r) {
-        $init = $init + 1;
-        if ($r->target_quantity > 0) {
-            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "'");
-
-        }
-        $array_field_c .= 0;
-        if ($init < $array_length) {
-            $array_field .= ",";
-            $array_field_c .= ",";
-        }
-
-    }
-    $array_field .= "]";
-    $array_field_c .= "]";
-}
-
-if ($m3bs) {
-    $array_field3 = "[";
-    $array_length3 = count($m5bs);
-    $init3 = 0;
-    foreach ($m3bs as $r) {
-        $init3 = $init3 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field3 .= $r->target_quantity;
-        } else {
-            $array_field3 .= 0;
-        }
-        if ($init3 < $array_length3) $array_field3 .= ",";
-    }
-    $array_field3 .= "]";
-} else $array_field3 = $array_field_c;
-
-
-if ($m2bs) {
-    $array_field2 = "[";
-    $array_length2 = count($m5bs);
-    $init2 = 0;
-    foreach ($m2bs as $r) {
-        $init2 = $init2 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field2 .= $r->target_quantity;
-        } else {
-            $array_field2 .= 0;
-        }
-        if ($init2 < $array_length2) $array_field2 .= ",";
-    }
-    $array_field2 .= "]";
-} else $array_field2 = $array_field_c;
-
-if ($m1bs) {
-    $array_field1 = "[";
-    $array_length1 = count($m5bs);
-    $init1 = 0;
-    foreach ($m1bs as $r) {
-        $init1 = $init1 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field1 .= $r->target_quantity;
-        } else {
-            $array_field1 .= 0;
-        }
-        if ($init1 < $array_length1) $array_field1 .= ",";
-    }
-    $array_field1 .= "]";
-} else $array_field1 = $array_field_c;
-
-?>
     <script src="<?= $assets; ?>js/hc/highcharts.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -111,7 +38,7 @@ if ($m1bs) {
                     //        }
                     //    }
                     //    ?>//]
-                    categories: <?php echo $array_field; ?>
+                    categories: <?php echo $officer_array; ?>
                 },
 
                 yAxis: {
@@ -123,10 +50,6 @@ if ($m1bs) {
                         enabled: true,
                         style: {
                             fontWeight: 'bold',
-                            // color: ( // theme
-                            //     Highcharts.defaultOptions.title.style &&
-                            //     Highcharts.defaultOptions.title.style.color
-                            // ) || 'gray'
                         }
                     }
                 },
@@ -153,19 +76,7 @@ if ($m1bs) {
                         }
                     }
                 },
-                series: [{
-                    color:'#8b4367',
-                    name: 'Poultry',
-                    data: <?php echo $array_field3; ?>
-                }, {
-                    color:'#35b0ab',
-                    name: 'Fish',
-                    data: <?php echo $array_field2; ?>
-                }, {
-                    color:'#105e62',
-                    name: 'Cattle',
-                    data:<?php echo $array_field1; ?>
-                }]
+                series: [<?php echo $allOfficerTarget; ?>]
             });
 
         });
@@ -244,7 +155,7 @@ if ($m1bs) {
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
-                    <h2 class="blue"><?= $m3; ?>
+                    <h2 class="blue"><?= $m1; ?>
                     </h2>
                 </div>
                 <div class="box-content">

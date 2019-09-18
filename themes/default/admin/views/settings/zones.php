@@ -22,7 +22,7 @@
                 var nCells = nRow.getElementsByTagName('th');
                 nCells[3].innerHTML = parseFloat(gtotal);
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null, null, null, null, {"bSortable": false}]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null,null, null, null, null, {"bSortable": false}]
         });
     });
 </script>
@@ -70,6 +70,7 @@
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkth" type="checkbox" name="check"/>
                             </th>
+                            <th><?= lang("Business_Unit"); ?></th>
                             <th><?= lang("Code"); ?></th>
                             <th><?= lang("Name"); ?></th>
                             <th><?= lang("No_Of_Dealer"); ?></th>
@@ -80,7 +81,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="7" class="dataTables_empty">
+                            <td colspan="8" class="dataTables_empty">
                                 <?= lang('loading_data_from_server') ?>
                             </td>
                         </tr>
@@ -92,6 +93,7 @@
                                 <input class="checkbox checkft" type="checkbox" name="check"/>
                             </th>
                             <th></th>
+                            <th ></th>
                             <th ></th>
                             <th ></th>
                             <th ></th>

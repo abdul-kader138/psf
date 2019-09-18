@@ -24,7 +24,7 @@
             "aoColumns": [{
                 "bSortable": false,
                 "mRender": checkbox
-            }, null, null, null, null,null, null, null, {"bSortable": false}]
+            }, null, null, null, null,null,null, null, null, {"bSortable": false}]
         });
     });
 </script>
@@ -74,18 +74,19 @@
                                 <input class="checkbox checkth" type="checkbox" name="check"/>
                             </th>
                             <th class="col-sm-1"><?= lang("ID"); ?></th>
+                            <th class="col-sm-1"><?= lang("Business_Unit"); ?></th>
                             <th class="col-sm-2"><?= lang("Sales_Officer"); ?></th>
                             <th class="col-sm-1"><?= lang("Zone"); ?></th>
                             <th class="col-sm-1"> <?= lang("Code"); ?></th>
                             <th class="col-sm-1"><?= lang( "Name"); ?></th>
-                            <th class="col-sm-3"><?= lang("Description"); ?></th>
+                            <th class="col-sm-2"><?= lang("Description"); ?></th>
                             <th class="col-sm-1"> <?= lang("No_Of_Dealer"); ?></th>
                             <th class="col-sm-1"><?= lang("actions"); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="9" class="dataTables_empty">
+                            <td colspan="10" class="dataTables_empty">
                                 <?= lang('loading_data_from_server') ?>
                             </td>
                         </tr>
@@ -96,6 +97,8 @@
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkft" type="checkbox" name="check"/>
                             </th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>

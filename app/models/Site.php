@@ -1269,4 +1269,56 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getAllZoneCategory($bu) {
+        $this->db->order_by('categories.name','asc');
+        $q = $this->db->get_where('categories', array('bu' => $bu));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getAllZoneSalesOfficer($bu) {
+         $this->db->join('users', 'users.id=sales_officer.user_id', 'left')->order_by('users.username','asc');
+        $q = $this->db->get_where('sales_officer', array('bu' => $bu));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getAllZone($bu) {
+        $this->db->order_by('zones.name','asc');
+        $q = $this->db->get_where('zones', array('bu' => $bu));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+    public function getAllZoneWithDealer($bu) {
+        $this->db->select("name, code")->select_sum('dealer');
+        $this->db->group_by('zones.name');
+        $q = $this->db->get_where('zones', array('bu' => $bu));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+
 }

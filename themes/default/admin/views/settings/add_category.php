@@ -10,7 +10,14 @@
         echo admin_form_open_multipart("system_settings/add_category", $attrib); ?>
         <div class="modal-body">
             <p><?= lang('enter_info'); ?></p>
-
+            <div class="form-group">
+                <?= lang("Business_Unit", "Business_Unit"); ?>
+                <?php
+                $b4[""] = lang('select') . ' ' . lang('package');
+                $opt = array("Poultry" => "Poultry", "Feed" => "Feed", "Paragon Agro" => "Paragon Agro");
+                echo form_dropdown('bu', $opt, (isset($_POST['bu']) ? $_POST['bu'] : ''), 'id="bu"  required="required" class="form-control input-tip select" style="width:100%;"');
+                ?>
+            </div>
             <div class="form-group">
                 <?= lang('category_code', 'code'); ?>
                 <?= form_input('code', set_value('code'), 'class="form-control" id="code" required="required"'); ?>

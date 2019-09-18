@@ -687,12 +687,12 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
-    public function getZoneTargetAll($month_name,$year)
+    public function getZoneTargetAll($month_name,$year,$bu)
     {
         $this->db
-            ->select("zone_name, um,zone_code")->select_sum('target_quantity')->select_sum('dealer')
+            ->select("zone_name, um,zone_code,categories.name,dealer")->select_sum('target_quantity')
             ->join('categories', 'zones_target.category_id = categories.id', 'left')
-            ->where('month', $month_name)->where('year', $year)
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
             ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(30);
         $q = $this->db->get('zones_target');
         if ($q->num_rows() > 0) {
@@ -705,12 +705,30 @@ class Reports_model extends CI_Model
     }
 
 
-    public function getZoneCategoryTarget($month_name,$year)
+    public function getZoneTargetAllInfo($month_name,$year,$bu,$cat)
+    {
+        $this->db
+            ->select("zone_name, um,zone_code,categories.name")->select_sum('target_quantity')->select_sum('dealer')
+            ->join('categories', 'zones_target.category_id = categories.id', 'left')
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)->where('categories.id',$cat)
+            ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(30);
+        $q = $this->db->get('zones_target');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+    public function getZoneCategoryTarget($month_name,$year,$bu)
     {
         $this->db
             ->select("categories.name")->select_sum('target_quantity')->select_sum('dealer')
             ->join('categories', 'zones_target.category_id = categories.id', 'left')
-            ->where('month', $month_name)->where('year', $year)
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
             ->group_by('zones_target.month,zones_target.year,categories.id')->order_by('categories.id', 'asc')->limit(30);
         $q = $this->db->get('zones_target');
         if ($q->num_rows() > 0) {
@@ -722,12 +740,12 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
-    public function getZoneCategoryTargetQty($month_name,$year)
+    public function getZoneCategoryTargetQty($month_name,$year,$bu)
     {
         $this->db->
             select_sum('target_quantity')
             ->join('categories', 'zones_target.category_id = categories.id', 'left')
-            ->where('month', $month_name)->where('year', $year)
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
             ->group_by('zones_target.month,zones_target.year')->order_by('categories.id', 'asc')->limit(30);
         $q = $this->db->get('zones_target');
         if ($q->num_rows() > 0) {
@@ -736,14 +754,14 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
-    public function getZoneSalesOfficerTarget($month_name,$year,$zone)
+    public function getZoneSalesOfficerTarget($month_name,$year,$zone,$bu=null)
     {
         if(empty($zone)) $zone=0;
         $this->db
             ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
 //            ->join('zones', 'sales_officer_target.zone_id = zones.id', 'left')
             ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
-            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
+            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)->where('sales_officer_target.business_unit', $bu)
             ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
         $q = $this->db->get('sales_officer_target');
         if ($q->num_rows() > 0) {
@@ -757,13 +775,13 @@ class Reports_model extends CI_Model
 
 
 
-    public function getZoneSalesOfficerCattleTarget($month_name,$year,$zone)
+    public function getZoneSalesOfficerGenericTarget($month_name,$year,$zone,$bu,$cat)
     {
         if(empty($zone)) $zone=0;
         $this->db
-            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
-            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Cattle')
-            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
+            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um,categories.name,users.username")->select_sum('target_quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name',$cat)
+            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)->where('sales_officer_target.business_unit',$bu)
             ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
             ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
         $q = $this->db->get('sales_officer_target');
@@ -776,41 +794,4 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
-    public function getZoneSalesOfficerFishTarget($month_name,$year,$zone)
-    {
-        if(empty($zone)) $zone=0;
-        $this->db
-            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
-            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Fish')
-            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
-            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
-            ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
-        $q = $this->db->get('sales_officer_target');
-        if ($q->num_rows() > 0) {
-            foreach (($q->result()) as $row) {
-                $data[] = $row;
-            }
-            return $data;
-        }
-        return FALSE;
-    }
-
-    public function getZoneSalesOfficerPoultryTarget($month_name,$year,$zone)
-    {
-        if(empty($zone)) $zone=0;
-        $this->db
-            ->select("users.first_name,users.last_name,sales_officer_target.no_of_visit,um")->select_sum('target_quantity')->select_sum('dealer')
-            ->join('categories', 'sales_officer_target.category_id = categories.id', 'left')->where('categories.name','Poultry')
-            ->join('users', 'sales_officer_target.user_code = users.username', 'left')->where('sales_officer_target.zone_id',$zone)
-            ->where('sales_officer_target.month', $month_name)->where('sales_officer_target.year', $year)
-            ->group_by('sales_officer_target.month,sales_officer_target.year,sales_officer_target.user_code')->order_by('sales_officer_target.user_code', 'asc')->limit(30);
-        $q = $this->db->get('sales_officer_target');
-        if ($q->num_rows() > 0) {
-            foreach (($q->result()) as $row) {
-                $data[] = $row;
-            }
-            return $data;
-        }
-        return FALSE;
-    }
 }

@@ -10,7 +10,14 @@
         echo admin_form_open_multipart("system_settings/edit_zone/".$zone->id, $attrib); ?>
         <div class="modal-body">
             <p><?= lang('update_info'); ?></p>
-
+            <div class="form-group">
+                <?= lang("Business_Unit", "Business_Unit"); ?>
+                <?php
+                $b4[""] = lang('select') . ' ' . lang('package');
+                $opt = array("Poultry" => "Poultry", "Feed" => "Feed", "Paragon Agro" => "Paragon Agro");
+                echo form_dropdown('bu', $opt, (isset($_POST['bu']) ? $_POST['bu'] : $zone->bu), 'id="bu"  required="required" class="form-control input-tip select" style="width:100%;"');
+                ?>
+            </div>
             <div class="form-group">
                 <?= lang('Code', 'code'); ?>
                 <?= form_input('code', set_value('code', $zone->code), 'class="form-control" id="code" required="required"'); ?>

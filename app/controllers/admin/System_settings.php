@@ -1044,7 +1044,7 @@ class system_settings extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("{$this->db->dbprefix('categories')}.id as id, {$this->db->dbprefix('categories')}.image, {$this->db->dbprefix('categories')}.code, {$this->db->dbprefix('categories')}.name, {$this->db->dbprefix('categories')}.slug, c.name as parent", FALSE)
+            ->select("{$this->db->dbprefix('categories')}.id as id, {$this->db->dbprefix('categories')}.image,{$this->db->dbprefix('categories')}.bu, {$this->db->dbprefix('categories')}.code, {$this->db->dbprefix('categories')}.name, {$this->db->dbprefix('categories')}.slug, c.name as parent", FALSE)
             ->from("categories")
             ->join("categories c", 'c.id=categories.parent_id', 'left')
             ->group_by('categories.id')
@@ -1062,12 +1062,14 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('slug', lang("slug"), 'required|is_unique[categories.slug]|alpha_dash');
         $this->form_validation->set_rules('userfile', lang("category_image"), 'xss_clean');
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
             $data = array(
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
                 'slug' => $this->input->post('slug'),
+                'bu' => $this->input->post('bu'),
                 'description' => $this->input->post('description'),
                 'parent_id' => $this->input->post('parent'),
                 'created_by' => $this->session->userdata('user_id'),
@@ -1157,6 +1159,7 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('name', lang("category_name"), 'required|min_length[3]');
         $this->form_validation->set_rules('userfile', lang("category_image"), 'xss_clean');
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
 
@@ -1164,6 +1167,7 @@ class system_settings extends MY_Controller
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
                 'slug' => $this->input->post('slug'),
+                'bu' => $this->input->post('bu'),
                 'description' => $this->input->post('description'),
                 'parent_id' => $this->input->post('parent'),
                 'updated_by' => $this->session->userdata('user_id'),
@@ -1277,6 +1281,7 @@ class system_settings extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('C1', lang('slug'));
                     $this->excel->getActiveSheet()->SetCellValue('D1', lang('image'));
                     $this->excel->getActiveSheet()->SetCellValue('E1', lang('parent_category'));
+                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('Business_Unit'));
 
                     $row = 2;
                     foreach ($_POST['val'] as $id) {
@@ -1291,6 +1296,7 @@ class system_settings extends MY_Controller
                         $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sc->slug);
                         $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sc->image);
                         $this->excel->getActiveSheet()->SetCellValue('E' . $row, $parent_category);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sc->bu);
                         $row++;
                     }
 
@@ -1327,7 +1333,7 @@ class system_settings extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("{$this->db->dbprefix('zones')}.id as id, {$this->db->dbprefix('zones')}.code, {$this->db->dbprefix('zones')}.name, {$this->db->dbprefix('zones')}.dealer,{$this->db->dbprefix('zones')}.description, c.name as parent", FALSE)
+            ->select("{$this->db->dbprefix('zones')}.id as id,  {$this->db->dbprefix('zones')}.bu,{$this->db->dbprefix('zones')}.code, {$this->db->dbprefix('zones')}.name, {$this->db->dbprefix('zones')}.dealer,{$this->db->dbprefix('zones')}.description, c.name as parent", FALSE)
             ->from("zones")
             ->join("zones c", 'c.id=zones.parent_id', 'left')
             ->group_by('zones.id')
@@ -1343,11 +1349,13 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('code', lang("Code"), 'trim|is_unique[zones.code]|required');
         $this->form_validation->set_rules('name', lang("Name"), 'required|min_length[3]');
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
             $data = array(
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
+                'bu' => $this->input->post('bu'),
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'parent_id' => $this->input->post('parent'),
@@ -1383,12 +1391,14 @@ class system_settings extends MY_Controller
         }
         $this->form_validation->set_rules('name', lang("Name"), 'required|min_length[3]');
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
 
             $data = array(
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
+                'bu' => $this->input->post('bu'),
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'parent_id' => $this->input->post('parent'),
@@ -1452,6 +1462,7 @@ class system_settings extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('C1', lang('Description'));
                     $this->excel->getActiveSheet()->SetCellValue('D1', lang('No_Of_Dealer'));
                     $this->excel->getActiveSheet()->SetCellValue('E1', lang('Parent_Zone'));
+                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('Business_Unit'));
 
                     $row = 2;
                     foreach ($_POST['val'] as $id) {
@@ -1466,6 +1477,7 @@ class system_settings extends MY_Controller
                         $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sc->description);
                         $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sc->dealer);
                         $this->excel->getActiveSheet()->SetCellValue('E' . $row, $parent_category);
+                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sc->bu);
                         $row++;
                     }
 
@@ -1501,7 +1513,7 @@ class system_settings extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("{$this->db->dbprefix('sales_officer')}.id as id, u.username,concat(u.first_name,' ',u.last_name) as full_name , z.name as zname,{$this->db->dbprefix('sales_officer')}.code, {$this->db->dbprefix('sales_officer')}.name, {$this->db->dbprefix('sales_officer')}.description,{$this->db->dbprefix('sales_officer')}.dealer", FALSE)
+            ->select("{$this->db->dbprefix('sales_officer')}.id as id,{$this->db->dbprefix('sales_officer')}.bu, u.username,concat(u.first_name,' ',u.last_name) as full_name , z.name as zname,{$this->db->dbprefix('sales_officer')}.code, {$this->db->dbprefix('sales_officer')}.name, {$this->db->dbprefix('sales_officer')}.description,{$this->db->dbprefix('sales_officer')}.dealer", FALSE)
             ->from("sales_officer")
             ->join("zones z", 'z.id=sales_officer.zone_id', 'left')
             ->join("users u", 'u.id=sales_officer.user_id', 'left')
@@ -1520,6 +1532,7 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
         $this->form_validation->set_rules('zone_id', lang("zone_id"), 'trim|required');
         $this->form_validation->set_rules('user_id', lang("user_id"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
             $data = array(
@@ -1528,6 +1541,7 @@ class system_settings extends MY_Controller
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'zone_id' => $this->input->post('zone_id'),
+                'bu' => $this->input->post('bu'),
                 'user_id' => $this->input->post('user_id'),
                 'created_by' => $this->session->userdata('user_id'),
                 'created_date' => date("Y-m-d H:i:s")
@@ -1565,6 +1579,7 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
         $this->form_validation->set_rules('zone_id', lang("zone_id"), 'trim|required');
         $this->form_validation->set_rules('user_id', lang("user_id"), 'trim|required');
+        $this->form_validation->set_rules('bu', lang("Business_Unit"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
 
@@ -1574,6 +1589,7 @@ class system_settings extends MY_Controller
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'zone_id' => $this->input->post('zone_id'),
+                'bu' => $this->input->post('bu'),
                 'user_id' => $this->input->post('user_id'),
                 'updated_by' => $this->session->userdata('user_id'),
                 'updated_date' => date("Y-m-d H:i:s")

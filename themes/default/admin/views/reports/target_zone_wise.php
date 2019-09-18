@@ -1,76 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php
-if ($m5bs) {
-    $array_field = "[";
-    $array_field_c = "[";
-    $array_length = count($m5bs);
-    $init = 0;
-    foreach ($m5bs as $r) {
-        $init = $init + 1;
-        if ($r->target_quantity > 0) {
-            $array_field .= ("'" . $r->zone_name. "<br>(Total Dealer-" . $r->dealer . ")"."'");
-
-        }
-        $array_field_c .= 0;
-        if ($init < $array_length) {
-            $array_field .= ",";
-            $array_field_c .= ",";
-        }
-
-    }
-    $array_field .= "]";
-    $array_field_c .= "]";
-}
-if ($m3bs) {
-    $array_field3 = "[";
-    $array_length3 = count($m5bs);
-    $init3 = 0;
-    foreach ($m3bs as $r) {
-        $init3 = $init3 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field3 .= $r->target_quantity;
-        } else {
-            $array_field3 .= 0;
-        }
-        if ($init3 < $array_length3) $array_field3 .= ",";
-    }
-    $array_field3 .= "]";
-} else $array_field3 = $array_field_c;
-
-
-if ($m2bs) {
-    $array_field2 = "[";
-    $array_length2 = count($m5bs);
-    $init2 = 0;
-    foreach ($m2bs as $r) {
-        $init2 = $init2 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field2 .= $r->target_quantity;
-        } else {
-            $array_field2 .= 0;
-        }
-        if ($init2 < $array_length2) $array_field2 .= ",";
-    }
-    $array_field2 .= "]";
-} else $array_field2 = $array_field_c;
-
-if ($m1bs) {
-    $array_field1 = "[";
-    $array_length1 = count($m5bs);
-    $init1 = 0;
-    foreach ($m1bs as $r) {
-        $init1 = $init1 + 1;
-        if ($r->target_quantity > 0) {
-            $array_field1 .= $r->target_quantity;
-        } else {
-            $array_field1 .= 0;
-        }
-        if ($init1 < $array_length1) $array_field1 .= ",";
-    }
-    $array_field1 .= "]";
-} else $array_field1 = $array_field_c;
-
-?>
 <script src="<?= $assets; ?>js/hc/highcharts.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -91,7 +19,7 @@ if ($m1bs) {
                 stops: [[0, color], [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]]
             };
         });
-        $('#m7bschart').highcharts({
+        $('#m8bschart').highcharts({
             chart: {
                 type: 'column'
             },
@@ -99,7 +27,7 @@ if ($m1bs) {
                 text: 'Zone Wise Target(Category)'
             }, credits: {enabled: false},
             xAxis: {
-                categories: <?php echo $array_field; ?>
+                categories: <?php echo $officer_array; ?>
             },
             yAxis: {
                 min: 0,
@@ -141,19 +69,7 @@ if ($m1bs) {
                     }
                 }
             },
-            series: [{
-                color:'#3c9d9b',
-                name: 'Poultry',
-                data: <?php echo $array_field1; ?>
-            }, {
-                color:'#ed5107',
-                name: 'Fish',
-                data: <?php echo $array_field2; ?>
-            }, {
-                color:'#241663',
-                name: 'Cattle',
-                data: <?php echo $array_field3; ?>
-            }]
+            series: [<?php echo $allOfficerTarget; ?>]
         });
     });
 </script>
@@ -181,6 +97,17 @@ if ($m1bs) {
                 <div id="form">
                     <?php echo admin_form_open("reports/target_zone_wise"); ?>
                     <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?= lang("Business_Unit", "Business_Unit"); ?>
+                                <?php
+                                $b4[""] = lang('select') . ' ' . lang('package');
+                                $opt = array("Poultry" => "Poultry", "Feed" => "Feed", "Paragon Agro" => "Paragon Agro");
+                                echo form_dropdown('bu', $opt, (isset($_POST['bu']) ? $_POST['bu'] : ''), 'id="bu"  required="required" class="form-control input-tip select" style="width:100%;"');
+                                ?>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("month", "month"); ?>
@@ -214,22 +141,23 @@ if ($m1bs) {
 </div>
 <?php if ($m5bs) { ?>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h2 class="blue"><?= $m3; ?>
-                        </h2>
-                    </div>
-                    <div class="box-content">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="m7bschart" style="width:100%; height:450px;"></div>
-                            </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box">
+                <div class="box-header">
+                    <h2 class="blue"><?= $m1; ?>
+                    </h2>
+                </div>
+                <div class="box-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="m8bschart" style="width:100%; height:450px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 <?php }?>

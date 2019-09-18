@@ -14,7 +14,7 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox}, {"bSortable": false, "mRender": img_hl}, null, null, null, null, {"bSortable": false}]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox}, {"bSortable": false, "mRender": img_hl}, null,null, null, null, null, {"bSortable": false}]
         });
     });
 </script>
@@ -70,6 +70,7 @@
                                 <th style="min-width:40px; width: 40px; text-align: center;">
                                     <?= lang("image"); ?>
                                 </th>
+                                <th><?= lang("Business_Unit"); ?></th>
                                 <th><?= lang("category_code"); ?></th>
                                 <th><?= lang("category_name"); ?></th>
                                 <th><?= lang("slug"); ?></th>
@@ -79,7 +80,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="7" class="dataTables_empty">
+                                <td colspan="8" class="dataTables_empty">
                                     <?= lang('loading_data_from_server') ?>
                                 </td>
                             </tr>
