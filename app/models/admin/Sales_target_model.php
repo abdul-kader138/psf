@@ -38,9 +38,9 @@ class Sales_target_model extends CI_Model
         return FALSE;
     }
 
-    public function getZoneTarget($month, $year, $category_id, $bu)
+    public function getZoneTarget($month, $year, $category_id, $zone_id,$bu)
     {
-        $q = $this->db->get_where('zones_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id, 'business_unit' => $bu), 1);
+        $q = $this->db->get_where('zones_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id,'zone_code'=>$zone_id, 'business_unit' => $bu), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
@@ -89,9 +89,9 @@ class Sales_target_model extends CI_Model
     }
 
 
-    public function getSalesOfficerTarget($month, $year, $category_id, $zone_id,$bu)
+    public function getSalesOfficerTarget($month, $year, $category_id, $zone_id,$bu,$user_id)
     {
-        $q = $this->db->get_where('sales_officer_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id, 'business_unit' => $bu), 1);
+        $q = $this->db->get_where('sales_officer_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id, 'business_unit' => $bu,'user_code'=>$user_id), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }

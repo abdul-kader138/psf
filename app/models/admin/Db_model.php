@@ -210,9 +210,14 @@ class Db_model extends CI_Model
     public function getAllYearSales($year)
     {
 
-        $year = '2018';
-        $this->db->select("month")->select_sum('target_quantity');
-        $q = $this->db->get_where("sales_officer_target", array('year' => $year));
+        $this->db->select("month")->select_sum('quantity');
+
+        if (!$this->Owner && !$this->Admin) {
+
+            if ($this->session->userdata('view_right') == '0') $this->db->where('user_code', $this->session->userdata('username'));
+        }
+        $this->db->where('year',$year)->group_by('month');
+        $q = $this->db->get_where("sales_officer_achievement", array('year' => $year));
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
                 $data[] = $row;

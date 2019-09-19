@@ -1320,5 +1320,17 @@ class Site extends CI_Model
     }
 
 
+    public function getAllZoneCategoryById($bu,$cate_id) {
+        $this->db->order_by('categories.name','asc');
+        $q = $this->db->get_where('categories', array('bu' => $bu,'id'=>$cate_id));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
 
 }

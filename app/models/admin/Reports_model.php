@@ -794,4 +794,43 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
+
+    public function getZoneSalesAllInfo($month_name,$year,$bu,$cat)
+    {
+        $this->db
+            ->select("zones.name as zone_name, sales_officer_achievement.um,zones.code as zone_code,categories.name")->select_sum('sales_officer_achievement.quantity')->select_sum('sales_officer_achievement.dealer')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->join('zones', 'sales_officer_achievement.zone_id = zones.id', 'left')
+            ->where('sales_officer_achievement.month', $month_name)->where('sales_officer_achievement.year', $year)->where('sales_officer_achievement.business_unit',$bu)->where('categories.id',$cat)
+            ->group_by('sales_officer_achievement.zone_id,sales_officer_achievement.month,sales_officer_achievement.year')->order_by('zones.name', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+    public function getZoneSalesAllInfoCat($month_name,$year,$bu)
+    {
+        $this->db
+            ->select("zones.name as zone_name, sales_officer_achievement.um,zones.code as zone_code,categories.name")->select_sum('sales_officer_achievement.quantity')->select_sum('sales_officer_achievement.dealer')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->join('zones', 'sales_officer_achievement.zone_id = zones.id', 'left')
+            ->where('sales_officer_achievement.month', $month_name)->where('sales_officer_achievement.year', $year)->where('sales_officer_achievement.business_unit',$bu)
+            ->group_by('sales_officer_achievement.zone_id,sales_officer_achievement.month,sales_officer_achievement.year')->order_by('zones.name', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
 }

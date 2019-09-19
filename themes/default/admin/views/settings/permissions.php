@@ -115,6 +115,24 @@
                                 </tr>
 
 
+                                <tr>
+                                    <td><?= lang("Sales_Achievement"); ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-sales_officer" <?php echo $p->{'sales_achievement-sales_officer'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-sales_officer_add" <?php echo $p->{'sales_achievement-sales_officer_add'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-delete_sales_officer" <?php echo $p->{'sales_achievement-delete_sales_officer'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+
 
 
                                 <tr>

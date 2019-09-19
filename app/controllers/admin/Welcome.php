@@ -50,7 +50,7 @@ class Welcome extends MY_Controller
         $getAllYearTarget = $this->db_model->getAllYearTarget($year);
         $getAllYearSales = $this->db_model->getAllYearSales($year);
         $this->data['createYearTarget']  = $this->createYearTarget($getAllYearTarget);
-        $this->data['createYearSales']  = $this->createYearTarget($getAllYearSales);
+        $this->data['createYearSales']  = $this->createYearAchv($getAllYearSales);
 //        $this->data['lmbs'] = $this->db_model->getBestSeller($lmsdate, $lmedate);
         $bc = array(array('link' => '#', 'page' => lang('dashboard')));
         $meta = array('page_title' => lang('dashboard'), 'bc' => $bc);
@@ -186,6 +186,34 @@ class Welcome extends MY_Controller
         foreach ($month_target as $val) {
             if ($val->month == trim($month)) {
                 $value = $val->target_quantity;
+                break;
+            }
+        }
+        return $value;
+    }
+
+
+    public function createYearAchv($month_target)
+    {
+        $val = "[";
+        $data = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+        foreach ($data as $de) {
+            $val .= $this->getMonthAchv($de,$month_target);
+            if( $de != 'December') $val .= ",";
+        }
+
+        $val .= "]";
+        return $val;
+
+    }
+
+    function getMonthAchv($month, $month_target)
+    {
+        $value = 0;
+        foreach ($month_target as $val) {
+            if ($val->month == trim($month)) {
+                $value = $val->quantity;
                 break;
             }
         }

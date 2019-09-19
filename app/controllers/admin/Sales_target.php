@@ -97,7 +97,7 @@ class Sales_target extends MY_Controller
 
                         $bill_details=null;
 
-                        $bill_details = $this->sales_target_model->getZoneTarget($month, $year, $category_id, $bu);
+                        $bill_details = $this->sales_target_model->getZoneTarget($month, $year, $category_id,$csv_pr['zone_code'], $bu);
                         if ($bill_details) {
                             $this->session->set_flashdata('error', lang("Target_already_exist"));
                             redirect($_SERVER["HTTP_REFERER"]);
@@ -114,7 +114,7 @@ class Sales_target extends MY_Controller
                             $dues = 0;
                             $target_quantity = (float)$csv_pr['target_quantity'];
                             $zones_target[] = array(
-                                'reference_no' => ($year . "_" . $month . "_" . $category_id . "_" . $bu),
+                                'reference_no' => ($year . "_" . $month . "_" . $category_id . "_". $csv_pr['zone_code'] . "_"  . $bu),
                                 'year' => $year,
                                 'month' => $month,
                                 'category_id' => $category_id,
@@ -148,8 +148,8 @@ class Sales_target extends MY_Controller
 
             $this->data['units'] = $this->site->getAllBaseUnits();
             $this->data['categories'] = $this->site->getAllCategories();
-            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('employees'), 'page' => lang('employees')), array('link' => '#', 'page' => lang('bill_upload')));
-            $meta = array('page_title' => lang('add_employee_by_csv'), 'bc' => $bc);
+            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sales_target'), 'page' => lang('Sales_Target')), array('link' => '#', 'page' => lang('Zone')));
+            $meta = array('page_title' => lang('Add_Zones_Target'), 'bc' => $bc);
             $this->page_construct('sales_target/zone_add', $meta, $this->data);
 
         }
@@ -183,7 +183,7 @@ class Sales_target extends MY_Controller
                 redirect($_SERVER["HTTP_REFERER"]);
             }
         }
-        if ($get_permission['employees-bill_delete'] || $this->Owner || $this->Admin) $delete_link = "<a href='#' class='po' title='<b>" . lang("Delete") . "</b>' data-content=\"<p>"
+        if ($get_permission['sales_target-delete_zone_target'] || $this->Owner || $this->Admin) $delete_link = "<a href='#' class='po' title='<b>" . lang("Delete") . "</b>' data-content=\"<p>"
             . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales_target/delete_zone_target/$1') . "'>"
             . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
             . lang('Delete') . "</a>";
@@ -330,7 +330,7 @@ class Sales_target extends MY_Controller
 
                         $bill_details=null;
 
-                        $bill_details = $this->sales_target_model->getSalesOfficerTarget($month, $year, $category_id,$zone_id, $bu);
+                        $bill_details = $this->sales_target_model->getSalesOfficerTarget($month, $year, $category_id,$zone_id, $bu,$csv_pr['user_code']);
                         if ($bill_details) {
                             $this->session->set_flashdata('error', lang("Target_already_exist"));
                             redirect($_SERVER["HTTP_REFERER"]);
@@ -383,8 +383,8 @@ class Sales_target extends MY_Controller
             $this->data['units'] = $this->site->getAllBaseUnits();
             $this->data['zones'] = $this->site->getAllZones();
             $this->data['categories'] = $this->site->getAllCategories();
-            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('employees'), 'page' => lang('employees')), array('link' => '#', 'page' => lang('bill_upload')));
-            $meta = array('page_title' => lang('add_employee_by_csv'), 'bc' => $bc);
+            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('sales_target'), 'page' => lang('Sales_Target')), array('link' => '#', 'page' => lang('Sales_Officer')));
+            $meta = array('page_title' => lang('Add_Sales_Officer_Target'), 'bc' => $bc);
             $this->page_construct('sales_target/sales_officer_add', $meta, $this->data);
 
         }
@@ -418,7 +418,7 @@ class Sales_target extends MY_Controller
                 redirect($_SERVER["HTTP_REFERER"]);
             }
         }
-        if ($get_permission['employees-bill_delete'] || $this->Owner || $this->Admin) $delete_link = "<a href='#' class='po' title='<b>" . lang("Delete") . "</b>' data-content=\"<p>"
+        if ($get_permission['sales_target-delete_sales_officer_target'] || $this->Owner || $this->Admin) $delete_link = "<a href='#' class='po' title='<b>" . lang("Delete") . "</b>' data-content=\"<p>"
             . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales_target/delete_sales_officer_target/$1') . "'>"
             . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
             . lang('Delete') . "</a>";
