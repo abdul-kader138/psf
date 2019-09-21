@@ -150,6 +150,19 @@
                                             <input type="checkbox" value="1" class="checkbox" id="reports_target_zone"
                                             name="reports-target_zone" <?php echo $p->{'reports-target_zone'} ? "checked" : ''; ?>><label for="reports_target_zone" class="padding05"><?= lang('Zone_Target') ?></label>
                                         </span>
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_zone_wise"
+                                                   name="reports-achievement_zone_wise" <?php echo $p->{'reports-achievement_zone_wise'} ? "checked" : ''; ?>><label for="reports-achievement_zone_wise" class="padding05"><?= lang('Achievement_Zone_(Category_Wise)') ?></label>
+                                        </span>
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_zone"
+                                                   name="reports-achievement_zone" <?php echo $p->{'reports-achievement_zone'} ? "checked" : ''; ?>><label for="reports-achievement_zone" class="padding05"><?= lang('Achievement_Zone_Wise') ?></label>
+                                        </span>
+
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_sales_officer"
+                                                   name="reports-achievement_sales_officer" <?php echo $p->{'reports-achievement_sales_officer'} ? "checked" : ''; ?>><label for="reports-achievement_sales_officer" class="padding05"><?= lang('Achievement_Sales_Officer') ?></label>
+                                        </span>
                                     </td>
                                 </tr>
 

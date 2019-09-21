@@ -430,12 +430,12 @@ class Reports extends MY_Controller
         }
         $all_cate_actual_details = array();
         foreach ($all_cate as $cate) {
-            $all_cate_actual_details[$cate->name] = $this->reports_model->getZoneSalesAllInfo($month_name, $year_name, $bu_id, $cate->id);
+            $all_cate_actual_details[$cate->name] = $this->reports_model->getZoneSalesAllInfoCat($month_name, $year_name, $bu_id, $cate->id);
         }
 
         $all_cate_actual_details_cat = array();
         foreach ($all_cate as $cate) {
-            $all_cate_actual_details_cat[$cate->name] = $this->reports_model->getZoneSalesAllInfoCat($month_name, $year_name, $bu_id);
+            $all_cate_actual_details_cat[$cate->name] = $this->reports_model->getZoneSalesAllInfo($month_name, $year_name, $bu_id);
         }
         $officer_array = $this->createZoneData($all_officers);
         $allOfficerSalesInfo1 = $this->getZoneSalesQty($all_officers, $all_cate_actual_details, $all_cate_by_id);
@@ -488,22 +488,86 @@ class Reports extends MY_Controller
 
 
         $poultry_target = $this->reports_model->getZoneTargetAll($month_name, $year_name, $bu_id);
+        $poultry_sales = $this->reports_model->getZoneSalesAllInfo($month_name, $year_name, $bu_id);
         $this->data['m5bs'] = $poultry_target;
         $this->data['m1'] = $month_name . ", " . $year_name;
         $this->data['um'] = isset($poultry_target) ? $poultry_target[0]->um : '';
 
-        $getAllZone=$this->site->getAllZone($bu_id);
-        $getAllZone=$this->getAllZoneTargetQty($getAllZone,$poultry_target);
+        $getAllZone = $this->site->getAllZone($bu_id);
+        $getAllZoneTarget = $this->getAllZoneTargetQty($getAllZone, $poultry_target);
+        $getAllZoneSales = $this->getAllZoneSalesQty($getAllZone, $poultry_sales);
 
-
-        $this->data['totals'] = $this->reports_model->getZoneCategoryTarget($month_name, $year_name, $bu_id);
-        $this->data['totals_qty'] = $this->reports_model->getZoneCategoryTargetQty($month_name, $year_name, $bu_id);
+        $getAllZones = $this->createZoneData($getAllZone);
+        $allOfficerTargets = $this->createChartDataZone($getAllZoneTarget);
+        $allOfficerSales = $this->createChartDataZoneSales($getAllZoneSales);
+        $info=$allOfficerTargets.",".$allOfficerSales;
+        $this->data['allZones'] = $getAllZones;
+        $this->data['info'] = $info;
+        $this->data['totals_qty'] = $this->reports_model->getZoneCategorySalesQty($month_name, $year_name, $bu_id);
+        $this->data['totals'] = $this->reports_model->getZoneCategorySales($month_name, $year_name, $bu_id);
+        $this->data['totals_credit'] = $this->reports_model->getZoneCategorySalesCredit($month_name, $year_name, $bu_id);
+        $this->data['totals_amount'] = $this->reports_model->getZoneCategorySalesAmount($month_name, $year_name, $bu_id);
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Zone_Wise_Achievement')));
         $meta = array('page_title' => lang('Zone_Wise_Achievement'), 'bc' => $bc);
         $this->page_construct('reports/achievement_zone', $meta, $this->data);
 
     }
 
+
+    public function achievement_sales_officer($month = NULL, $year = Null, $zone = null)
+    {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-sales_officer_zone'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+        $month_name = date('m');
+        $year_name = date('Y');
+        $convert = DateTime::createFromFormat('!m', $month_name);
+        $month_name = $convert->format('F');
+        $zone_id = $this->input->post('zone_id') ? $this->input->post('zone_id') : NULL;
+
+        $month_name = $this->input->post('month') ? $this->input->post('month') : $month_name;
+        $year_name = $this->input->post('year') ? $this->input->post('year') : $year_name;
+        if (empty($zone_id)) $zone_id = 0;
+
+        $zone_details = $this->site->getZoneById($zone_id);
+        $all_cate = $this->site->getAllZoneCategory($zone_details->bu);
+        $all_officers = $this->site->getAllZoneSalesOfficer($zone_details->bu);
+        $all_cate_details = array();
+        foreach ($all_cate as $cate) {
+            $all_cate_details[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericTarget($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);
+        }
+
+        $all_cate_details_sale = array();
+        foreach ($all_cate as $cate) {
+            $all_cate_details_sale[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericSales($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);
+        }
+        $poultry_target = $this->reports_model->getZoneSalesOfficerTarget($month_name, $year_name, $zone_id, $zone_details->bu);
+        $officer_array = $this->createEmployeesData($all_officers);
+        $allOfficerInfo = $this->getOfficersTargetQty($all_officers, $all_cate_details, $all_cate);
+        $allOfficerInfoSales = $this->getOfficersSalesQty($all_officers, $all_cate_details_sale, $all_cate);
+        $allOfficerTarget = $this->createTargetChartDataOfficer($allOfficerInfo);
+        $allOfficerInfoSales = $this->createSalesChartDataOfficer($allOfficerInfoSales);
+        $this->data['officer_array'] = $officer_array;
+        $this->data['info'] = $allOfficerTarget . "," . $allOfficerInfoSales;
+        $this->data['m5bs'] = $poultry_target;
+        $this->data['um'] = isset($poultry_target) ? $poultry_target[0]->um : '';
+
+
+        $this->data['zones'] = $this->site->getAllZones();
+        $this->data['zone_name'] = $zone_details->name;
+        $this->data['officer_array'] = $officer_array;
+        $this->data['allOfficerTarget'] = $allOfficerTarget;
+        $this->data['m1'] = $month_name . ", " . $year_name;
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Sales_Officer_Wise_Achievement')));
+        $meta = array('page_title' => lang('Sales_Officer_Wise_Achievement'), 'bc' => $bc);
+        $this->page_construct('reports/achievement_sales_officer', $meta, $this->data);
+
+    }
     function products()
     {
         $this->sma->checkPermissions();
@@ -3463,7 +3527,7 @@ class Reports extends MY_Controller
         $init = 0;
         foreach ($listData as $r) {
             $init = $init + 1;
-            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "'");
+            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "<br>(Total Dealer-" . $r->dealer . ")'");
 
             if ($init < $array_length) {
                 $array_field .= ",";
@@ -3491,6 +3555,34 @@ class Reports extends MY_Controller
                     foreach ($category as $val) {
                         if ($value->username == $val->username) {
                             $qty = $val->target_quantity;
+                            break;
+                        }
+                    }
+                }
+                $temp['qty'] = $qty;
+                $employeeTargetHistory[$cat->name][] = $temp;
+            }
+        }
+
+        return $employeeTargetHistory;
+    }
+
+    public
+    function getOfficersSalesQty($officerList, $officerListWithTarget, $cat_list)
+    {
+        $employeeTargetHistory = array();
+        foreach ($cat_list as $cat) {
+            $employeeTargetHistory1[$cat->name] = array();
+            foreach ($officerList as $value) {
+                $temp = array();
+                $qty = 0;
+                $temp['full_name'] = $value->first_name . ' ' . $value->last_name;
+                $temp['username'] = $value->username;
+                $category = $officerListWithTarget[$cat->name];
+                if ($category) {
+                    foreach ($category as $val) {
+                        if ($value->username == $val->username) {
+                            $qty = $val->quantity;
                             break;
                         }
                     }
@@ -3846,23 +3938,165 @@ class Reports extends MY_Controller
     function getAllZoneTargetQty($officerList, $officerListWithTarget)
     {
         $employeeTargetHistory = array();
-            foreach ($officerList as $value) {
-                $temp = array();
-                $qty = 0;
-                $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
-                $temp['dealer'] = $value->dealer;
+        foreach ($officerList as $value) {
+            $temp = array();
+            $qty = 0;
+            $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+            $temp['dealer'] = $value->dealer;
 //                $category = $officerListWithTarget[$cat->name];
-                foreach ($officerListWithTarget as $target) {
-                            if ($value->name == $target->zone_name) {
-                                $qty = $target->target_quantity;
-                                break;
-                            }
+            foreach ($officerListWithTarget as $target) {
+                if ($value->name == $target->zone_name) {
+                    $qty = $target->target_quantity;
+                    break;
                 }
-                $temp['qty'] = $qty;
-                $employeeTargetHistory[] = $temp;
             }
+            $temp['qty'] = $qty;
+            $employeeTargetHistory[] = $temp;
+        }
 
         return $employeeTargetHistory;
+    }
+
+
+    public
+    function getAllZoneSalesQty($officerList, $officerListWithSales)
+    {
+        $employeeTargetHistory = array();
+        foreach ($officerList as $value) {
+            $temp = array();
+            $qty = 0;
+            $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+            $temp['dealer'] = $value->dealer;
+//                $category = $officerListWithTarget[$cat->name];
+            foreach ($officerListWithSales as $target) {
+                if ($value->name == $target->zone_name) {
+                    $qty = $target->quantity;
+                    break;
+                }
+            }
+            $temp['qty'] = $qty;
+            $employeeTargetHistory[] = $temp;
+        }
+
+        return $employeeTargetHistory;
+    }
+
+
+    public
+    function createChartDataZone($info)
+    {
+        $init_c = 0;
+        $array_length_c = count($info);
+        $output = "{ name : 'Target', data : ";
+        $init_c = $init_c + 1;
+        $output .= "[";
+        foreach ($info as $value) {
+            $init_c = $init_c + 1;
+            $output .= $value['qty'];
+            if ($init_c < $array_length_c) {
+                $output .= ",";
+            }
+        }
+        $output .= "]}";
+        return $output;
+
+    }
+
+    public
+    function createChartDataZoneSales($info)
+    {
+        $init_c = 0;
+        $array_length_c = count($info);
+        $output = "{ name : 'Actual', data : ";
+        $init_c = $init_c + 1;
+        $output .= "[";
+        foreach ($info as $value) {
+            $init_c = $init_c + 1;
+            $output .= $value['qty'];
+            if ($init_c < $array_length_c) {
+                $output .= ",";
+            }
+        }
+        $output .= "]}";
+        return $output;
+
+    }
+
+
+    public
+    function createTargetChartDataOfficer($info)
+    {
+
+        /* {
+                     color:'#8b4367',
+                     name: 'Poultry',
+                     data: <?php echo $array_field3; ?>
+                 },
+         */
+        $output = '';
+        $init_c = 0;
+        $array_length_c = count($info);
+        foreach ($info as $cat => $value) {
+            $output .= "{ name : '" . $cat . " (Target)', data : ";
+            $init_c = $init_c + 1;
+            $array_field = "[";
+            $array_length = count($value);
+            $init = 0;
+            foreach ($value as $r) {
+                $init = $init + 1;
+                $array_field .= $r['qty'];
+                if ($init < $array_length) {
+                    $array_field .= ",";
+                }
+            }
+            $array_field .= "]";
+            $output .= $array_field;
+            $output .= ',stack: "Target"}';
+            if ($init_c < $array_length_c) {
+                $output .= ",";
+            }
+        }
+
+        return $output;
+
+    }
+
+    public
+    function createSalesChartDataOfficer($info)
+    {
+
+        /* {
+                     color:'#8b4367',
+                     name: 'Poultry',
+                     data: <?php echo $array_field3; ?>
+                 },
+         */
+        $output = '';
+        $init_c = 0;
+        $array_length_c = count($info);
+        foreach ($info as $cat => $value) {
+            $output .= "{ name : '" . $cat . " (Actual)', data : ";
+            $init_c = $init_c + 1;
+            $array_field = "[";
+            $array_length = count($value);
+            $init = 0;
+            foreach ($value as $r) {
+                $init = $init + 1;
+                $array_field .= $r['qty'];
+                if ($init < $array_length) {
+                    $array_field .= ",";
+                }
+            }
+            $array_field .= "]";
+            $output .= $array_field;
+            $output .= ',stack: "Actual"}';
+            if ($init_c < $array_length_c) {
+                $output .= ",";
+            }
+        }
+
+        return $output;
+
     }
 
 }

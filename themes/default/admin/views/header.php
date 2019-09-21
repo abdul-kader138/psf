@@ -441,6 +441,13 @@
                                                     </a>
                                                 </li>
 
+                                                <li id="reports_achievement_sales_officer">
+                                                    <a href="<?= admin_url('reports/achievement_sales_officer') ?>">
+                                                        <i class="fa fa-line-chart"></i><span
+                                                                class="text"> <?= lang('Achievement_Sales_Officer'); ?></span>
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </li>
                                         <?php
@@ -543,7 +550,7 @@
                                             </li>
                                         <?php } ?>
 
-                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-target_zone'] || $GP['reports-target_zone_wise'] ) { ?>
+                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-achievement_zone_wise'] || $GP['reports-achievement_zone'] || $GP['reports-achievement_sales_officer'] ||$GP['reports-target_zone'] || $GP['reports-target_zone_wise'] ) { ?>
                                             <li class="mm_reports">
                                                 <a class="dropmenu" href="#">
                                                     <i class="fa fa-bar-chart-o"></i>
@@ -572,6 +579,33 @@
                                                             <a href="<?= admin_url('reports/sales_officer_zone') ?>">
                                                                 <i class="fa fa-line-chart"></i><span
                                                                         class="text"> <?= lang('Sales_Officer_Target_(Zone)'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php }
+
+                                                    if ($GP['reports-achievement_zone_wise']) { ?>
+                                                        <li id="reports_achievement_zone_wise">
+                                                            <a href="<?= admin_url('reports/achievement_zone_wise') ?>">
+                                                                <i class="fa fa-line-chart"></i><span
+                                                                        class="text"> <?= lang('Zone_Achievement_(Category)'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php }
+
+                                                    if ($GP['reports-achievement_zone']) { ?>
+                                                        <li id="reports_achievement_zone">
+                                                            <a href="<?= admin_url('reports/achievement_zone') ?>">
+                                                                <i class="fa fa-line-chart"></i><span
+                                                                        class="text"> <?= lang('Zone_Wise_Achievement'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php }
+
+                                                    if ($GP['reports-achievement_sales_officer']) { ?>
+                                                        <li id="reports_achievement_sales_officer">
+                                                            <a href="<?= admin_url('reports/achievement_sales_officer') ?>">
+                                                                <i class="fa fa-line-chart"></i><span
+                                                                        class="text"> <?= lang('Achievement_Sales_Officer'); ?></span>
                                                             </a>
                                                         </li>
                                                     <?php }

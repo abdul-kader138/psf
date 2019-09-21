@@ -50,6 +50,44 @@
                     }
                 }]
             });
+
+
+            $('#m11bschart').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'All Category'
+                },  credits: {enabled: false},
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: <?php echo $allZones; ?>,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '<?php echo "Target Quantity (" . $um . ")"; ?>'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:12px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [<?php echo $info; ?>]
+            });
             <?php } ?>
 
             <?php if ($totals) { ?>
@@ -59,7 +97,7 @@
                     plotBorderWidth: null,
                     plotShadow: false
                 },
-                title: {text: 'Category Wise Target'},
+                title: {text: 'Category Wise Sales'},
                 credits: {enabled: false},
                 tooltip: {
                     formatter: function () {
@@ -77,7 +115,7 @@
                         dataLabels: {
                             enabled: true,
                             formatter: function () {
-                                return '<h3 style="margin:-15px 0 0 0;"><b>' + this.point.name + '</b>:<br><b> ' + currencyFormat(this.y) + '</b></h3>';
+                                return '<h3 style="margin:-15px 0 0 0;"><b>' + this.point.name + '</b>:<br></h3>';
                             },
                             useHTML: true
                         }
@@ -85,11 +123,57 @@
                 },
                 series: [{
                     type: 'pie',
-                    name: '<?php echo $this->lang->line("Target_Quantity") . " " . $um; ?>',
+                    name: '<?php echo $this->lang->line("Sales_Quantity") . " " . $um; ?>',
                     data: [<?php
                         foreach ($totals as $r1) {
-                            if ($r->target_quantity > 0) {
-                                echo "['" . $r1->name . "', " . $r1->target_quantity . "],";
+                            if ($r1->quantity > 0) {
+                                echo "['" . $r1->name . "', " . $r1->quantity . "],";
+                            }
+                        }
+                        ?>]
+
+                }]
+            });
+            <?php } ?>
+
+            <?php if ($totals_amount) { ?>
+            $('#chart_s').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {text: 'Category Wise Credit Sales'},
+                credits: {enabled: false},
+                tooltip: {
+                    formatter: function () {
+                        return '<div class="tooltip-inner hc-tip" style="margin-bottom:0;">' + this.key + '<br><strong>' + currencyFormat(this.y) + '</strong> (' + formatNumber(this.percentage) + '%)';
+                    },
+                    followPointer: true,
+                    useHTML: true,
+                    borderWidth: 0,
+                    shadow: true,
+                    valueDecimals: site.settings.decimals,
+                    style: {fontSize: '14px', padding: '0', color: '#000000'}
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function () {
+                                return '<h3 style="margin:-15px 0 0 0;"><b>' + this.point.name + '</b>:<br></h3>';
+                            },
+                            useHTML: true
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '<?php echo $this->lang->line("Credit_Amount"); ?>',
+                    data: [<?php
+                        foreach ($totals_credit as $r12) {
+                            if ($r12->credit_amount > 0) {
+                                echo "['" . $r12->name . "', " . $r12->credit_amount . "],";
                             }
                         }
                         ?>]
@@ -101,7 +185,7 @@
     </script>
     <div class="box">
         <div class="box-header">
-            <h2 style="color: #0e90d2; text-align: center">Sales Target- Zone Wise</h2>
+            <h2 style="color: #0e90d2; text-align: center">Sales Achievement- Zone Wise</h2>
             <div class="box-icon">
                 <ul class="btn-tasks">
                     <li class="dropdown">
@@ -186,6 +270,28 @@
             </div>
         </div>
     </div>
+
+    <div class="box">
+        <div class="box-content">
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-sm-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h2 class="blue"><?= $m1; ?>
+                            </h2>
+                        </div>
+                        <div class="box-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="m11bschart" style="width:100%; height:650px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php } ?>
 <?php if ($totals) { ?>
     <div class="box" style="margin-top: 15px;">
@@ -195,19 +301,32 @@
         </div>
         <div class="box-content">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-sm-6">
                     <?php if ($totals) { ?>
-                        <div class="small-box padding1010 col-sm-12" style="background-color: #83b582">
+                        <div class="small-box col-sm-12" style="background-color: #83b582">
                             <div class="inner clearfix">
-                                <p style="color: black;font-size: 20px;"><b>Total Target Quantity
-                                        : <?= $this->sma->formatQuantity($totals_qty->target_quantity) ?></b></p>
+                                <p style="color: black;font-size: 20px;"><b>Total Sales Quantity
+                                        : <?= $this->sma->formatQuantity($totals_qty->quantity) ?></b></p>
                             </div>
                         </div>
                         <div class="clearfix" style="margin-top:20px;"></div>
                     <?php } ?>
-                    <div id="chart" style="width:100%; height:450px;"></div>
+                    <div id="chart" style="width:100%; height:550px;"></div>
+                </div>
+                <div class="col-sm-6">
+                    <?php if ($totals_amount) { ?>
+                        <div class="small-box col-sm-12" style="background-color: #9db5b0">
+                            <div class="inner clearfix">
+                                <p style="color: black;font-size: 20px;"><b>Total Sales Amount
+                                        : <?= $this->sma->formatQuantity($totals_amount->sales_amount) ?></b></p>
+                            </div>
+                        </div>
+                        <div class="clearfix" style="margin-top:20px;"></div>
+                    <?php } ?>
+                    <div id="chart_s" style="width:100%; height:550px;"></div>
                 </div>
             </div>
         </div>
     </div>
 <?php } ?>
+

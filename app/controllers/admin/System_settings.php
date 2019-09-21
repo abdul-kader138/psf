@@ -830,6 +830,11 @@ class system_settings extends MY_Controller
                 'sales_achievement-delete_sales_officer' => $this->input->post('sales_achievement-delete_sales_officer'),
 
 
+                'reports-achievement_zone_wise' => $this->input->post('reports-achievement_zone_wise'),
+                'reports-achievement_zone' => $this->input->post('reports-achievement_zone'),
+                'reports-achievement_sales_officer' => $this->input->post('reports-achievement_sales_officer'),
+
+
             );
 
             if (POS) {

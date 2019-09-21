@@ -795,7 +795,7 @@ class Reports_model extends CI_Model
     }
 
 
-    public function getZoneSalesAllInfo($month_name,$year,$bu,$cat)
+    public function getZoneSalesAllInfoCat($month_name,$year,$bu,$cat)
     {
         $this->db
             ->select("zones.name as zone_name, sales_officer_achievement.um,zones.code as zone_code,categories.name")->select_sum('sales_officer_achievement.quantity')->select_sum('sales_officer_achievement.dealer')
@@ -814,7 +814,7 @@ class Reports_model extends CI_Model
     }
 
 
-    public function getZoneSalesAllInfoCat($month_name,$year,$bu)
+    public function getZoneSalesAllInfo($month_name,$year,$bu)
     {
         $this->db
             ->select("zones.name as zone_name, sales_officer_achievement.um,zones.code as zone_code,categories.name")->select_sum('sales_officer_achievement.quantity')->select_sum('sales_officer_achievement.dealer')
@@ -822,6 +822,90 @@ class Reports_model extends CI_Model
             ->join('zones', 'sales_officer_achievement.zone_id = zones.id', 'left')
             ->where('sales_officer_achievement.month', $month_name)->where('sales_officer_achievement.year', $year)->where('sales_officer_achievement.business_unit',$bu)
             ->group_by('sales_officer_achievement.zone_id,sales_officer_achievement.month,sales_officer_achievement.year')->order_by('zones.name', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+    public function getZoneCategorySalesQty($month_name,$year,$bu)
+    {
+        $this->db->
+        select_sum('quantity')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
+            ->group_by('sales_officer_achievement.month,sales_officer_achievement.year')->order_by('categories.id', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
+    public function getZoneCategorySales($month_name,$year,$bu)
+    {
+        $this->db
+            ->select("categories.name")->select_sum('quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
+            ->group_by('sales_officer_achievement.month,sales_officer_achievement.year,categories.id')->order_by('categories.id', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getZoneCategorySalesCredit($month_name,$year,$bu)
+    {
+        $this->db
+            ->select("categories.name")->select_sum('credit_amount')->select_sum('dealer')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
+            ->group_by('sales_officer_achievement.month,sales_officer_achievement.year,categories.id')->order_by('categories.id', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+    public function getZoneCategorySalesAmount($month_name,$year,$bu)
+    {
+        $this->db->
+        select_sum('sales_amount')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')
+            ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
+            ->group_by('sales_officer_achievement.month,sales_officer_achievement.year')->order_by('categories.id', 'asc')->limit(30);
+        $q = $this->db->get('sales_officer_achievement');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
+    public function getZoneSalesOfficerGenericSales($month_name,$year,$zone,$bu,$cat)
+    {
+        if(empty($zone)) $zone=0;
+        $this->db
+            ->select("users.first_name,users.last_name,sales_officer_achievement.no_of_visit,um,categories.name,users.username")->select_sum('quantity')->select_sum('dealer')
+            ->join('categories', 'sales_officer_achievement.category_id = categories.id', 'left')->where('categories.name',$cat)
+            ->join('users', 'sales_officer_achievement.user_code = users.username', 'left')->where('sales_officer_achievement.zone_id',$zone)->where('sales_officer_achievement.business_unit',$bu)
+            ->where('sales_officer_achievement.month', $month_name)->where('sales_officer_achievement.year', $year)
+            ->group_by('sales_officer_achievement.month,sales_officer_achievement.year,sales_officer_achievement.user_code')->order_by('sales_officer_achievement.user_code', 'asc')->limit(30);
         $q = $this->db->get('sales_officer_achievement');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
