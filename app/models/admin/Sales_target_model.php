@@ -77,7 +77,7 @@ class Sales_target_model extends CI_Model
     {
         $this->db->select('zones_target.*,users.*,categories.name as nam')
             ->join('categories', 'zones_target.category_id=categories.id', 'left')
-            ->join('users', 'users.id=zones_target.created_by', 'left')->order_by('zones_target.zone_name','asc');
+            ->join('users', 'users.id=zones_target.created_by', 'left')->order_by('zones_target.zone_name','asc')->group_by('zones_target.zone_name,zones_target.category_id');
         $q = $this->db->get_where('zones_target', array('reference_no' => $ref));
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {

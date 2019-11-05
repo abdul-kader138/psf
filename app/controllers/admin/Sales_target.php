@@ -114,7 +114,7 @@ class Sales_target extends MY_Controller
                             $dues = 0;
                             $target_quantity = (float)$csv_pr['target_quantity'];
                             $zones_target[] = array(
-                                'reference_no' => ($year . "_" . $month . "_" . $category_id . "_". $csv_pr['zone_code'] . "_"  . $bu),
+                                'reference_no' => ($year . "_" . $month . "_" . $category_id . "_"  . $bu),
                                 'year' => $year,
                                 'month' => $month,
                                 'category_id' => $category_id,
