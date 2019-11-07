@@ -63,6 +63,24 @@
                                 </tr>
 
                                 <tr>
+                                    <td><?= lang("Depot_Expense"); ?></td>
+                                    <td class="text-center">
+                                    </td>
+                                    <td class="text-center">
+                                    </td>
+                                    <td class="text-center">
+                                    </td>
+                                    <td class="text-center">
+                                    </td>
+                                    <td>
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" id="purchases-expenses" class="checkbox" name="purchases-expenses" <?php echo $p->{'purchases-expenses'} ? "checked" : ''; ?>>
+                                            <label for="purchases-expenses" class="padding05"><?= lang('expenses') ?></label>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <tr>
                                     <td><?= lang("Notifications"); ?></td>
                                     <td class="text-center">
                                         <input type="checkbox" value="1" class="checkbox" name="notifications-index" <?php echo $p->{'notifications-index'} ? "checked" : ''; ?>>
@@ -162,6 +180,10 @@
                                         <span style="display:inline-block;">
                                             <input type="checkbox" value="1" class="checkbox" id="reports_achievement_sales_officer"
                                                    name="reports-achievement_sales_officer" <?php echo $p->{'reports-achievement_sales_officer'} ? "checked" : ''; ?>><label for="reports-achievement_sales_officer" class="padding05"><?= lang('Achievement_Sales_Officer') ?></label>
+                                        </span>
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox" id="expenses" name="reports-expenses" <?php echo $p->{'reports-expenses'} ? "checked" : ''; ?>>
+                                            <label for="expenses" class="padding05"><?= lang('expenses') ?></label>
                                         </span>
                                     </td>
                                 </tr>

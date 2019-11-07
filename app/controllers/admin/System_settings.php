@@ -3133,8 +3133,8 @@ class system_settings extends MY_Controller
     function brands()
     {
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
-        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('brands')));
-        $meta = array('page_title' => lang('brands'), 'bc' => $bc);
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('Depots')));
+        $meta = array('page_title' => lang('Depots'), 'bc' => $bc);
         $this->page_construct('settings/brands', $meta, $this->data);
     }
 
@@ -3143,9 +3143,9 @@ class system_settings extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("id, image, code, name, slug")
+            ->select("id, code, name, description")
             ->from("brands")
-            ->add_column("Actions", "<div class=\"text-center\"><a href='" . admin_url('system_settings/edit_brand/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit_brand") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_brand") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('system_settings/delete_brand/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class=\"text-center\"><a href='" . admin_url('system_settings/edit_brand/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("Edit") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("Delete") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('system_settings/delete_brand/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
 
         echo $this->datatables->generate();
     }
@@ -3153,8 +3153,8 @@ class system_settings extends MY_Controller
     function add_brand()
     {
 
-        $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required|is_unique[brands.name]|alpha_numeric_spaces');
-        $this->form_validation->set_rules('slug', lang("slug"), 'trim|required|is_unique[brands.slug]|alpha_dash');
+        $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required|is_unique[brands.name]');
+        $this->form_validation->set_rules('code', lang("code"), 'trim|required|is_unique[brands.code]');
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
 
         if ($this->form_validation->run() == true) {
@@ -3162,42 +3162,9 @@ class system_settings extends MY_Controller
             $data = array(
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
-                'slug' => $this->input->post('slug'),
                 'description' => $this->input->post('description'),
             );
 
-            if ($_FILES['userfile']['size'] > 0) {
-                $this->load->library('upload');
-                $config['upload_path'] = $this->upload_path;
-                $config['allowed_types'] = $this->image_types;
-                $config['max_size'] = $this->allowed_file_size;
-                $config['max_width'] = $this->Settings->iwidth;
-                $config['max_height'] = $this->Settings->iheight;
-                $config['overwrite'] = FALSE;
-                $config['encrypt_name'] = TRUE;
-                $config['max_filename'] = 25;
-                $this->upload->initialize($config);
-                if (!$this->upload->do_upload()) {
-                    $error = $this->upload->display_errors();
-                    $this->session->set_flashdata('error', $error);
-                    redirect($_SERVER["HTTP_REFERER"]);
-                }
-                $photo = $this->upload->file_name;
-                $data['image'] = $photo;
-                $this->load->library('image_lib');
-                $config['image_library'] = 'gd2';
-                $config['source_image'] = $this->upload_path . $photo;
-                $config['new_image'] = $this->thumbs_path . $photo;
-                $config['maintain_ratio'] = TRUE;
-                $config['width'] = $this->Settings->twidth;
-                $config['height'] = $this->Settings->theight;
-                $this->image_lib->clear();
-                $this->image_lib->initialize($config);
-                if (!$this->image_lib->resize()) {
-                    echo $this->image_lib->display_errors();
-                }
-                $this->image_lib->clear();
-            }
 
         } elseif ($this->input->post('add_brand')) {
             $this->session->set_flashdata('error', validation_errors());
@@ -3205,7 +3172,7 @@ class system_settings extends MY_Controller
         }
 
         if ($this->form_validation->run() == true && $this->settings_model->addBrand($data)) {
-            $this->session->set_flashdata('message', lang("brand_added"));
+            $this->session->set_flashdata('message', lang("Info_added_successfully."));
             admin_redirect("system_settings/brands");
         } else {
 
@@ -3219,14 +3186,10 @@ class system_settings extends MY_Controller
     function edit_brand($id = NULL)
     {
 
-        $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required|alpha_numeric_spaces');
+        $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required');
         $brand_details = $this->site->getBrandByID($id);
         if ($this->input->post('name') != $brand_details->name) {
             $this->form_validation->set_rules('name', lang("brand_name"), 'required|is_unique[brands.name]');
-        }
-        $this->form_validation->set_rules('slug', lang("slug"), 'required|alpha_dash');
-        if ($this->input->post('slug') != $brand_details->slug) {
-            $this->form_validation->set_rules('slug', lang("slug"), 'required|alpha_dash|is_unique[brands.slug]');
         }
         $this->form_validation->set_rules('description', lang("description"), 'trim|required');
 
@@ -3235,42 +3198,9 @@ class system_settings extends MY_Controller
             $data = array(
                 'name' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
-                'slug' => $this->input->post('slug'),
                 'description' => $this->input->post('description'),
             );
 
-            if ($_FILES['userfile']['size'] > 0) {
-                $this->load->library('upload');
-                $config['upload_path'] = $this->upload_path;
-                $config['allowed_types'] = $this->image_types;
-                $config['max_size'] = $this->allowed_file_size;
-                $config['max_width'] = $this->Settings->iwidth;
-                $config['max_height'] = $this->Settings->iheight;
-                $config['overwrite'] = FALSE;
-                $config['encrypt_name'] = TRUE;
-                $config['max_filename'] = 25;
-                $this->upload->initialize($config);
-                if (!$this->upload->do_upload()) {
-                    $error = $this->upload->display_errors();
-                    $this->session->set_flashdata('error', $error);
-                    redirect($_SERVER["HTTP_REFERER"]);
-                }
-                $photo = $this->upload->file_name;
-                $data['image'] = $photo;
-                $this->load->library('image_lib');
-                $config['image_library'] = 'gd2';
-                $config['source_image'] = $this->upload_path . $photo;
-                $config['new_image'] = $this->thumbs_path . $photo;
-                $config['maintain_ratio'] = TRUE;
-                $config['width'] = $this->Settings->twidth;
-                $config['height'] = $this->Settings->theight;
-                $this->image_lib->clear();
-                $this->image_lib->initialize($config);
-                if (!$this->image_lib->resize()) {
-                    echo $this->image_lib->display_errors();
-                }
-                $this->image_lib->clear();
-            }
 
         } elseif ($this->input->post('edit_brand')) {
             $this->session->set_flashdata('error', validation_errors());
@@ -3278,7 +3208,7 @@ class system_settings extends MY_Controller
         }
 
         if ($this->form_validation->run() == true && $this->settings_model->updateBrand($id, $data)) {
-            $this->session->set_flashdata('message', lang("brand_updated"));
+            $this->session->set_flashdata('message', lang("Info_updated_successfully"));
             admin_redirect("system_settings/brands");
         } else {
 
@@ -3294,11 +3224,11 @@ class system_settings extends MY_Controller
     {
 
         if ($this->settings_model->brandHasProducts($id)) {
-            $this->sma->send_json(array('error' => 1, 'msg' => lang("brand_has_products")));
+            $this->sma->send_json(array('error' => 1, 'msg' => lang("Info_deleted_successfully")));
         }
 
         if ($this->settings_model->deleteBrand($id)) {
-            $this->sma->send_json(array('error' => 0, 'msg' => lang("brand_deleted")));
+            $this->sma->send_json(array('error' => 0, 'msg' => lang("Info_deleted_successfully")));
         }
     }
 
@@ -3310,54 +3240,12 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
 
-            if (isset($_FILES["userfile"])) {
-
-                $this->load->library('upload');
-                $config['upload_path'] = 'files/';
-                $config['allowed_types'] = 'csv';
-                $config['max_size'] = $this->allowed_file_size;
-                $config['overwrite'] = TRUE;
-                $this->upload->initialize($config);
-
-                if (!$this->upload->do_upload()) {
-                    $error = $this->upload->display_errors();
-                    $this->session->set_flashdata('error', $error);
-                    admin_redirect("system_settings/brands");
-                }
-
-                $csv = $this->upload->file_name;
-
-                $arrResult = array();
-                $handle = fopen('files/' . $csv, "r");
-                if ($handle) {
-                    while (($row = fgetcsv($handle, 5000, ",")) !== FALSE) {
-                        $arrResult[] = $row;
-                    }
-                    fclose($handle);
-                }
-                $titles = array_shift($arrResult);
-                $keys = array('name', 'code', 'image');
-                $final = array();
-                foreach ($arrResult as $key => $value) {
-                    $final[] = array_combine($keys, $value);
-                }
-
-                foreach ($final as $csv_ct) {
-                    if (!$this->settings_model->getBrandByName(trim($csv_ct['name']))) {
-                        $data[] = array(
-                            'code' => trim($csv_ct['code']),
-                            'name' => trim($csv_ct['name']),
-                            'image' => trim($csv_ct['image']),
-                        );
-                    }
-                }
-            }
 
             // $this->sma->print_arrays($data);
         }
 
         if ($this->form_validation->run() == true && !empty($data) && $this->settings_model->addBrands($data)) {
-            $this->session->set_flashdata('message', lang("brands_added"));
+            $this->session->set_flashdata('message', lang("Info_added_successfully"));
             admin_redirect('system_settings/brands');
         } else {
 
@@ -3385,7 +3273,7 @@ class system_settings extends MY_Controller
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteBrand($id);
                     }
-                    $this->session->set_flashdata('message', lang("brands_deleted"));
+                    $this->session->set_flashdata('message', lang("Info_deleted_successfully"));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
 

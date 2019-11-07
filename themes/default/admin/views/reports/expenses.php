@@ -53,7 +53,7 @@ if ($this->input->post('end_date')) {
                 nRow.className = "expense_link2";
                 return nRow;
             },
-            "aoColumns": [{"mRender": fld}, null, null, {"mRender": currencyFormat}, null, null, {"bSortable": false, "mRender": attachment}],
+            "aoColumns": [{"mRender": fld}, null, null, null,{"mRender": currencyFormat}, null, null, {"bSortable": false, "mRender": attachment}],
             "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var total = 0;
                 for (var i = 0; i < aaData.length; i++) {
@@ -66,8 +66,9 @@ if ($this->input->post('end_date')) {
             {column_number: 0, filter_default_label: "[<?=lang('date');?> (yyyy-mm-dd)]", filter_type: "text", data: []},
             {column_number: 1, filter_default_label: "[<?=lang('reference');?>]", filter_type: "text", data: []},
             {column_number: 2, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
-            {column_number: 4, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
-            {column_number: 5, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
+            {column_number: 3, filter_default_label: "[<?=lang('Depot');?>]", filter_type: "text", data: []},
+            {column_number: 5, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
         ], "footer");
 
     });
@@ -166,13 +167,13 @@ if ($this->input->post('end_date')) {
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label class="control-label" for="warehouse"><?= lang("warehouse"); ?></label>
+                                <label class="control-label" for="warehouse"><?= lang("Depot"); ?></label>
                                 <?php
-                                $ct[""] = lang('select').' '.lang('warehouse');
+                                $ct1[""] = lang('select').' '.lang('warehouse');
                                 foreach ($warehouses as $warehouse) {
-                                    $ct[$warehouse->id] = $warehouse->name;
+                                    $ct1[$warehouse->id] = $warehouse->name;
                                 }
-                                echo form_dropdown('warehouse', $ct, (isset($_POST['warehouse']) ? $_POST['warehouse'] : ""), 'class="form-control" id="warehouse" data-placeholder="' . $this->lang->line("select") . " " . $this->lang->line("warehouse") . '"');
+                                echo form_dropdown('warehouse', $ct1, (isset($_POST['warehouse']) ? $_POST['warehouse'] : ""), 'class="form-control" id="warehouse" data-placeholder="' . $this->lang->line("select") . " " . $this->lang->line("warehouse") . '"');
                                 ?>
                             </div>
                         </div>
@@ -211,7 +212,8 @@ if ($this->input->post('end_date')) {
                         <tr class="active">
                             <th class="col-xs-2"><?= lang("date"); ?></th>
                             <th class="col-xs-2"><?= lang("reference"); ?></th>
-                            <th class="col-xs-2"><?= lang("category"); ?></th>
+                            <th class="col-xs-1"><?= lang("category"); ?></th>
+                            <th class="col-xs-1"><?= lang("Depot"); ?></th>
                             <th class="col-xs-1"><?= lang("amount"); ?></th>
                             <th class="col-xs-3"><?= lang("note"); ?></th>
                             <th class="col-xs-2"><?= lang("created_by"); ?></th>
@@ -226,7 +228,7 @@ if ($this->input->post('end_date')) {
                         </tbody>
                         <tfoot class="dtFilter">
                         <tr class="active">
-                            <th></th><th></th><th></th><th></th><th></th><th></th>
+                            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
                             <th style="min-width:30px; width: 30px; text-align: center;"><i class="fa fa-chain"></i>
                             </th>
                         </tr>

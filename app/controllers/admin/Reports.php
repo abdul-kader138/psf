@@ -2812,7 +2812,7 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions();
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['warehouses'] = $this->site->getAllBrands();
         $this->data['users'] = $this->reports_model->getStaff();
         $this->data['categories'] = $this->reports_model->getExpenseCategories();
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('expenses')));
@@ -2841,10 +2841,11 @@ class Reports extends MY_Controller
         if ($pdf || $xls) {
 
             $this->db
-                ->select("date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
+                ->select("date, reference, {$this->db->dbprefix('expense_categories')}.name as category,{$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
                 ->from('expenses')
                 ->join('users', 'users.id=expenses.created_by', 'left')
                 ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
+                ->join('brands', 'brands.id=expenses.warehouse_id', 'left')
                 ->group_by('expenses.id');
 
             if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
@@ -2926,10 +2927,11 @@ class Reports extends MY_Controller
 
             $this->load->library('datatables');
             $this->datatables
-                ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
+                ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference, {$this->db->dbprefix('expense_categories')}.name as category,{$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
                 ->from('expenses')
                 ->join('users', 'users.id=expenses.created_by', 'left')
                 ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
+                ->join('brands', 'brands.id=expenses.warehouse_id', 'left')
                 ->group_by('expenses.id');
 
             if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {

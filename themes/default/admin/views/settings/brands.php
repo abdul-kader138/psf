@@ -14,14 +14,14 @@
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox}, {"bSortable": false, "mRender": img_hl}, null, null, null, {"bSortable": false}]
+            "aoColumns": [{"bSortable": false, "mRender": checkbox},  null, null, null, {"bSortable": false}]
         });
     });
 </script>
 <?= admin_form_open('system_settings/brand_actions', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
-        <h2 class="blue"><i class="fa-fw fa fa-th-list"></i><?= lang('brands'); ?></h2>
+        <h2 class="blue"><i class="fa-fw fa fa-th-list"></i><?= lang('Depots'); ?></h2>
 
         <div class="box-icon">
             <ul class="btn-tasks">
@@ -32,12 +32,12 @@
                     <ul class="dropdown-menu pull-right tasks-menus" role="menu" aria-labelledby="dLabel">
                         <li>
                             <a href="<?php echo admin_url('system_settings/add_brand'); ?>" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-plus"></i> <?= lang('add_brand') ?>
+                                <i class="fa fa-plus"></i> <?= lang('Add_Depot') ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?php echo admin_url('system_settings/import_brands'); ?>" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-plus"></i> <?= lang('import_brands') ?>
+                                <i class="fa fa-plus"></i> <?= lang('Import_Depots') ?>
                             </a>
                         </li>
                         <li>
@@ -48,7 +48,7 @@
                         <li class="divider"></li>
                         <li>
                             <a href="#" id="delete" data-action="delete">
-                                <i class="fa fa-trash-o"></i> <?= lang('delete_brands') ?>
+                                <i class="fa fa-trash-o"></i> <?= lang('Delete_Depot') ?>
                             </a>
                         </li>
                     </ul>
@@ -67,18 +67,15 @@
                                 <th style="min-width:30px; width: 30px; text-align: center;">
                                     <input class="checkbox checkth" type="checkbox" name="check"/>
                                 </th>
-                                <th style="min-width:40px; width: 40px; text-align: center;">
-                                    <?= lang("image"); ?>
-                                </th>
                                 <th><?= lang("code"); ?></th>
                                 <th><?= lang("name"); ?></th>
-                                <th><?= lang("slug"); ?></th>
+                                <th><?= lang("description"); ?></th>
                                 <th style="width:100px;"><?= lang("actions"); ?></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="6" class="dataTables_empty">
+                                <td colspan="5" class="dataTables_empty">
                                     <?= lang('loading_data_from_server') ?>
                                 </td>
                             </tr>

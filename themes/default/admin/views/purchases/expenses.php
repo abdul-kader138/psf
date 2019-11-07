@@ -24,7 +24,7 @@
             "aoColumns": [{
                 "bSortable": false,
                 "mRender": checkbox
-            }, {"mRender": fld}, null, null, {"mRender": currencyFormat}, null, null, {
+            }, {"mRender": fld}, null, null,null, {"mRender": currencyFormat}, null, null, {
                 "bSortable": false,
                 "mRender": attachment
             }, {"bSortable": false}],
@@ -46,8 +46,9 @@
             {column_number: 1, filter_default_label: "[<?=lang('date');?> (yyyy-mm-dd)]", filter_type: "text", data: []},
             {column_number: 2, filter_default_label: "[<?=lang('reference');?>]", filter_type: "text", data: []},
             {column_number: 3, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
-            {column_number: 5, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
-            {column_number: 6, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
+            {column_number: 4, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
+            {column_number: 7, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
         ], "footer");
 
     });
@@ -106,8 +107,9 @@
                                 <input class="checkbox checkft" type="checkbox" name="check"/>
                             </th>
                             <th class="col-xs-2"><?= lang("date"); ?></th>
-                            <th class="col-xs-2"><?= lang("reference"); ?></th>
-                            <th class="col-xs-2"><?= lang("category"); ?></th>
+                            <th class="col-xs-1"><?= lang("reference"); ?></th>
+                            <th class="col-xs-1"><?= lang("category"); ?></th>
+                            <th class="col-xs-2"><?= lang("Depot"); ?></th>
                             <th class="col-xs-1"><?= lang("amount"); ?></th>
                             <th class="col-xs-3"><?= lang("note"); ?></th>
                             <th class="col-xs-2"><?= lang("created_by"); ?></th>
@@ -126,6 +128,7 @@
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkft" type="checkbox" name="check"/>
                             </th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>

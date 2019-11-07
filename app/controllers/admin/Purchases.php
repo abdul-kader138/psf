@@ -1532,10 +1532,11 @@ class Purchases extends MY_Controller
         $this->load->library('datatables');
 
         $this->datatables
-            ->select($this->db->dbprefix('expenses') . ".id as id, date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment", false)
+            ->select($this->db->dbprefix('expenses') . ".id as id, date, reference, {$this->db->dbprefix('expense_categories')}.name as category, {$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment", false)
             ->from('expenses')
             ->join('users', 'users.id=expenses.created_by', 'left')
             ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
+            ->join('brands', 'brands.id=expenses.warehouse_id', 'left')
             ->group_by('expenses.id');
 
         if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
@@ -1607,11 +1608,11 @@ class Purchases extends MY_Controller
 
         if ($this->form_validation->run() == true && $this->purchases_model->addExpense($data)) {
             $this->session->set_flashdata('message', lang("expense_added"));
-            redirect($_SERVER["HTTP_REFERER"]);
+            admin_redirect("purchases/expenses");
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['exnumber'] = ''; //$this->site->getReference('ex');
-            $this->data['warehouses'] = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllBrands();
             $this->data['categories'] = $this->purchases_model->getExpenseCategories();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'purchases/add_expense', $this->data);
@@ -1673,7 +1674,7 @@ class Purchases extends MY_Controller
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['expense'] = $this->purchases_model->getExpenseByID($id);
-            $this->data['warehouses'] = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllBrands();
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['categories'] = $this->purchases_model->getExpenseCategories();
             $this->load->view($this->theme . 'purchases/edit_expense', $this->data);
@@ -1682,7 +1683,15 @@ class Purchases extends MY_Controller
 
     public function delete_expense($id = null)
     {
-        $this->sma->checkPermissions('delete', true);
+//        $this->sma->checkPermissions('delete', true);
+        if (!$this->Owner && !$this->Admin) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            admin_redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+
+
 
         if ($this->input->get('id')) {
             $id = $this->input->get('id');

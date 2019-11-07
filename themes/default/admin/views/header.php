@@ -329,6 +329,32 @@
 
                                             </ul>
                                         </li>
+
+                                        <li class="mm_purchases">
+                                            <a class="dropmenu" href="#">
+                                                <i class="fa fa-star"></i>
+                                                <span class="text"> <?= lang('Depot_Expense'); ?>
+                                    </span> <span class="chevron closed"></span>
+                                            </a>
+                                            <ul>
+                                                <li id="purchases_expenses">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('purchases/expenses'); ?>">
+                                                        <i class="fa fa-dollar"></i>
+                                                        <span class="text"> <?= lang('list_expenses'); ?></span>
+                                                    </a>
+                                                </li>
+                                                <li id="purchases_add_expense">
+                                                    <a   class="submenu"
+                                                       href="<?= admin_url('purchases/add_expense'); ?>"
+                                                       data-toggle="modal" data-target="#myModal">
+                                                        <i class="fa fa-plus-circle"></i>
+                                                        <span class="text"> <?= lang('add_expense'); ?></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
                                         <?php if ($Owner) { ?>
                                             <li class="mm_system_settings <?= strtolower($this->router->fetch_method()) == 'sales' ? '' : 'mm_pos' ?>">
                                                 <a class="dropmenu" href="#">
@@ -377,6 +403,19 @@
                                                         </a>
                                                     </li>
 
+                                                    <li id="system_settings_brands">
+                                                        <a
+                                                           href="<?= admin_url('system_settings/brands') ?>">
+                                                            <i class="fa fa-th-list"></i><span
+                                                                    class="text"> <?= lang('Depot'); ?></span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li id="system_settings_expense_categories">
+                                                        <a href="<?= admin_url('system_settings/expense_categories') ?>">
+                                                            <i class="fa fa-folder-open"></i><span class="text"> <?= lang('expense_categories'); ?></span>
+                                                        </a>
+                                                    </li>
                                                     <li id="system_settings_units">
                                                         <a href="<?= admin_url('system_settings/units') ?>">
                                                             <i class="fa fa-wrench"></i><span
@@ -448,6 +487,14 @@
                                                     </a>
                                                 </li>
 
+                                                <li id="reports_expenses">
+                                                    <a
+                                                       href="<?= admin_url('reports/expenses') ?>">
+                                                        <i class="fa fa-star"></i><span
+                                                                class="text"> <?= lang('expenses_report'); ?></span>
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </li>
                                         <?php
@@ -464,7 +511,8 @@
                                                 <ul>
                                                     <?php if ($GP['sales_target-zones']) { ?>
                                                         <li id="sales_target_zones">
-                                                            <a class="submenu" href="<?= admin_url('sales_target/zones'); ?>">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('sales_target/zones'); ?>">
                                                                 <i class="fa fa-heart-o"></i><span
                                                                         class="text"> <?= lang('Zones_Target'); ?></span>
                                                             </a>
@@ -481,12 +529,13 @@
                                                     <?php } ?>
 
                                                     <?php if ($GP['sales_target-sales_officer']) { ?>
-                                                    <li id="sales_target_sales_officer">
-                                                        <a class="submenu" href="<?= admin_url('sales_target/sales_officer'); ?>">
-                                                            <i class="fa fa-heart-o"></i><span
-                                                                    class="text"> <?= lang('Sales_Officer_Target'); ?></span>
-                                                        </a>
-                                                    </li>
+                                                        <li id="sales_target_sales_officer">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('sales_target/sales_officer'); ?>">
+                                                                <i class="fa fa-heart-o"></i><span
+                                                                        class="text"> <?= lang('Sales_Officer_Target'); ?></span>
+                                                            </a>
+                                                        </li>
                                                     <?php } ?>
                                                     <?php if ($GP['sales_target-sales_officer_add']) { ?>
                                                         <li id="sales_target_sales_officer_add">
@@ -513,7 +562,8 @@
 
                                                     <?php if ($GP['sales_achievement-sales_officer']) { ?>
                                                         <li id="sales_achievement_sales_officer">
-                                                            <a class="submenu" href="<?= admin_url('sales_achievement/sales_officer'); ?>">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('sales_achievement/sales_officer'); ?>">
                                                                 <i class="fa fa-heart-o"></i><span
                                                                         class="text"> <?= lang('Sales_Officer_Achievement'); ?></span>
                                                             </a>
@@ -525,6 +575,36 @@
                                                                href="<?= admin_url('sales_achievement/sales_officer_add'); ?>">
                                                                 <i class="fa fa-plus-circle"></i><span
                                                                         class="text"> <?= lang('Add_Achievement'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </li>
+                                        <?php } ?>
+
+
+                                        <?php if ( $GP['purchases-expenses']) { ?>
+                                            <li class="mm_purchases">
+                                                <a class="dropmenu" href="#">
+                                                    <i class="fa fa-star"></i>
+                                                    <span class="text"> <?= lang('Depot_Expense'); ?>
+                                    </span> <span class="chevron closed"></span>
+                                                </a>
+                                                <ul>
+                                                    <?php if ($GP['purchases-expenses']) { ?>
+                                                        <li id="purchases_expenses">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('purchases/expenses'); ?>">
+                                                                <i class="fa fa-dollar"></i><span
+                                                                        class="text"> <?= lang('list_expenses'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                        <li id="purchases_add_expense">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('purchases/add_expense'); ?>"
+                                                               data-toggle="modal" data-target="#myModal">
+                                                                <i class="fa fa-plus-circle"></i><span
+                                                                        class="text"> <?= lang('add_expense'); ?></span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
@@ -550,7 +630,7 @@
                                             </li>
                                         <?php } ?>
 
-                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-achievement_zone_wise'] || $GP['reports-achievement_zone'] || $GP['reports-achievement_sales_officer'] ||$GP['reports-target_zone'] || $GP['reports-target_zone_wise'] ) { ?>
+                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-achievement_zone_wise'] || $GP['reports-achievement_zone'] || $GP['reports-achievement_sales_officer'] || $GP['reports-target_zone'] || $GP['reports-target_zone_wise']) { ?>
                                             <li class="mm_reports">
                                                 <a class="dropmenu" href="#">
                                                     <i class="fa fa-bar-chart-o"></i>
@@ -567,12 +647,12 @@
                                                         </li>
                                                     <?php }
                                                     if ($GP['reports-target_zone']) { ?>
-                                                            <li id="reports_target_zone">
-                                                                <a href="<?= admin_url('reports/target_zone') ?>">
-                                                                    <i class="fa fa-line-chart"></i><span
-                                                                            class="text"> <?= lang('Zone_Wise_Target'); ?></span>
-                                                                </a>
-                                                            </li>
+                                                        <li id="reports_target_zone">
+                                                            <a href="<?= admin_url('reports/target_zone') ?>">
+                                                                <i class="fa fa-line-chart"></i><span
+                                                                        class="text"> <?= lang('Zone_Wise_Target'); ?></span>
+                                                            </a>
+                                                        </li>
                                                     <?php }
                                                     if ($GP['reports-sales_officer_zone']) { ?>
                                                         <li id="reports_sales_officer_zone">
@@ -696,7 +776,8 @@
                                                                         class="text"> <?= lang('suppliers_report'); ?></span>
                                                             </a>
                                                         </li>
-                                                    <?php } ?>
+                                                    <?php }?>
+
                                                 </ul>
                                             </li>
                                         <?php } ?>

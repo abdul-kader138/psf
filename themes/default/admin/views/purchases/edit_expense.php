@@ -36,9 +36,9 @@
             </div>
 
             <div class="form-group">
-                <?= lang("warehouse", "warehouse"); ?>
+                <?= lang("Depot", "Depot"); ?>
                 <?php
-                $wh[''] = lang("select") . ' ' . lang("warehouse");
+                $wh[''] = lang("select") . ' ' . lang("Depot");
                 foreach ($warehouses as $warehouse) {
                     $wh[$warehouse->id] = $warehouse->name;
                 }
