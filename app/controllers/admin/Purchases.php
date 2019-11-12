@@ -1552,7 +1552,7 @@ class Purchases extends MY_Controller
         $expense = $this->purchases_model->getExpenseByID($id);
         $this->data['user'] = $this->site->getUser($expense->created_by);
         $this->data['category'] = $expense->category_id ? $this->purchases_model->getExpenseCategoryByID($expense->category_id) : NULL;
-        $this->data['warehouse'] = $expense->warehouse_id ? $this->site->getWarehouseByID($expense->warehouse_id) : NULL;
+        $this->data['warehouse'] = $expense->warehouse_id ? $this->site->getBrandByID($expense->warehouse_id) : NULL;
         $this->data['expense'] = $expense;
         $this->data['page_title'] = $this->lang->line("expense_note");
         $this->load->view($this->theme . 'purchases/expense_note', $this->data);
@@ -1767,6 +1767,275 @@ class Purchases extends MY_Controller
             redirect($_SERVER["HTTP_REFERER"]);
         }
     }
+
+
+
+    public function depot_sales($id = null)
+    {
+        $this->sma->checkPermissions();
+
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('Depot_Sales')));
+        $meta = array('page_title' => lang('Depot_Sales'), 'bc' => $bc);
+        $this->page_construct('purchases/depot_sales', $meta, $this->data);
+    }
+
+    public function getDepotSales()
+    {
+        $this->sma->checkPermissions('expenses');
+
+        $detail_link = anchor('admin/purchases/sales_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('Sales_Note'), 'data-toggle="modal" data-target="#myModal2"');
+        $edit_link = anchor('admin/purchases/edit_sales/$1', '<i class="fa fa-edit"></i> ' . lang('Edit'), 'data-toggle="modal" data-target="#myModal"');
+        //$attachment_link = '<a href="'.base_url('assets/uploads/$1').'" target="_blank"><i class="fa fa-chain"></i></a>';
+        $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line("Delete") . "</b>' data-content=\"<p>"
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete_sales/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('Delete') . "</a>";
+        $action = '<div class="text-center"><div class="btn-group text-left">'
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right" role="menu">
+            <li>' . $detail_link . '</li>
+            <li>' . $edit_link . '</li>
+            <li>' . $delete_link . '</li>
+        </ul>
+    </div></div>';
+
+        $this->load->library('datatables');
+
+        $this->datatables
+            ->select($this->db->dbprefix('depot_sales') . ".id as id, date, reference,  {$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment", false)
+            ->from('depot_sales')
+            ->join('users', 'users.id=depot_sales.created_by', 'left')
+            ->join('expense_categories', 'expense_categories.id=depot_sales.category_id', 'left')
+            ->join('brands', 'brands.id=depot_sales.warehouse_id', 'left')
+            ->group_by('depot_sales.id');
+
+        if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
+            $this->datatables->where('created_by', $this->session->userdata('user_id'));
+        }
+        //$this->datatables->edit_column("attachment", $attachment_link, "attachment");
+        $this->datatables->add_column("Actions", $action, "id");
+        echo $this->datatables->generate();
+    }
+
+    public function sales_note($id = null)
+    {
+        $expense = $this->purchases_model->getSalesByID($id);
+        $this->data['user'] = $this->site->getUser($expense->created_by);
+        $this->data['warehouse'] = $expense->warehouse_id ? $this->site->getBrandByID($expense->warehouse_id) : NULL;
+        $this->data['expense'] = $expense;
+        $this->data['page_title'] = $this->lang->line("expense_note");
+        $this->load->view($this->theme . 'purchases/sales_note', $this->data);
+    }
+
+    public function add_sales()
+    {
+        $this->sma->checkPermissions('expenses', true);
+        $this->load->helper('security');
+
+        //$this->form_validation->set_rules('reference', lang("reference"), 'required');
+        $this->form_validation->set_rules('amount', lang("amount"), 'required');
+        $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');
+        if ($this->form_validation->run() == true) {
+            if ($this->Owner || $this->Admin) {
+                $date = $this->sma->fld(trim($this->input->post('date')));
+            } else {
+                $date = date('Y-m-d H:i:s');
+            }
+            $data = array(
+                'date' => $date,
+                'reference' => $this->input->post('reference') ? $this->input->post('reference') : $this->site->getReference('ex'),
+                'amount' => $this->input->post('amount'),
+                'created_by' => $this->session->userdata('user_id'),
+                'note' => $this->input->post('note', true),
+                'category_id' => $this->input->post('category', true),
+                'warehouse_id' => $this->input->post('warehouse', true),
+            );
+
+            if ($_FILES['userfile']['size'] > 0) {
+                $this->load->library('upload');
+                $config['upload_path'] = $this->upload_path;
+                $config['allowed_types'] = $this->digital_file_types;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload()) {
+                    $error = $this->upload->display_errors();
+                    $this->session->set_flashdata('error', $error);
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+                $photo = $this->upload->file_name;
+                $data['attachment'] = $photo;
+            }
+
+            //$this->sma->print_arrays($data);
+
+        } elseif ($this->input->post('add_sales')) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+        if ($this->form_validation->run() == true && $this->purchases_model->addSales($data)) {
+            $this->session->set_flashdata('message', lang("Info_Added"));
+            admin_redirect("purchases/depot_sales");
+        } else {
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['exnumber'] = ''; //$this->site->getReference('ex');
+            $this->data['warehouses'] = $this->site->getAllBrands();
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'purchases/add_sales', $this->data);
+        }
+    }
+
+    public function edit_sales($id = null)
+    {
+        $this->sma->checkPermissions('edit', true);
+        $this->load->helper('security');
+        if ($this->input->get('id')) {
+            $id = $this->input->get('id');
+        }
+
+        $this->form_validation->set_rules('reference', lang("reference"), 'required');
+        $this->form_validation->set_rules('amount', lang("amount"), 'required');
+        $this->form_validation->set_rules('userfile', lang("attachment"), 'xss_clean');
+        if ($this->form_validation->run() == true) {
+            if ($this->Owner || $this->Admin) {
+                $date = $this->sma->fld(trim($this->input->post('date')));
+            } else {
+                $date = date('Y-m-d H:i:s');
+            }
+            $data = array(
+                'date' => $date,
+                'reference' => $this->input->post('reference'),
+                'amount' => $this->input->post('amount'),
+                'note' => $this->input->post('note', true),
+                'warehouse_id' => $this->input->post('warehouse', true),
+            );
+            if ($_FILES['userfile']['size'] > 0) {
+                $this->load->library('upload');
+                $config['upload_path'] = $this->upload_path;
+                $config['allowed_types'] = $this->digital_file_types;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload()) {
+                    $error = $this->upload->display_errors();
+                    $this->session->set_flashdata('error', $error);
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+                $photo = $this->upload->file_name;
+                $data['attachment'] = $photo;
+            }
+
+            //$this->sma->print_arrays($data);
+
+        } elseif ($this->input->post('edit_sales')) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+        if ($this->form_validation->run() == true && $this->purchases_model->updateSales($id, $data)) {
+            $this->session->set_flashdata('message', lang("Info_Updated"));
+            admin_redirect("purchases/depot_sales");
+        } else {
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['expense'] = $this->purchases_model->getSalesByID($id);
+            $this->data['warehouses'] = $this->site->getAllBrands();
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'purchases/edit_sales', $this->data);
+        }
+    }
+
+    public function delete_sales($id = null)
+    {
+//        $this->sma->checkPermissions('delete', true);
+        if (!$this->Owner && !$this->Admin) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            admin_redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+
+
+
+        if ($this->input->get('id')) {
+            $id = $this->input->get('id');
+        }
+        $expense = $this->purchases_model->getSalesByID($id);
+        if ($this->purchases_model->deleteSales($id)) {
+            if ($expense->attachment) {
+                unlink($this->upload_path . $expense->attachment);
+            }
+            $this->sma->send_json(array('error' => 0, 'msg' => lang("Info_Deleted")));
+        }
+    }
+
+    public function sales_actions()
+    {
+        if (!$this->Owner && !$this->GP['bulk_actions']) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+        $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
+
+        if ($this->form_validation->run() == true) {
+
+            if (!empty($_POST['val'])) {
+                if ($this->input->post('form_action') == 'delete') {
+                    $this->sma->checkPermissions('delete');
+                    foreach ($_POST['val'] as $id) {
+                        $this->purchases_model->deleteExpense($id);
+                    }
+                    $this->session->set_flashdata('message', $this->lang->line("expenses_deleted"));
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+
+                if ($this->input->post('form_action') == 'export_excel') {
+
+                    $this->load->library('excel');
+                    $this->excel->setActiveSheetIndex(0);
+                    $this->excel->getActiveSheet()->setTitle(lang('sales'));
+                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
+                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference'));
+                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('amount'));
+                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('note'));
+                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('created_by'));
+
+                    $row = 2;
+                    foreach ($_POST['val'] as $id) {
+                        $expense = $this->purchases_model->getSalesByID($id);
+                        $user = $this->site->getUser($expense->created_by);
+                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($expense->date));
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $expense->reference);
+                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $this->sma->formatMoney($expense->amount));
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $expense->note);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $user->first_name . ' ' . $user->last_name);
+                        $row++;
+                    }
+
+                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                    $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(35);
+                    $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+                    $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $filename = 'sales_' . date('Y_m_d_H_i_s');
+                    $this->load->helper('excel');
+                    create_excel($this->excel, $filename);
+                }
+            } else {
+                $this->session->set_flashdata('error', $this->lang->line("No_Sales_Selected"));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        } else {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+    }
+
 
     public function view_return($id = null)
     {

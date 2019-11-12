@@ -1332,5 +1332,19 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getAllZoneSalesOfficerById($bu,$zone_id) {
+        $this->db->join('users', 'users.id=sales_officer.user_id', 'left')->order_by('users.username','asc');
+        $q = $this->db->get_where('sales_officer', array('bu' => $bu,'zone_id'=>$zone_id));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
+
+
 
 }

@@ -627,4 +627,40 @@ class Purchases_model extends CI_Model
         }
     }
 
+    public function addSales($data = array())
+    {
+        if ($this->db->insert('depot_sales', $data)) {
+            if ($this->site->getReference('ex') == $data['reference']) {
+                $this->site->updateReference('ex');
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    public function getSalesByID($id)
+    {
+        $q = $this->db->get_where('depot_sales', array('id' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+    public function updateSales($id, $data = array())
+    {
+        if ($this->db->update('depot_sales', $data, array('id' => $id))) {
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteSales($id)
+    {
+        if ($this->db->delete('depot_sales', array('id' => $id))) {
+            return true;
+        }
+        return FALSE;
+    }
+
 }

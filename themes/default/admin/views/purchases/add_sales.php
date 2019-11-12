@@ -4,10 +4,10 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-2x">&times;</i>
             </button>
-            <h4 class="modal-title" id="myModalLabel"><?php echo lang('add_expense'); ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?php echo lang('Add_Sales'); ?></h4>
         </div>
         <?php $attrib = array('data-toggle' => 'validator', 'role' => 'form');
-        echo admin_form_open_multipart("purchases/add_expense", $attrib); ?>
+        echo admin_form_open_multipart("purchases/add_sales", $attrib); ?>
         <div class="modal-body">
             <p><?= lang('enter_info'); ?></p>
 
@@ -24,18 +24,6 @@
                 <?= form_input('reference', (isset($_POST['reference']) ? $_POST['reference'] : $exnumber), 'class="form-control tip" id="reference"'); ?>
             </div>
 
-            <div class="form-group">
-                <?= lang('category', 'category'); ?>
-                <?php
-                $ct[''] = lang('select').' '.lang('category');
-                if ($categories) {
-                    foreach ($categories as $category) {
-                        $ct[$category->id] = $category->name;
-                    }
-                }
-                ?>
-                <?= form_dropdown('category', $ct, set_value('category'), 'class="form-control tip" id="category"'); ?>
-            </div>
 
             <div class="form-group">
                 <?= lang("Depot", "Depot"); ?>
@@ -67,7 +55,7 @@
 
         </div>
         <div class="modal-footer">
-            <?php echo form_submit('add_expense', lang('add_expense'), 'class="btn btn-primary"'); ?>
+            <?php echo form_submit('add_sales', lang('Add'), 'class="btn btn-primary"'); ?>
         </div>
     </div>
     <?php echo form_close(); ?>

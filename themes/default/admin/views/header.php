@@ -333,7 +333,7 @@
                                         <li class="mm_purchases">
                                             <a class="dropmenu" href="#">
                                                 <i class="fa fa-star"></i>
-                                                <span class="text"> <?= lang('Depot_Expense'); ?>
+                                                <span class="text"> <?= lang('Depot_Transaction'); ?>
                                     </span> <span class="chevron closed"></span>
                                             </a>
                                             <ul>
@@ -345,11 +345,27 @@
                                                     </a>
                                                 </li>
                                                 <li id="purchases_add_expense">
-                                                    <a   class="submenu"
+                                                    <a class="submenu"
                                                        href="<?= admin_url('purchases/add_expense'); ?>"
                                                        data-toggle="modal" data-target="#myModal">
                                                         <i class="fa fa-plus-circle"></i>
                                                         <span class="text"> <?= lang('add_expense'); ?></span>
+                                                    </a>
+                                                </li>
+
+                                                <li id="purchases_depot_sales">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('purchases/depot_sales'); ?>">
+                                                        <i class="fa fa-dollar"></i>
+                                                        <span class="text"> <?= lang('Depot_Sales'); ?></span>
+                                                    </a>
+                                                </li>
+                                                <li id="purchases_add_sales">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('purchases/add_sales'); ?>"
+                                                       data-toggle="modal" data-target="#myModal">
+                                                        <i class="fa fa-plus-circle"></i>
+                                                        <span class="text"> <?= lang('Add_Sales'); ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -405,7 +421,7 @@
 
                                                     <li id="system_settings_brands">
                                                         <a
-                                                           href="<?= admin_url('system_settings/brands') ?>">
+                                                                href="<?= admin_url('system_settings/brands') ?>">
                                                             <i class="fa fa-th-list"></i><span
                                                                     class="text"> <?= lang('Depot'); ?></span>
                                                         </a>
@@ -413,7 +429,8 @@
 
                                                     <li id="system_settings_expense_categories">
                                                         <a href="<?= admin_url('system_settings/expense_categories') ?>">
-                                                            <i class="fa fa-folder-open"></i><span class="text"> <?= lang('expense_categories'); ?></span>
+                                                            <i class="fa fa-folder-open"></i><span
+                                                                    class="text"> <?= lang('expense_categories'); ?></span>
                                                         </a>
                                                     </li>
                                                     <li id="system_settings_units">
@@ -489,7 +506,7 @@
 
                                                 <li id="reports_expenses">
                                                     <a
-                                                       href="<?= admin_url('reports/expenses') ?>">
+                                                            href="<?= admin_url('reports/expenses') ?>">
                                                         <i class="fa fa-star"></i><span
                                                                 class="text"> <?= lang('expenses_report'); ?></span>
                                                     </a>
@@ -583,11 +600,11 @@
                                         <?php } ?>
 
 
-                                        <?php if ( $GP['purchases-expenses']) { ?>
+                                        <?php if ($GP['purchases-expenses']) { ?>
                                             <li class="mm_purchases">
                                                 <a class="dropmenu" href="#">
                                                     <i class="fa fa-star"></i>
-                                                    <span class="text"> <?= lang('Depot_Expense'); ?>
+                                                    <span class="text"> <?= lang('Depot_Transaction'); ?>
                                     </span> <span class="chevron closed"></span>
                                                 </a>
                                                 <ul>
@@ -776,7 +793,7 @@
                                                                         class="text"> <?= lang('suppliers_report'); ?></span>
                                                             </a>
                                                         </li>
-                                                    <?php }?>
+                                                    <?php } ?>
 
                                                 </ul>
                                             </li>

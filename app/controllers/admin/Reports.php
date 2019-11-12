@@ -272,7 +272,7 @@ class Reports extends MY_Controller
 
         $zone_details = $this->site->getZoneById($zone_id);
         $all_cate = $this->site->getAllZoneCategory($zone_details->bu);
-        $all_officers = $this->site->getAllZoneSalesOfficer($zone_details->bu);
+        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu,$zone_id);
         $all_cate_details = array();
         foreach ($all_cate as $cate) {
             $all_cate_details[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericTarget($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);
@@ -536,7 +536,8 @@ class Reports extends MY_Controller
 
         $zone_details = $this->site->getZoneById($zone_id);
         $all_cate = $this->site->getAllZoneCategory($zone_details->bu);
-        $all_officers = $this->site->getAllZoneSalesOfficer($zone_details->bu);
+//        $all_officers = $this->site->getAllZoneSalesOfficer($zone_details->bu);
+        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu,$zone_id);
         $all_cate_details = array();
         foreach ($all_cate as $cate) {
             $all_cate_details[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericTarget($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);

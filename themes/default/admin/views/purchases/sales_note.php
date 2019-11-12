@@ -18,7 +18,7 @@
             <div class="clearfix"></div>
             <div class="row padding10">
                 <div class="col-xs-5">
-                    <h2 class=""><?= $Settings->site_name." (Expense Info)"; ?></h2>
+                    <h2 class=""><?= $Settings->site_name." (Sales Info)"; ?></h2>
 
                     <div class="clearfix"></div>
                 </div>
@@ -37,12 +37,6 @@
                         <td><strong><?= lang("reference"); ?></strong></td>
                         <td><strong class="text-right"><?php echo $expense->reference; ?></strong></td>
                     </tr>
-                    <?php if ($category) { ?>
-                    <tr>
-                        <td><strong><?= lang("category"); ?></strong></td>
-                        <td><strong class="text-right"><?php echo $category->name; ?></strong></td>
-                    </tr>
-                    <?php } ?>
                     <?php if ($warehouse) { ?>
                     <tr>
                         <td><strong><?= lang("Depot"); ?></strong></td>
