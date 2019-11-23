@@ -98,6 +98,15 @@ class Sales_target_model extends CI_Model
         return FALSE;
     }
 
+    public function getSalesOfficerZoneTarget($month, $year, $category_id, $zone_id,$bu,$user_id)
+    {
+        $q = $this->db->get_where('sales_officer_target', array('month' => $month, 'year' => $year, 'category_id' => $category_id, 'zone_id'=>$zone_id,'business_unit' => $bu,'user_code'=>$user_id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
     public function getUserByCode($id)
     {
         $q = $this->db->get_where('users', array('username' => $id), 1);

@@ -330,7 +330,7 @@ class Sales_target extends MY_Controller
 
                         $bill_details=null;
 
-                        $bill_details = $this->sales_target_model->getSalesOfficerTarget($month, $year, $category_id,$zone_id, $bu,$csv_pr['user_code']);
+                        $bill_details = $this->sales_target_model->getSalesOfficerZoneTarget($month, $year, $category_id,$zone_id, $bu,$csv_pr['user_code']);
                         if ($bill_details) {
                             $this->session->set_flashdata('error', lang("Target_already_exist"));
                             redirect($_SERVER["HTTP_REFERER"]);
@@ -374,7 +374,7 @@ class Sales_target extends MY_Controller
 
 
         if ($this->form_validation->run() == true && $this->sales_target_model->addSalesOfficerTarget($target)) {
-            $this->session->set_flashdata('message', lang("Info_Added"));
+            $this->session->set_flashdata('message', lang("Info_added_successfully"));
             admin_redirect("sales_target/sales_officer");
         } else {
 
