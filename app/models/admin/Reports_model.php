@@ -676,7 +676,7 @@ class Reports_model extends CI_Model
             ->select("zone_name, um,zone_code")->select_sum('target_quantity')->select_sum('dealer')
             ->join('categories', 'zones_target.category_id = categories.id', 'left')
             ->where('month', $month_name)->where('year', $year)->where('categories.name', $category)
-            ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(30);
+            ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(40);
         $q = $this->db->get('zones_target');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -693,7 +693,7 @@ class Reports_model extends CI_Model
             ->select("zone_name, um,zone_code,categories.name,dealer")->select_sum('target_quantity')
             ->join('categories', 'zones_target.category_id = categories.id', 'left')
             ->where('month', $month_name)->where('year', $year)->where('bu',$bu)
-            ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(30);
+            ->group_by('zones_target.zone_code,zones_target.month,zones_target.year')->order_by('zone_name', 'asc')->limit(40);
         $q = $this->db->get('zones_target');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {

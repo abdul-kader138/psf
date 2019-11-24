@@ -3991,7 +3991,7 @@ class Reports extends MY_Controller
         $init_c = 0;
         $array_length_c = count($info);
         $output = "{ name : 'Target', data : ";
-        $init_c = $init_c + 1;
+//        $init_c = $init_c + 1;
         $output .= "[";
         foreach ($info as $value) {
             $init_c = $init_c + 1;
@@ -4011,7 +4011,7 @@ class Reports extends MY_Controller
         $init_c = 0;
         $array_length_c = count($info);
         $output = "{ name : 'Actual', data : ";
-        $init_c = $init_c + 1;
+//        $init_c = $init_c + 1;
         $output .= "[";
         foreach ($info as $value) {
             $init_c = $init_c + 1;

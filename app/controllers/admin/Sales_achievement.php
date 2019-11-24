@@ -99,7 +99,7 @@ class Sales_achievement extends MY_Controller
 
                         $bill_details = null;
 
-                        $bill_details = $this->sales_achievement_model->getSalesOfficerAchievement($month, $year, $category_id, $zone_id, $bu,$csv_pr['user_code']);
+                        $bill_details = $this->sales_achievement_model->getSalesOfficerAchievementZone($month, $year, $category_id, $zone_id, $bu,$csv_pr['user_code']);
                         if ($bill_details) {
                             $this->session->set_flashdata('error', lang("Data_already_exist"));
                             redirect($_SERVER["HTTP_REFERER"]);

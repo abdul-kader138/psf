@@ -25,6 +25,16 @@ class Sales_achievement_model extends CI_Model
     }
 
 
+    public function getSalesOfficerAchievementZone($month, $year, $category_id, $zone_id,$bu,$user_id)
+    {
+        $q = $this->db->get_where('sales_officer_achievement', array('month' => $month, 'year' => $year,'zone_id'=>$zone_id, 'category_id' => $category_id, 'business_unit' => $bu,'user_code'=>$user_id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
     public function getUserByCode($id)
     {
         $q = $this->db->get_where('users', array('username' => $id), 1);

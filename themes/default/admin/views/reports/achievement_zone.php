@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
     <script src="<?= $assets; ?>js/hc/highcharts.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
