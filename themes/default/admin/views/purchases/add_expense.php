@@ -25,7 +25,7 @@
             </div>
 
             <div class="form-group">
-                <?= lang('category', 'category'); ?>
+                <?= lang('Expense_Category', 'Expense_Category'); ?>
                 <?php
                 $ct[''] = lang('select').' '.lang('category');
                 if ($categories) {

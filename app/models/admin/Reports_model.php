@@ -916,5 +916,39 @@ class Reports_model extends CI_Model
         return FALSE;
     }
 
+    public function getDepotAllExpense($month_name,$year,$bu)
+    {
+        $this->db
+            ->select("brands.name")->select_sum('amount')
+            ->join('expense_categories', 'expenses.category_id = expense_categories.id', 'left')
+            ->join('brands', 'expenses.warehouse_id = brands.id', 'left')
+            ->where('month', $month_name)->where('year', $year)
+            ->group_by('expenses.month,expenses.year,expenses.warehouse_id')->order_by('brands.name', 'asc')->limit(40);
+        $q = $this->db->get('expenses');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 
+
+    public function getDepotAllIncome($month_name,$year,$bu)
+    {
+        $this->db
+            ->select("brands.name")->select_sum('sales_qty')
+            ->join('brands', 'depot_sales.warehouse_id = brands.id', 'left')
+            ->where('month', $month_name)->where('year', $year)
+            ->group_by('depot_sales.month,depot_sales.year,depot_sales.warehouse_id')->order_by('brands.name', 'asc')->limit(40);
+        $q = $this->db->get('depot_sales');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 }

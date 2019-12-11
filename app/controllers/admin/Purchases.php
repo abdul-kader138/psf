@@ -1532,7 +1532,7 @@ class Purchases extends MY_Controller
         $this->load->library('datatables');
 
         $this->datatables
-            ->select($this->db->dbprefix('expenses') . ".id as id, date, reference, {$this->db->dbprefix('expense_categories')}.name as category, {$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment", false)
+            ->select($this->db->dbprefix('expenses') . ".id as id, date, reference, {$this->db->dbprefix('expense_categories')}.name as category, {$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user,year", false)
             ->from('expenses')
             ->join('users', 'users.id=expenses.created_by', 'left')
             ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
@@ -1569,8 +1569,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1580,6 +1584,8 @@ class Purchases extends MY_Controller
                 'note' => $this->input->post('note', true),
                 'category_id' => $this->input->post('category', true),
                 'warehouse_id' => $this->input->post('warehouse', true),
+                'month' => $month,
+                'year' => $year,
             );
 
             if ($_FILES['userfile']['size'] > 0) {
@@ -1633,8 +1639,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1643,6 +1653,8 @@ class Purchases extends MY_Controller
                 'note' => $this->input->post('note', true),
                 'category_id' => $this->input->post('category', true),
                 'warehouse_id' => $this->input->post('warehouse', true),
+                'month' => $month,
+                'year' => $year,
             );
             if ($_FILES['userfile']['size'] > 0) {
                 $this->load->library('upload');
@@ -1804,7 +1816,7 @@ class Purchases extends MY_Controller
         $this->load->library('datatables');
 
         $this->datatables
-            ->select($this->db->dbprefix('depot_sales') . ".id as id, date, reference,  {$this->db->dbprefix('brands')}.name as bname, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment", false)
+            ->select($this->db->dbprefix('depot_sales') . ".id as id, date, reference,  {$this->db->dbprefix('brands')}.name as bname, sales_qty, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, {$this->db->dbprefix('depot_sales')}.year", false)
             ->from('depot_sales')
             ->join('users', 'users.id=depot_sales.created_by', 'left')
             ->join('expense_categories', 'expense_categories.id=depot_sales.category_id', 'left')
@@ -1840,17 +1852,23 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             }
             $data = array(
                 'date' => $date,
                 'reference' => $this->input->post('reference') ? $this->input->post('reference') : $this->site->getReference('ex'),
-                'amount' => $this->input->post('amount'),
+                'sales_qty' => $this->input->post('amount'),
                 'created_by' => $this->session->userdata('user_id'),
                 'note' => $this->input->post('note', true),
                 'category_id' => $this->input->post('category', true),
                 'warehouse_id' => $this->input->post('warehouse', true),
+                'month' => $month,
+                'year' => $year,
             );
 
             if ($_FILES['userfile']['size'] > 0) {
@@ -1903,15 +1921,21 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
+                $month = date("m",strtotime($date));
+                $year = date("Y",strtotime($date));
             }
             $data = array(
                 'date' => $date,
                 'reference' => $this->input->post('reference'),
-                'amount' => $this->input->post('amount'),
+                'sales_qty' => $this->input->post('amount'),
                 'note' => $this->input->post('note', true),
                 'warehouse_id' => $this->input->post('warehouse', true),
+                'month' => $month,
+                'year' => $year,
             );
             if ($_FILES['userfile']['size'] > 0) {
                 $this->load->library('upload');

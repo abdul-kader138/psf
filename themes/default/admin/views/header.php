@@ -504,14 +504,12 @@
                                                     </a>
                                                 </li>
 
-                                                <li id="reports_expenses">
-                                                    <a
-                                                            href="<?= admin_url('reports/expenses') ?>">
-                                                        <i class="fa fa-star"></i><span
-                                                                class="text"> <?= lang('expenses_report'); ?></span>
+                                                <li id="reports_depot_costing">
+                                                    <a href="<?= admin_url('reports/depot_costing') ?>">
+                                                        <i class="fa fa-line-chart"></i><span
+                                                                class="text"> <?= lang('Depot_Costing'); ?></span>
                                                     </a>
                                                 </li>
-
                                             </ul>
                                         </li>
                                         <?php

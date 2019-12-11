@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group">
-                <?= lang("amount", "amount"); ?>
+                <?= lang("Quantity", "Quantity"); ?>
                 <input name="amount" type="number" id="amount" value="" class="pa form-control kb-pad amount"
                        required="required"/>
             </div>

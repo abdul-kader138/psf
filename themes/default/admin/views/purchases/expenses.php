@@ -24,10 +24,7 @@
             "aoColumns": [{
                 "bSortable": false,
                 "mRender": checkbox
-            }, {"mRender": fld}, null, null,null, {"mRender": currencyFormat}, null, null, {
-                "bSortable": false,
-                "mRender": attachment
-            }, {"bSortable": false}],
+            }, {"mRender": fld}, null, null,null, {"mRender": currencyFormat}, null, null, null, {"bSortable": false}],
             'fnRowCallback': function (nRow, aData, iDisplayIndex) {
                 var oSettings = oTable.fnSettings();
                 nRow.id = aData[0];
@@ -49,6 +46,7 @@
             {column_number: 4, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
             {column_number: 6, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
             {column_number: 7, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
+            {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
         ], "footer");
 
     });
@@ -113,7 +111,7 @@
                             <th class="col-xs-1"><?= lang("amount"); ?></th>
                             <th class="col-xs-3"><?= lang("note"); ?></th>
                             <th class="col-xs-2"><?= lang("created_by"); ?></th>
-                            <th style="min-width:30px; width: 30px; text-align: center;"><i class="fa fa-chain"></i>
+                            <th style="min-width:30px; width: 30px; text-align: center;">Year</i>
                             </th>
                             <th style="width:100px;"><?= lang("actions"); ?></th>
                         </tr>
@@ -135,7 +133,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th style="min-width:30px; width: 30px; text-align: center;"><i class="fa fa-chain"></i>
+                            <th style="min-width:30px; width: 30px; text-align: center;"></i>
                             </th>
                             <th style="width:100px; text-align: center;"><?= lang("actions"); ?></th>
                         </tr>

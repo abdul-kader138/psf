@@ -36,8 +36,8 @@
             </div>
 
             <div class="form-group">
-                <?= lang("amount", "amount"); ?>
-                <input name="amount" type="number" id="amount" value="<?= $this->sma->formatDecimal($expense->amount); ?>"
+                <?= lang("Quantity", "Quantity"); ?>
+                <input name="amount" type="number" id="amount" value="<?= $this->sma->formatDecimal($expense->sales_qty); ?>"
                        class="pa form-control kb-pad amount" required="required"/>
             </div>
 

@@ -1077,6 +1077,7 @@ class Site extends CI_Model
     }
 
     public function getAllBrands() {
+        $this->db->order_by('brands.name', 'asc');
         $q = $this->db->get("brands");
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {

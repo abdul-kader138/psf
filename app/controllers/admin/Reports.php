@@ -272,7 +272,7 @@ class Reports extends MY_Controller
 
         $zone_details = $this->site->getZoneById($zone_id);
         $all_cate = $this->site->getAllZoneCategory($zone_details->bu);
-        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu,$zone_id);
+        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu, $zone_id);
         $all_cate_details = array();
         foreach ($all_cate as $cate) {
             $all_cate_details[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericTarget($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);
@@ -500,7 +500,7 @@ class Reports extends MY_Controller
         $getAllZones = $this->createZoneData($getAllZone);
         $allOfficerTargets = $this->createChartDataZone($getAllZoneTarget);
         $allOfficerSales = $this->createChartDataZoneSales($getAllZoneSales);
-        $info=$allOfficerTargets.",".$allOfficerSales;
+        $info = $allOfficerTargets . "," . $allOfficerSales;
         $this->data['allZones'] = $getAllZones;
         $this->data['info'] = $info;
         $this->data['totals_qty'] = $this->reports_model->getZoneCategorySalesQty($month_name, $year_name, $bu_id);
@@ -537,7 +537,7 @@ class Reports extends MY_Controller
         $zone_details = $this->site->getZoneById($zone_id);
         $all_cate = $this->site->getAllZoneCategory($zone_details->bu);
 //        $all_officers = $this->site->getAllZoneSalesOfficer($zone_details->bu);
-        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu,$zone_id);
+        $all_officers = $this->site->getAllZoneSalesOfficerById($zone_details->bu, $zone_id);
         $all_cate_details = array();
         foreach ($all_cate as $cate) {
             $all_cate_details[$cate->name] = $this->reports_model->getZoneSalesOfficerGenericTarget($month_name, $year_name, $zone_id, $zone_details->bu, $cate->name);
@@ -569,6 +569,7 @@ class Reports extends MY_Controller
         $this->page_construct('reports/achievement_sales_officer', $meta, $this->data);
 
     }
+
     function products()
     {
         $this->sma->checkPermissions();
@@ -4100,6 +4101,69 @@ class Reports extends MY_Controller
 
         return $output;
 
+    }
+
+    public function depot_costing($month = NULL, $year = Null)
+    {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-target_zone'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
+        $month_name = date('m');
+        $year_name = date('Y');
+        $convert = DateTime::createFromFormat('!m', $month_name);
+        $month_name = $convert->format('F');
+
+        $month_name = $this->input->post('month') ? date("m", strtotime($this->input->post('month'))) : $month_name;
+        $year_name = $this->input->post('year') ? $this->input->post('year') : $year_name;
+        $bu_id = $this->input->post('bu') ? $this->input->post('bu') : NULL;
+        $depot_expense = $this->reports_model->getDepotAllExpense($month_name, $year_name, $bu_id);
+        $depot_income = $this->reports_model->getDepotAllIncome($month_name, $year_name, $bu_id);
+        $this->data['m1'] = $this->input->post('month') . ", " . $year_name;
+        $getAllZone = $this->site->getAllBrands();
+        $getAllZoneTarget = $this->getAllDepotCosting($getAllZone, $depot_expense, $depot_income);
+        $this->data['m5bs'] = $getAllZoneTarget;
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('Depot_Costing')));
+        $meta = array('page_title' => lang('Depot_Costing'), 'bc' => $bc);
+        $this->page_construct('reports/depot_costing', $meta, $this->data);
+
+    }
+
+
+    public
+    function getAllDepotCosting($getAllZone, $depot_expense, $depot_income)
+    {
+        $costHistory = array();
+        foreach ($getAllZone as $value) {
+            $temp = array();
+            $qty = 0;
+            $total_expense = 0;
+            $total_sales = 0;
+            foreach ($depot_expense as $expense) {
+                if ($expense->name == $value->name) {
+                    $total_expense = $expense->amount;
+                    break;
+                }
+            }
+            foreach ($depot_income as $income) {
+                if ($income->name == $value->name) {
+                    $total_sales = $income->sales_qty;
+                    break;
+                }
+            }
+            if ($total_sales > 0 && $total_expense > 0) {
+                $temp['name'] = $value->name;
+                $temp['cost'] = ($total_sales / $total_expense);
+                $costHistory[] = $temp;
+            }
+        }
+
+        return $costHistory;
     }
 
 }

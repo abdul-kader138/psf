@@ -236,7 +236,7 @@ class Db_model extends CI_Model
             if ($this->session->userdata('view_right') == '0') $this->db->where('user_code', $this->session->userdata('username'));
         }
         $this->db->where('year',$year)->group_by('month');
-        $q = $this->db->get("sales_officer_target");
+        $q = $this->db->get("zones_target");
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
                 $data[] = $row;
