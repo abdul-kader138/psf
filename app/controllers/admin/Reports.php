@@ -4158,7 +4158,7 @@ class Reports extends MY_Controller
             }
             if ($total_sales > 0 && $total_expense > 0) {
                 $temp['name'] = $value->name;
-                $temp['cost'] = ($total_sales / $total_expense);
+                $temp['cost'] = ($total_expense/$total_sales);
                 $costHistory[] = $temp;
             }
         }

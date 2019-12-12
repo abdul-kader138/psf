@@ -47,52 +47,45 @@
                                 <tr>
                                     <td><?= lang("Calendar"); ?></td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="calendar-index" <?php echo $p->{'calendar-index'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="calendar-index" <?php echo $p->{'calendar-index'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="calendar-add" <?php echo $p->{'calendar-add'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="calendar-add" <?php echo $p->{'calendar-add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="calendar-edit" <?php echo $p->{'calendar-edit'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="calendar-edit" <?php echo $p->{'calendar-edit'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="calendar-delete" <?php echo $p->{'calendar-delete'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="calendar-delete" <?php echo $p->{'calendar-delete'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td><?= lang("Depot_Expense"); ?></td>
-                                    <td class="text-center">
-                                    </td>
-                                    <td class="text-center">
-                                    </td>
-                                    <td class="text-center">
-                                    </td>
-                                    <td class="text-center">
-                                    </td>
-                                    <td>
-                                        <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" id="purchases-expenses" class="checkbox" name="purchases-expenses" <?php echo $p->{'purchases-expenses'} ? "checked" : ''; ?>>
-                                            <label for="purchases-expenses" class="padding05"><?= lang('expenses') ?></label>
-                                        </span>
-                                    </td>
-                                </tr>
+
 
                                 <tr>
                                     <td><?= lang("Notifications"); ?></td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="notifications-index" <?php echo $p->{'notifications-index'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="notifications-index" <?php echo $p->{'notifications-index'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="notifications-add" <?php echo $p->{'notifications-add'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="notifications-add" <?php echo $p->{'notifications-add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="notifications-edit" <?php echo $p->{'notifications-edit'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="notifications-edit" <?php echo $p->{'notifications-edit'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="notifications-delete" <?php echo $p->{'notifications-delete'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="notifications-delete" <?php echo $p->{'notifications-delete'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
@@ -101,15 +94,18 @@
                                 <tr>
                                     <td><?= lang("Sales_Target_Zones"); ?></td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-zones" <?php echo $p->{'sales_target-zones'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-zones" <?php echo $p->{'sales_target-zones'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-zone_add" <?php echo $p->{'sales_target-zone_add'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-zone_add" <?php echo $p->{'sales_target-zone_add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-delete_zone_target" <?php echo $p->{'sales_target-delete_zone_target'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-delete_zone_target" <?php echo $p->{'sales_target-delete_zone_target'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
@@ -118,15 +114,18 @@
                                 <tr>
                                     <td><?= lang("Sales_Target_Officers"); ?></td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-sales_officer" <?php echo $p->{'sales_target-sales_officer'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-sales_officer" <?php echo $p->{'sales_target-sales_officer'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-sales_officer_add" <?php echo $p->{'sales_target-sales_officer_add'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-sales_officer_add" <?php echo $p->{'sales_target-sales_officer_add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_target-delete_sales_officer_target" <?php echo $p->{'sales_target-delete_sales_officer_target'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_target-delete_sales_officer_target" <?php echo $p->{'sales_target-delete_sales_officer_target'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
@@ -136,54 +135,114 @@
                                 <tr>
                                     <td><?= lang("Sales_Achievement"); ?></td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-sales_officer" <?php echo $p->{'sales_achievement-sales_officer'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_achievement-sales_officer" <?php echo $p->{'sales_achievement-sales_officer'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-sales_officer_add" <?php echo $p->{'sales_achievement-sales_officer_add'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_achievement-sales_officer_add" <?php echo $p->{'sales_achievement-sales_officer_add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
                                     </td>
                                     <td class="text-center">
-                                        <input type="checkbox" value="1" class="checkbox" name="sales_achievement-delete_sales_officer" <?php echo $p->{'sales_achievement-delete_sales_officer'} ? "checked" : ''; ?>>
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="sales_achievement-delete_sales_officer" <?php echo $p->{'sales_achievement-delete_sales_officer'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
                                 </tr>
 
 
+                                <tr>
+                                    <td><?= lang("Depot_Expenses"); ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-expenses" <?php echo $p->{'purchases-expenses'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-add_expense" <?php echo $p->{'purchases-add_expense'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-edit_expense" <?php echo $p->{'purchases-edit_expense'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-delete_expense" <?php echo $p->{'purchases-delete_expense'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td></td>
+                                </tr>
 
-
+                                <tr>
+                                    <td><?= lang("Depot_Sales"); ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-depot_sales" <?php echo $p->{'purchases-depot_sales'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-add_sale" <?php echo $p->{'purchases-add_sale'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-edit_sale" <?php echo $p->{'purchases-edit_sale'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox"
+                                               name="purchases-delete_sale" <?php echo $p->{'purchases-delete_sales'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 <tr>
                                     <td><?= lang("reports"); ?></td>
                                     <td colspan="5">
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="product_quantity_alerts" name="reports-sales_officer_zone" <?php echo $p->{'reports-sales_officer_zone'} ? "checked" : ''; ?>>
-                                            <label for="reports_sales_officer_zone" class="padding05"><?= lang('Sales_Officer_Target') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="product_quantity_alerts"
+                                                   name="reports-sales_officer_zone" <?php echo $p->{'reports-sales_officer_zone'} ? "checked" : ''; ?>>
+                                            <label for="reports_sales_officer_zone"
+                                                   class="padding05"><?= lang('Sales_Officer_Target') ?></label>
                                         </span>
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="Product_expiry_alerts" name="reports-target_zone_wise" <?php echo $p->{'reports-target_zone_wise'} ? "checked" : ''; ?>>
-                                            <label for="reports_target_zone_wise" class="padding05"><?= lang('Zone_Target_(Category Wise)') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox" id="Product_expiry_alerts"
+                                                   name="reports-target_zone_wise" <?php echo $p->{'reports-target_zone_wise'} ? "checked" : ''; ?>>
+                                            <label for="reports_target_zone_wise"
+                                                   class="padding05"><?= lang('Zone_Target_(Category Wise)') ?></label>
                                         </span>
                                         <span style="display:inline-block;">
                                             <input type="checkbox" value="1" class="checkbox" id="reports_target_zone"
-                                            name="reports-target_zone" <?php echo $p->{'reports-target_zone'} ? "checked" : ''; ?>><label for="reports_target_zone" class="padding05"><?= lang('Zone_Target') ?></label>
+                                                   name="reports-target_zone" <?php echo $p->{'reports-target_zone'} ? "checked" : ''; ?>><label
+                                                    for="reports_target_zone"
+                                                    class="padding05"><?= lang('Zone_Target') ?></label>
                                         </span>
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_zone_wise"
-                                                   name="reports-achievement_zone_wise" <?php echo $p->{'reports-achievement_zone_wise'} ? "checked" : ''; ?>><label for="reports-achievement_zone_wise" class="padding05"><?= lang('Achievement_Zone_(Category_Wise)') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="reports_achievement_zone_wise"
+                                                   name="reports-achievement_zone_wise" <?php echo $p->{'reports-achievement_zone_wise'} ? "checked" : ''; ?>><label
+                                                    for="reports-achievement_zone_wise"
+                                                    class="padding05"><?= lang('Achievement_Zone_(Category_Wise)') ?></label>
                                         </span>
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_zone"
-                                                   name="reports-achievement_zone" <?php echo $p->{'reports-achievement_zone'} ? "checked" : ''; ?>><label for="reports-achievement_zone" class="padding05"><?= lang('Achievement_Zone_Wise') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="reports_achievement_zone"
+                                                   name="reports-achievement_zone" <?php echo $p->{'reports-achievement_zone'} ? "checked" : ''; ?>><label
+                                                    for="reports-achievement_zone"
+                                                    class="padding05"><?= lang('Achievement_Zone_Wise') ?></label>
                                         </span>
 
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="reports_achievement_sales_officer"
-                                                   name="reports-achievement_sales_officer" <?php echo $p->{'reports-achievement_sales_officer'} ? "checked" : ''; ?>><label for="reports-achievement_sales_officer" class="padding05"><?= lang('Achievement_Sales_Officer') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="reports_achievement_sales_officer"
+                                                   name="reports-achievement_sales_officer" <?php echo $p->{'reports-achievement_sales_officer'} ? "checked" : ''; ?>><label
+                                                    for="reports-achievement_sales_officer"
+                                                    class="padding05"><?= lang('Achievement_Sales_Officer') ?></label>
                                         </span>
                                         <span style="display:inline-block;">
-                                            <input type="checkbox" value="1" class="checkbox" id="expenses" name="reports-expenses" <?php echo $p->{'reports-expenses'} ? "checked" : ''; ?>>
-                                            <label for="expenses" class="padding05"><?= lang('expenses') ?></label>
+                                            <input type="checkbox" value="1" class="checkbox" id="expenses"
+                                                   name="reports-depot_costing" <?php echo $p->{'reports-depot_costing'} ? "checked" : ''; ?>>
+                                            <label for="depot_costing"
+                                                   class="padding05"><?= lang('Depot_Costing') ?></label>
                                         </span>
                                     </td>
                                 </tr>
@@ -193,8 +252,9 @@
                                     <td colspan="5">
                                         <span style="display:inline-block;">
                                             <input type="checkbox" value="1" class="checkbox" id="bulk_actions"
-                                            name="bulk_actions" <?php echo $p->bulk_actions ? "checked" : ''; ?>>
-                                            <label for="bulk_actions" class="padding05"><?= lang('bulk_actions') ?></label>
+                                                   name="bulk_actions" <?php echo $p->bulk_actions ? "checked" : ''; ?>>
+                                            <label for="bulk_actions"
+                                                   class="padding05"><?= lang('bulk_actions') ?></label>
                                         </span>
                                     </td>
                                 </tr>
@@ -204,7 +264,7 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary"><?=lang('update')?></button>
+                            <button type="submit" class="btn btn-primary"><?= lang('update') ?></button>
                         </div>
                         <?php echo form_close();
                     } else {

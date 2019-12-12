@@ -783,7 +783,6 @@ class system_settings extends MY_Controller
                 'reports-suppliers' => $this->input->post('reports-suppliers'),
                 'sales-payments' => $this->input->post('sales-payments'),
                 'purchases-payments' => $this->input->post('purchases-payments'),
-                'purchases-expenses' => $this->input->post('purchases-expenses'),
                 'products-adjustments' => $this->input->post('products-adjustments'),
                 'bulk_actions' => $this->input->post('bulk_actions'),
                 'customers-deposits' => $this->input->post('customers-deposits'),
@@ -823,6 +822,7 @@ class system_settings extends MY_Controller
                 'reports-sales_officer_zone' => $this->input->post('reports-sales_officer_zone'),
                 'reports-target_zone_wise' => $this->input->post('reports-target_zone_wise'),
                 'reports-target_zone' => $this->input->post('reports-target_zone'),
+                'reports-depot_costing' => $this->input->post('reports-depot_costing'),
 
 
                 'sales_achievement-sales_officer' => $this->input->post('sales_achievement-sales_officer'),
@@ -833,6 +833,17 @@ class system_settings extends MY_Controller
                 'reports-achievement_zone_wise' => $this->input->post('reports-achievement_zone_wise'),
                 'reports-achievement_zone' => $this->input->post('reports-achievement_zone'),
                 'reports-achievement_sales_officer' => $this->input->post('reports-achievement_sales_officer'),
+
+
+                'purchases-depot_sales' => $this->input->post('purchases-depot_sales'),
+                'purchases-add_sale' => $this->input->post('purchases-add_sale'),
+                'purchases-edit_sale' => $this->input->post('purchases-edit_sale'),
+                'purchases-delete_sales' => $this->input->post('purchases-delete_sale'),
+                'purchases-add_expense' => $this->input->post('purchases-add_expense'),
+                'purchases-edit_expense' => $this->input->post('purchases-edit_expense'),
+                'purchases-delete_expense' => $this->input->post('purchases-delete_expense'),
+                'purchases-expenses' => $this->input->post('purchases-expenses'),
+
 
 
             );

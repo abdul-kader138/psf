@@ -598,7 +598,7 @@
                                         <?php } ?>
 
 
-                                        <?php if ($GP['purchases-expenses']) { ?>
+                                        <?php if ($GP['purchases-expenses'] || $GP['purchases-add_expense'] || $GP['purchases-depot_sales'] || $GP['purchases-add_sale']) { ?>
                                             <li class="mm_purchases">
                                                 <a class="dropmenu" href="#">
                                                     <i class="fa fa-star"></i>
@@ -614,12 +614,33 @@
                                                                         class="text"> <?= lang('list_expenses'); ?></span>
                                                             </a>
                                                         </li>
+                                                    <?php } ?>
+                                                    <?php if ($GP['purchases-add_expense']) { ?>
                                                         <li id="purchases_add_expense">
                                                             <a class="submenu"
                                                                href="<?= admin_url('purchases/add_expense'); ?>"
                                                                data-toggle="modal" data-target="#myModal">
                                                                 <i class="fa fa-plus-circle"></i><span
-                                                                        class="text"> <?= lang('add_expense'); ?></span>
+                                                                        class="text"> <?= lang('Add_Expense'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                    <?php if ($GP['purchases-depot_sales']) { ?>
+                                                        <li id="purchases_depot_sales">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('purchases/depot_sales'); ?>">
+                                                                <i class="fa fa-dollar"></i><span
+                                                                        class="text"> <?= lang('Depot_Sales'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                    <?php if ($GP['purchases-add_sale']) { ?>
+                                                        <li id="purchases_add_sales">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('purchases/add_sales'); ?>"
+                                                               data-toggle="modal" data-target="#myModal">
+                                                                <i class="fa fa-plus-circle"></i><span
+                                                                        class="text"> <?= lang('Add_Sale'); ?></span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
@@ -789,6 +810,15 @@
                                                             <a href="<?= admin_url('reports/suppliers') ?>">
                                                                 <i class="fa fa-users"></i><span
                                                                         class="text"> <?= lang('suppliers_report'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+
+                                                    <?php if ($GP['reports-depot_costing']) { ?>
+                                                        <li id="reports_depot_costing">
+                                                            <a href="<?= admin_url('reports/depot_costing') ?>">
+                                                                <i class="fa fa-bar-chart"></i><span
+                                                                        class="text"> <?= lang('Depot_Costing'); ?></span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>

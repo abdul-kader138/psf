@@ -24,6 +24,7 @@ class Purchases extends MY_Controller
         $this->digital_file_types = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
         $this->allowed_file_size = '1024';
         $this->data['logo'] = true;
+        $this->permission_details = $this->site->checkPermissions();
 
     }
 
@@ -67,12 +68,12 @@ class Purchases extends MY_Controller
         $print_barcode = anchor('admin/products/print_barcodes/?purchase=$1', '<i class="fa fa-print"></i> ' . lang('print_barcodes'));
         $return_link = anchor('admin/purchases/return_purchase/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_purchase'));
         $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line("delete_purchase") . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_purchase') . "</a>";
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_purchase') . "</a>";
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $payments_link . '</li>
@@ -190,7 +191,7 @@ class Purchases extends MY_Controller
         $this->data['return_rows'] = $inv->return_id ? $this->purchases_model->getAllPurchaseItems($inv->return_id) : NULL;
         $name = $this->lang->line("purchase") . "_" . str_replace('/', '_', $inv->reference_no) . ".pdf";
         $html = $this->load->view($this->theme . 'purchases/pdf', $this->data, true);
-        if (! $this->Settings->barcode_img) {
+        if (!$this->Settings->barcode_img) {
             $html = preg_replace("'\<\?xml(.*)\?\>'", '', $html);
         }
         if ($view) {
@@ -223,7 +224,7 @@ class Purchases extends MY_Controller
             $this->data['return_purchase'] = $inv->return_id ? $this->purchases_model->getPurchaseByID($inv->return_id) : NULL;
             $this->data['return_rows'] = $inv->return_id ? $this->purchases_model->getAllPurchaseItems($inv->return_id) : NULL;
             $inv_html = $this->load->view($this->theme . 'purchases/pdf', $this->data, true);
-            if (! $this->Settings->barcode_img) {
+            if (!$this->Settings->barcode_img) {
                 $inv_html = preg_replace("'\<\?xml(.*)\?\>'", '', $inv_html);
             }
             $html[] = array(
@@ -311,7 +312,7 @@ class Purchases extends MY_Controller
             $this->data['subject'] = array('name' => 'subject',
                 'id' => 'subject',
                 'type' => 'text',
-                'value' => $this->form_validation->set_value('subject', lang('purchase_order').' (' . $inv->reference_no . ') '.lang('from').' ' . $this->Settings->site_name),
+                'value' => $this->form_validation->set_value('subject', lang('purchase_order') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
             );
             $this->data['note'] = array('name' => 'note',
                 'id' => 'note',
@@ -351,7 +352,7 @@ class Purchases extends MY_Controller
             $status = $this->input->post('status');
             $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $supplier_details = $this->site->getCompanyByID($supplier_id);
-            $supplier = $supplier_details->company != '-'  ? $supplier_details->company : $supplier_details->name;
+            $supplier = $supplier_details->company != '-' ? $supplier_details->company : $supplier_details->name;
             $note = $this->sma->clear_tags($this->input->post('note'));
             $payment_term = $this->input->post('payment_term');
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
@@ -528,7 +529,7 @@ class Purchases extends MY_Controller
                                 $crow->qty = $item->quantity;
                             } else {
                                 unset($crow->details, $crow->product_details, $crow->price);
-                                $crow->qty = $citem->qty*$item->quantity;
+                                $crow->qty = $citem->qty * $item->quantity;
                             }
                             $crow->base_quantity = $item->quantity;
                             $crow->base_unit = $crow->unit ? $crow->unit : $item->product_unit_id;
@@ -638,7 +639,7 @@ class Purchases extends MY_Controller
             $status = $this->input->post('status');
             $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $supplier_details = $this->site->getCompanyByID($supplier_id);
-            $supplier = $supplier_details->company != '-'  ? $supplier_details->company : $supplier_details->name;
+            $supplier = $supplier_details->company != '-' ? $supplier_details->company : $supplier_details->name;
             $note = $this->sma->clear_tags($this->input->post('note'));
             $payment_term = $this->input->post('payment_term');
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
@@ -674,7 +675,7 @@ class Purchases extends MY_Controller
                         $this->session->set_flashdata('error', lang("received_more_than_ordered"));
                         redirect($_SERVER["HTTP_REFERER"]);
                     }
-                    $balance_qty =  $quantity_received - ($ordered_quantity - $quantity_balance);
+                    $balance_qty = $quantity_received - ($ordered_quantity - $quantity_balance);
                 } else {
                     $balance_qty = $item_quantity;
                     $quantity_received = $item_quantity;
@@ -738,7 +739,7 @@ class Purchases extends MY_Controller
                         'date' => date('Y-m-d', strtotime($date)),
                     );
 
-                    $items[] = ($item+$gst_data);
+                    $items[] = ($item + $gst_data);
                     $total += $item_net_cost * $item_unit_quantity;
                 }
             }
@@ -818,7 +819,7 @@ class Purchases extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['inv'] = $inv;
             if ($this->Settings->disable_editing) {
-                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-'.$this->Settings->disable_editing.' days'))) {
+                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-' . $this->Settings->disable_editing . ' days'))) {
                     $this->session->set_flashdata('error', sprintf(lang("purchase_x_edited_older_than_x_days"), $this->Settings->disable_editing));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
@@ -837,7 +838,7 @@ class Purchases extends MY_Controller
                 $row->oqty = $item->quantity;
                 $row->supplier_part_no = $item->supplier_part_no;
                 $row->received = $item->quantity_received ? $item->quantity_received : $item->quantity;
-                $row->quantity_balance = $item->quantity_balance + ($item->quantity-$row->received);
+                $row->quantity_balance = $item->quantity_balance + ($item->quantity - $row->received);
                 $row->discount = $item->discount ? $item->discount : '0';
                 $options = $this->purchases_model->getProductOptions($row->id);
                 $row->option = $item->option_id;
@@ -899,7 +900,7 @@ class Purchases extends MY_Controller
             $status = $this->input->post('status');
             $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $supplier_details = $this->site->getCompanyByID($supplier_id);
-            $supplier = $supplier_details->company != '-'  ? $supplier_details->company : $supplier_details->name;
+            $supplier = $supplier_details->company != '-' ? $supplier_details->company : $supplier_details->name;
             $note = $this->sma->clear_tags($this->input->post('note'));
 
             $total = 0;
@@ -1020,7 +1021,7 @@ class Purchases extends MY_Controller
                                 'real_unit_cost' => $this->sma->formatDecimal(($item_net_cost + $item_tax + $pr_discount), 4),
                             );
 
-                            $products[] = ($product+$gst_data);
+                            $products[] = ($product + $gst_data);
                             $total += $this->sma->formatDecimal(($item_net_cost * $item_quantity), 4);
 
                         } else {
@@ -1187,7 +1188,7 @@ class Purchases extends MY_Controller
                 $units = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
-                $pr[] = array('id' => sha1($c.$r), 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")",
+                $pr[] = array('id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")",
                     'row' => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
                 $r++;
             }
@@ -1296,26 +1297,26 @@ class Purchases extends MY_Controller
         $supplier = $this->site->getCompanyByID($inv->supplier_id);
         $this->data['inv'] = $inv;
         $this->data['payment'] = $payment;
-        if ( ! $supplier->email) {
+        if (!$supplier->email) {
             $this->sma->send_json(array('msg' => lang("update_supplier_email")));
         }
-        $this->data['supplier'] =$supplier;
+        $this->data['supplier'] = $supplier;
         $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);
         $this->data['inv'] = $inv;
         $this->data['payment'] = $payment;
         $this->data['page_title'] = lang("payment_note");
         $html = $this->load->view($this->theme . 'purchases/payment_note', $this->data, TRUE);
 
-        $html = str_replace(array('<i class="fa fa-2x">&times;</i>', 'modal-', '<p>&nbsp;</p>', '<p style="border-bottom: 1px solid #666;">&nbsp;</p>', '<p>'.lang("stamp_sign").'</p>'), '', $html);
+        $html = str_replace(array('<i class="fa fa-2x">&times;</i>', 'modal-', '<p>&nbsp;</p>', '<p style="border-bottom: 1px solid #666;">&nbsp;</p>', '<p>' . lang("stamp_sign") . '</p>'), '', $html);
         $html = preg_replace("/<img[^>]+\>/i", '', $html);
         // $html = '<div style="border:1px solid #DDD; padding:10px; margin:10px 0;">'.$html.'</div>';
 
         $this->load->library('parser');
         $parse_data = array(
-            'stylesheet' => '<link href="'.$this->data['assets'].'styles/helpers/bootstrap.min.css" rel="stylesheet"/>',
-            'name' => $supplier->company && $supplier->company != '-' ? $supplier->company :  $supplier->name,
+            'stylesheet' => '<link href="' . $this->data['assets'] . 'styles/helpers/bootstrap.min.css" rel="stylesheet"/>',
+            'name' => $supplier->company && $supplier->company != '-' ? $supplier->company : $supplier->name,
             'email' => $supplier->email,
-            'heading' => lang('payment_note').'<hr>',
+            'heading' => lang('payment_note') . '<hr>',
             'msg' => $html,
             'site_link' => base_url(),
             'site_name' => $this->Settings->site_name,
@@ -1500,7 +1501,14 @@ class Purchases extends MY_Controller
 
     public function expenses($id = null)
     {
-        $this->sma->checkPermissions();
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-expenses'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('expenses')));
@@ -1510,18 +1518,26 @@ class Purchases extends MY_Controller
 
     public function getExpenses()
     {
-        $this->sma->checkPermissions('expenses');
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-expenses'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
 
         $detail_link = anchor('admin/purchases/expense_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('expense_note'), 'data-toggle="modal" data-target="#myModal2"');
         $edit_link = anchor('admin/purchases/edit_expense/$1', '<i class="fa fa-edit"></i> ' . lang('edit_expense'), 'data-toggle="modal" data-target="#myModal"');
         //$attachment_link = '<a href="'.base_url('assets/uploads/$1').'" target="_blank"><i class="fa fa-chain"></i></a>';
         $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line("delete_expense") . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete_expense/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_expense') . "</a>";
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete_expense/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_expense') . "</a>";
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $edit_link . '</li>
@@ -1549,6 +1565,15 @@ class Purchases extends MY_Controller
 
     public function expense_note($id = null)
     {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-expenses'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         $expense = $this->purchases_model->getExpenseByID($id);
         $this->data['user'] = $this->site->getUser($expense->created_by);
         $this->data['category'] = $expense->category_id ? $this->purchases_model->getExpenseCategoryByID($expense->category_id) : NULL;
@@ -1560,7 +1585,15 @@ class Purchases extends MY_Controller
 
     public function add_expense()
     {
-        $this->sma->checkPermissions('expenses', true);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-add_expense'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         $this->load->helper('security');
 
         //$this->form_validation->set_rules('reference', lang("reference"), 'required');
@@ -1569,12 +1602,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1627,7 +1660,14 @@ class Purchases extends MY_Controller
 
     public function edit_expense($id = null)
     {
-        $this->sma->checkPermissions('edit', true);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-edit_expense'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $this->load->helper('security');
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
@@ -1639,12 +1679,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1695,15 +1735,14 @@ class Purchases extends MY_Controller
 
     public function delete_expense($id = null)
     {
-//        $this->sma->checkPermissions('delete', true);
         if (!$this->Owner && !$this->Admin) {
-            $this->session->set_flashdata('warning', lang('access_denied'));
-            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
-            admin_redirect($_SERVER["HTTP_REFERER"]);
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-delete_expense'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
         }
-
-
-
 
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
@@ -1781,10 +1820,16 @@ class Purchases extends MY_Controller
     }
 
 
-
     public function depot_sales($id = null)
     {
-        $this->sma->checkPermissions();
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-depot_sales'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('Depot_Sales')));
@@ -1794,7 +1839,14 @@ class Purchases extends MY_Controller
 
     public function getDepotSales()
     {
-        $this->sma->checkPermissions('expenses');
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-depot_sales'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $detail_link = anchor('admin/purchases/sales_note/$1', '<i class="fa fa-file-text-o"></i> ' . lang('Sales_Note'), 'data-toggle="modal" data-target="#myModal2"');
         $edit_link = anchor('admin/purchases/edit_sales/$1', '<i class="fa fa-edit"></i> ' . lang('Edit'), 'data-toggle="modal" data-target="#myModal"');
@@ -1833,6 +1885,14 @@ class Purchases extends MY_Controller
 
     public function sales_note($id = null)
     {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-depot_sales'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $expense = $this->purchases_model->getSalesByID($id);
         $this->data['user'] = $this->site->getUser($expense->created_by);
         $this->data['warehouse'] = $expense->warehouse_id ? $this->site->getBrandByID($expense->warehouse_id) : NULL;
@@ -1843,7 +1903,14 @@ class Purchases extends MY_Controller
 
     public function add_sales()
     {
-        $this->sma->checkPermissions('expenses', true);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-add_sale'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $this->load->helper('security');
 
         //$this->form_validation->set_rules('reference', lang("reference"), 'required');
@@ -1852,12 +1919,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1909,7 +1976,14 @@ class Purchases extends MY_Controller
 
     public function edit_sales($id = null)
     {
-        $this->sma->checkPermissions('edit', true);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-edit_sale'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $this->load->helper('security');
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
@@ -1921,12 +1995,12 @@ class Purchases extends MY_Controller
         if ($this->form_validation->run() == true) {
             if ($this->Owner || $this->Admin) {
                 $date = $this->sma->fld(trim($this->input->post('date')));
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             } else {
                 $date = date('Y-m-d H:i:s');
-                $month = date("m",strtotime($date));
-                $year = date("Y",strtotime($date));
+                $month = date("m", strtotime($date));
+                $year = date("Y", strtotime($date));
             }
             $data = array(
                 'date' => $date,
@@ -1975,14 +2049,20 @@ class Purchases extends MY_Controller
 
     public function delete_sales($id = null)
     {
-//        $this->sma->checkPermissions('delete', true);
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['purchases-delete_sale'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                admin_redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         if (!$this->Owner && !$this->Admin) {
             $this->session->set_flashdata('warning', lang('access_denied'));
             die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
             admin_redirect($_SERVER["HTTP_REFERER"]);
         }
-
-
 
 
         if ($this->input->get('id')) {
@@ -2081,7 +2161,7 @@ class Purchases extends MY_Controller
         $this->data['inv'] = $inv;
         $this->data['rows'] = $this->purchases_model->getAllReturnItems($id);
         $this->data['purchase'] = $this->purchases_model->getPurchaseByID($inv->purchase_id);
-        $this->load->view($this->theme.'purchases/view_return', $this->data);
+        $this->load->view($this->theme . 'purchases/view_return', $this->data);
     }
 
     public function return_purchase($id = null)
@@ -2125,12 +2205,12 @@ class Purchases extends MY_Controller
                 $item_option = isset($_POST['product_option'][$r]) && !empty($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' ? $_POST['product_option'][$r] : null;
                 $real_unit_cost = $this->sma->formatDecimal($_POST['real_unit_cost'][$r]);
                 $unit_cost = $this->sma->formatDecimal($_POST['unit_cost'][$r]);
-                $item_unit_quantity = (0-$_POST['quantity'][$r]);
+                $item_unit_quantity = (0 - $_POST['quantity'][$r]);
                 $item_expiry = isset($_POST['expiry'][$r]) ? $_POST['expiry'][$r] : '';
                 $item_tax_rate = isset($_POST['product_tax'][$r]) ? $_POST['product_tax'][$r] : null;
                 $item_discount = isset($_POST['product_discount'][$r]) ? $_POST['product_discount'][$r] : null;
                 $item_unit = $_POST['product_unit'][$r];
-                $item_quantity = (0-$_POST['product_base_quantity'][$r]);
+                $item_quantity = (0 - $_POST['product_base_quantity'][$r]);
 
                 if (isset($item_code) && isset($real_unit_cost) && isset($unit_cost) && isset($item_quantity)) {
                     $product_details = $this->purchases_model->getProductByCode($item_code);
@@ -2190,7 +2270,7 @@ class Purchases extends MY_Controller
                         'status' => 'received',
                     );
 
-                    $products[] = ($product+$gst_data);
+                    $products[] = ($product + $gst_data);
                     $total += $this->sma->formatDecimal(($item_net_cost * $item_unit_quantity), 4);
                 }
             }
@@ -2267,7 +2347,7 @@ class Purchases extends MY_Controller
                 redirect($_SERVER["HTTP_REFERER"]);
             }
             if ($this->Settings->disable_editing) {
-                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-'.$this->Settings->disable_editing.' days'))) {
+                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-' . $this->Settings->disable_editing . ' days'))) {
                     $this->session->set_flashdata('error', sprintf(lang("purchase_x_edited_older_than_x_days"), $this->Settings->disable_editing));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
@@ -2287,7 +2367,7 @@ class Purchases extends MY_Controller
                 $row->purchase_item_id = $item->id;
                 $row->supplier_part_no = $item->supplier_part_no;
                 $row->received = $item->quantity_received ? $item->quantity_received : $item->quantity;
-                $row->quantity_balance = $item->quantity_balance + ($item->quantity-$row->received);
+                $row->quantity_balance = $item->quantity_balance + ($item->quantity - $row->received);
                 $row->discount = $item->discount ? $item->discount : '0';
                 $options = $this->purchases_model->getProductOptions($row->id);
                 $row->option = !empty($item->option_id) ? $item->option_id : '';
@@ -2318,19 +2398,19 @@ class Purchases extends MY_Controller
     {
         switch ($supplier_id) {
             case $product->supplier1:
-                $cost =  $product->supplier1price > 0 ? $product->supplier1price : $product->cost;
+                $cost = $product->supplier1price > 0 ? $product->supplier1price : $product->cost;
                 break;
             case $product->supplier2:
-                $cost =  $product->supplier2price > 0 ? $product->supplier2price : $product->cost;
+                $cost = $product->supplier2price > 0 ? $product->supplier2price : $product->cost;
                 break;
             case $product->supplier3:
-                $cost =  $product->supplier3price > 0 ? $product->supplier3price : $product->cost;
+                $cost = $product->supplier3price > 0 ? $product->supplier3price : $product->cost;
                 break;
             case $product->supplier4:
-                $cost =  $product->supplier4price > 0 ? $product->supplier4price : $product->cost;
+                $cost = $product->supplier4price > 0 ? $product->supplier4price : $product->cost;
                 break;
             case $product->supplier5:
-                $cost =  $product->supplier5price > 0 ? $product->supplier5price : $product->cost;
+                $cost = $product->supplier5price > 0 ? $product->supplier5price : $product->cost;
                 break;
             default:
                 $cost = $product->cost;
@@ -2362,7 +2442,7 @@ class Purchases extends MY_Controller
                 $this->data['returned'] = TRUE;
             }
             $this->data['modal_js'] = $this->site->modal_js();
-            $this->load->view($this->theme.'purchases/update_status', $this->data);
+            $this->load->view($this->theme . 'purchases/update_status', $this->data);
 
         }
     }
