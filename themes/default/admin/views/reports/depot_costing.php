@@ -36,7 +36,8 @@
                     <?php
                     foreach ($m5bs as $r) {
                         if ($r['cost'] > 0) {
-                            echo "['" . $r['name'] . "<br>', " . $r['cost'] . "],";
+                            $cost=round($r['cost'],2);
+                            echo "['" . $r['name'] . "', " . $cost . "],";
                         }
                     }
                     ?>
