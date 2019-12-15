@@ -13,29 +13,33 @@
                     "value": "<?= $this->security->get_csrf_hash() ?>"
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
-            },"fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
+            }, "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var gtotal = 0;
                 var total = 0;
                 for (var i = 0; i < (aaData.length); i++) {
                     // if(aaData[aiDisplay[i]][4])  gtotal += parseFloat(aaData[aiDisplay[i]][4]);
-                    if(aaData[aiDisplay[i]][5])  total += parseFloat(aaData[aiDisplay[i]][5]);
-                    if(aaData[aiDisplay[i]][6])  gtotal += parseFloat(aaData[aiDisplay[i]][6]);
+                    if (aaData[aiDisplay[i]][5]) total += parseFloat(aaData[aiDisplay[i]][5]);
+                    if (aaData[aiDisplay[i]][6]) gtotal += parseFloat(aaData[aiDisplay[i]][6]);
                 }
                 var nCells = nRow.getElementsByTagName('th');
                 // nCells[4].innerHTML = parseFloat(gtotal);
                 nCells[5].innerHTML = parseFloat(total);
                 nCells[6].innerHTML = parseFloat(gtotal);
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null,null,null, null, null, null,null, {"bSortable": false}]
-        });
-    }).fnSetFilteringDelay().dtFilter([
-        {column_number: 2, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
-        {column_number: 3, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
-        {column_number: 7, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
-        {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
-    ], "footer");
+            "aoColumns": [{
+                "bSortable": false,
+                "mRender": checkbox
+            }, {"bSortable": true}, null, null, null, null, null, null, null, {"bSortable": false}]
+        }).fnSetFilteringDelay().dtFilter([
+            {column_number: 1, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
+            {column_number: 2, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
+            {column_number: 3, filter_default_label: "[<?=lang('Zone');?>]", filter_type: "text", data: []},
+            {column_number: 4, filter_default_label: "[<?=lang('No_Of_Dealer');?>]", filter_type: "text", data: []},
+            {column_number: 7, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
+            {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
+        ], "footer");
+    })
 </script>
-<?= admin_form_open('system_settings/zone_actions', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
         <h2 class="blue"><i class="fa-fw fa fa-folder-open"></i><?= lang('Sales_Officer_Achievement'); ?></h2>
@@ -76,12 +80,12 @@
                             </th>
                             <th></th>
                             <th></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th style="width:85px;"><?= lang("actions"); ?></th>
                         </tr>
                         </tfoot>
@@ -91,33 +95,4 @@
         </div>
     </div>
 </div>
-
-<div style="display: none;">
-    <input type="hidden" name="form_action" value="" id="form_action"/>
-    <?= form_submit('submit', 'submit', 'id="action-form-submit"') ?>
-</div>
-<?= form_close() ?>
-<script language="javascript">
-    $(document).ready(function () {
-
-        $('#delete').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-        $('#excel').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-        $('#pdf').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-    });
-</script>
 

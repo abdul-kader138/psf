@@ -39,7 +39,7 @@
                     allowDecimals: false,
                     min: 0,
                     title: {
-                        text: <?php echo "'Target Quantity (" . $um . ")'"; ?>
+                        text: <?php echo "'Target Quantity ( TON )'"; ?>
                     }
                 },
 
@@ -74,7 +74,7 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: <?php echo "'Target Quantity (" . $um . ")'"; ?>
+                        text: <?php echo "'Target Quantity ( TON )'"; ?>
                     }
                 },
                 tooltip: {

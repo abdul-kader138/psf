@@ -268,9 +268,9 @@ class Db_model extends CI_Model
     public function getTotalUsers()
     {
         $this->db->select('count(id) as total', FALSE);
-        $this->db->where('group_id!=',1);
-        $this->db->where('group_id!=',2);
-        $q = $this->db->get('users');
+//        $this->db->where('group_id!=',1);
+//        $this->db->where('group_id!=',2);
+        $q = $this->db->get('sales_officer');
         if ($q->num_rows() > 0) {
             return $q->row();
         }

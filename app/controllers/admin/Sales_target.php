@@ -200,7 +200,7 @@ class Sales_target extends MY_Controller
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->load->library('datatables');
         $this->datatables
-            ->select($this->db->dbprefix('zones_target') . ".reference_no as id, ". $this->db->dbprefix('zones_target') . ".business_unit," . $this->db->dbprefix('categories') . ".name as c_name,count(distinct(" . $this->db->dbprefix('zones_target') . ".zone_code)) as zname,sum(" . $this->db->dbprefix('zones_target') . ".dealer) as dealers,round(sum(" . $this->db->dbprefix('zones_target') . ".target_quantity),2) as u_amount," . $this->db->dbprefix('zones_target') . ".month," . $this->db->dbprefix('zones_target') . ".year")
+            ->select($this->db->dbprefix('zones_target') . ".reference_no as id, ". $this->db->dbprefix('zones_target') . ".business_unit," . $this->db->dbprefix('categories') . ".name as c_name,sum(" . $this->db->dbprefix('zones_target') . ".dealer) as dealers,round(sum(" . $this->db->dbprefix('zones_target') . ".target_quantity)/1000,2) as u_amount," . $this->db->dbprefix('zones_target') . ".month," . $this->db->dbprefix('zones_target') . ".year")
             ->from("zones_target")
             ->join('categories', 'zones_target.category_id=categories.id', 'left')
             ->group_by('zones_target.year,zones_target.month,categories.name')
@@ -434,7 +434,7 @@ class Sales_target extends MY_Controller
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->load->library('datatables');
         $this->datatables
-            ->select($this->db->dbprefix('sales_officer_target') . ".reference_no as id, ". $this->db->dbprefix('sales_officer_target') . ".business_unit," . $this->db->dbprefix('categories') . ".name as c_name," . $this->db->dbprefix('zones') . ".name as zname,sum(" . $this->db->dbprefix('sales_officer_target') . ".dealer) as dealers,round(sum(" . $this->db->dbprefix('sales_officer_target') . ".target_quantity),2) as u_amount," . $this->db->dbprefix('sales_officer_target') . ".month," . $this->db->dbprefix('sales_officer_target') . ".year")
+            ->select($this->db->dbprefix('sales_officer_target') . ".reference_no as id, ". $this->db->dbprefix('sales_officer_target') . ".business_unit," . $this->db->dbprefix('categories') . ".name as c_name," . $this->db->dbprefix('zones') . ".name as zname,sum(" . $this->db->dbprefix('sales_officer_target') . ".dealer) as dealers,round(sum(" . $this->db->dbprefix('sales_officer_target') . ".target_quantity)/1000,2) as u_amount," . $this->db->dbprefix('sales_officer_target') . ".month," . $this->db->dbprefix('sales_officer_target') . ".year")
             ->from("sales_officer_target")
             ->join('categories', 'sales_officer_target.category_id=categories.id', 'left')
             ->join('zones', 'sales_officer_target.zone_id=zones.id', 'left')

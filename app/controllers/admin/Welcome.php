@@ -26,23 +26,7 @@ class Welcome extends MY_Controller
             $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
             admin_redirect('sync');
         }
-
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $this->data['sales'] = $this->db_model->getLatestSales();
-        $this->data['quotes'] = $this->db_model->getLastestQuotes();
-        $this->data['purchases'] = $this->db_model->getLatestPurchases();
-        $this->data['transfers'] = $this->db_model->getLatestTransfers();
-        $this->data['customers'] = $this->db_model->getLatestCustomers();
-        $this->data['suppliers'] = $this->db_model->getLatestSuppliers();
-        $this->data['chatData'] = $this->db_model->getChartData();
-        $this->data['stock'] = $this->db_model->getStockValue();
-//        $this->data['bs'] = $this->db_model->getBestSeller();
-        $this->data['total_purchases'] = $this->db_model->getTotalPurchases();
-        $this->data['total_sales'] = $this->db_model->getTotalSales();
-        $this->data['total_expenses'] = $this->db_model->getTotalExpenses();
-        $lmsdate = date('Y-m-d', strtotime('first day of last month')) . ' 00:00:00';
-        $lmedate = date('Y-m-d', strtotime('last day of last month')) . ' 23:59:59';
-
         $this->data['total_zones'] = $this->db_model->getTotalZone();
         $this->data['total_cate'] = $this->db_model->getTotalCategory();
         $this->data['total_users'] = $this->db_model->getTotalUsers();
@@ -51,7 +35,6 @@ class Welcome extends MY_Controller
         $getAllYearSales = $this->db_model->getAllYearSales($year);
         $this->data['createYearTarget']  = $this->createYearTarget($getAllYearTarget);
         $this->data['createYearSales']  = $this->createYearAchv($getAllYearSales);
-//        $this->data['lmbs'] = $this->db_model->getBestSeller($lmsdate, $lmedate);
         $bc = array(array('link' => '#', 'page' => lang('dashboard')));
         $meta = array('page_title' => lang('dashboard'), 'bc' => $bc);
         $this->page_construct('dashboard', $meta, $this->data);
@@ -185,7 +168,7 @@ class Welcome extends MY_Controller
         $value = 0;
         foreach ($month_target as $val) {
             if ($val->month == trim($month)) {
-                $value = $val->target_quantity;
+                $value = ($val->target_quantity/1000);
                 break;
             }
         }
@@ -213,7 +196,7 @@ class Welcome extends MY_Controller
         $value = 0;
         foreach ($month_target as $val) {
             if ($val->month == trim($month)) {
-                $value = $val->quantity;
+                $value = ($val->quantity/1000);
                 break;
             }
         }

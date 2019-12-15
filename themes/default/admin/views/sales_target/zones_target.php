@@ -13,27 +13,29 @@
                     "value": "<?= $this->security->get_csrf_hash() ?>"
                 });
                 $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
-            },"fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
+            }, "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var gtotal = 0;
                 var total = 0;
                 for (var i = 0; i < (aaData.length); i++) {
                     // if(aaData[aiDisplay[i]][4])  gtotal += parseFloat(aaData[aiDisplay[i]][4]);
-                    if(aaData[aiDisplay[i]][5])  total += parseFloat(aaData[aiDisplay[i]][5]);
+                    if (aaData[aiDisplay[i]][4]) total += parseFloat(aaData[aiDisplay[i]][4]);
                 }
                 var nCells = nRow.getElementsByTagName('th');
                 // nCells[4].innerHTML = parseFloat(gtotal);
-                nCells[5].innerHTML = parseFloat(total);
+                nCells[4].innerHTML = parseFloat(total);
             },
-            "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null,null, null, null, null,null, {"bSortable": false}]
-        });
-    }).fnSetFilteringDelay().dtFilter([
-        {column_number: 2, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
-        {column_number: 3, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
-        {column_number: 7, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
-        {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
-    ], "footer");
+            "aoColumns": [{
+                "bSortable": false,
+                "mRender": checkbox
+            }, null, null, null, null, null, null,  {"bSortable": false}]
+        }).fnSetFilteringDelay().dtFilter([
+            {column_number: 1, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
+            {column_number: 2, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
+            {column_number: 5, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
+        ], "footer");
+    })
 </script>
-<?= admin_form_open('system_settings/zone_actions', 'id="action-form"') ?>
 <div class="box">
     <div class="box-header">
         <h2 class="blue"><i class="fa-fw fa fa-folder-open"></i><?= lang('Zones_Target'); ?></h2>
@@ -52,7 +54,6 @@
                             </th>
                             <th><?= lang("Business_Unit"); ?></th>
                             <th><?= lang("Category"); ?></th>
-                            <th><?= lang("Zone"); ?></th>
                             <th><?= lang("No_Of_Dealer"); ?></th>
                             <th><?= lang("Target_Quantity"); ?></th>
                             <th><?= lang("Month"); ?></th>
@@ -62,7 +63,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="9" class="dataTables_empty">
+                            <td colspan="8" class="dataTables_empty">
                                 <?= lang('loading_data_from_server') ?>
                             </td>
                         </tr>
@@ -74,11 +75,10 @@
                             </th>
                             <th></th>
                             <th></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
-                            <th ></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th style="width:85px;"><?= lang("actions"); ?></th>
                         </tr>
                         </tfoot>
@@ -88,33 +88,4 @@
         </div>
     </div>
 </div>
-
-<div style="display: none;">
-    <input type="hidden" name="form_action" value="" id="form_action"/>
-    <?= form_submit('submit', 'submit', 'id="action-form-submit"') ?>
-</div>
-<?= form_close() ?>
-<script language="javascript">
-    $(document).ready(function () {
-
-        $('#delete').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-        $('#excel').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-        $('#pdf').click(function (e) {
-            e.preventDefault();
-            $('#form_action').val($(this).attr('data-action'));
-            $('#action-form-submit').trigger('click');
-        });
-
-    });
-</script>
 

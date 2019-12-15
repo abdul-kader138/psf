@@ -34,16 +34,16 @@
             "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var total = 0;
                 for (var i = 0; i < aaData.length; i++) {
-                    total += parseFloat(aaData[aiDisplay[i]][4]);
+                    total += parseFloat(aaData[aiDisplay[i]][5]);
                 }
                 var nCells = nRow.getElementsByTagName('th');
-                nCells[4].innerHTML = currencyFormat(total);
+                nCells[5].innerHTML = currencyFormat(total);
             }
         }).fnSetFilteringDelay().dtFilter([
             {column_number: 1, filter_default_label: "[<?=lang('date');?> (yyyy-mm-dd)]", filter_type: "text", data: []},
             {column_number: 2, filter_default_label: "[<?=lang('reference');?>]", filter_type: "text", data: []},
             {column_number: 3, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
-            {column_number: 4, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
+            {column_number: 4, filter_default_label: "[<?=lang('Depot');?>]", filter_type: "text", data: []},
             {column_number: 6, filter_default_label: "[<?=lang('note');?>]", filter_type: "text", data: []},
             {column_number: 7, filter_default_label: "[<?=lang('created_by');?>]", filter_type: "text", data: []},
             {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},

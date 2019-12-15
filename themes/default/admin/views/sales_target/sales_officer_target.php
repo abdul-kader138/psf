@@ -25,13 +25,14 @@
                 nCells[5].innerHTML = parseFloat(total);
             },
             "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null,null, null, null, null,null, {"bSortable": false}]
-        });
-    }).fnSetFilteringDelay().dtFilter([
-        {column_number: 2, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
-        {column_number: 3, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
-        {column_number: 7, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
-        {column_number: 8, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
-    ], "footer");
+        }).fnSetFilteringDelay().dtFilter([
+            {column_number: 1, filter_default_label: "[<?=lang('Business_Unit');?>]", filter_type: "text", data: []},
+            {column_number: 2, filter_default_label: "[<?=lang('Category');?>]", filter_type: "text", data: []},
+            {column_number: 3, filter_default_label: "[<?=lang('Zone');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('Month');?>]", filter_type: "text", data: []},
+            {column_number: 7, filter_default_label: "[<?=lang('Year');?>]", filter_type: "text", data: []},
+        ], "footer")
+    });
 </script>
 <?= admin_form_open('system_settings/zone_actions', 'id="action-form"') ?>
 <div class="box">

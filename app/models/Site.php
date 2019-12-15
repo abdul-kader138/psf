@@ -1308,7 +1308,7 @@ class Site extends CI_Model
 
 
     public function getAllZoneWithDealer($bu) {
-        $this->db->select("name, code")->select_sum('dealer');
+        $this->db->select("name, code,description")->select_sum('dealer');
         $this->db->group_by('zones.name');
         $q = $this->db->get_where('zones', array('bu' => $bu));
         if ($q->num_rows() > 0) {

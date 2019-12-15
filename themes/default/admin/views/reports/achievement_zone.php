@@ -28,7 +28,7 @@
                     type: 'category',
                     labels: {rotation: -45, style: {fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}
                 },
-                yAxis: {min: 0, title: {text: <?php echo "'Target Quantity (" . $um . ")'"; ?>}},
+                yAxis: {min: 0, title: {text: <?php echo "'Target Quantity ( TON )'"; ?>}},
                 legend: {enabled: false},
                 series: [{
                     name: '<?=lang('Target_Quantity');?>',
@@ -36,7 +36,7 @@
                     data: [<?php
                         foreach ($m5bs as $r) {
                             if ($r->target_quantity > 0) {
-                                echo "['" . $r->zone_name . "<br>(Total Dealer-" . $r->dealer . ")', " . $r->target_quantity . "],";
+                                echo "['" . $r->zone_name . "<br>Total Dealer: " . $r->dealer . "', " . ($r->target_quantity/1000) . "],";
                             }
                         }
                         ?>],
@@ -69,7 +69,7 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: '<?php echo "Target Quantity (" . $um . ")"; ?>'
+                        text: '<?php echo "Target Quantity ( TON )"; ?>'
                     }
                 },
                 tooltip: {
@@ -127,7 +127,7 @@
                     data: [<?php
                         foreach ($totals as $r1) {
                             if ($r1->quantity > 0) {
-                                echo "['" . $r1->name . "', " . $r1->quantity . "],";
+                                echo "['" . $r1->name . "', " . ($r1->quantity/1000) . "],";
                             }
                         }
                         ?>]
@@ -305,8 +305,8 @@
                     <?php if ($totals) { ?>
                         <div class="small-box col-sm-12" style="background-color: #83b582">
                             <div class="inner clearfix">
-                                <p style="color: black;font-size: 20px;"><b>Total Sales Quantity
-                                        : <?= $this->sma->formatQuantity($totals_qty->quantity) ?></b></p>
+                                <p style="color: black;font-size: 20px;"><b>Total Sales Quantity (TON)
+                                        : <?= $this->sma->formatQuantity(($totals_qty->quantity/1000)) ?></b></p>
                             </div>
                         </div>
                         <div class="clearfix" style="margin-top:20px;"></div>

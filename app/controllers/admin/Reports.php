@@ -29,17 +29,17 @@ class Reports extends MY_Controller
 
     }
 
-    function index()
-    {
-        $this->sma->checkPermissions();
-        $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['monthly_sales'] = $this->reports_model->getChartData();
-        $this->data['stock'] = $this->reports_model->getStockValue();
-        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('reports')));
-        $meta = array('page_title' => lang('reports'), 'bc' => $bc);
-        $this->page_construct('reports/index', $meta, $this->data);
-
-    }
+//    function index()
+//    {
+//        $this->sma->checkPermissions();
+//        $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+//        $this->data['monthly_sales'] = $this->reports_model->getChartData();
+//        $this->data['stock'] = $this->reports_model->getStockValue();
+//        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('reports')));
+//        $meta = array('page_title' => lang('reports'), 'bc' => $bc);
+//        $this->page_construct('reports/index', $meta, $this->data);
+//
+//    }
 
     function warehouse_stock($warehouse = NULL)
     {
@@ -3531,7 +3531,7 @@ class Reports extends MY_Controller
         $init = 0;
         foreach ($listData as $r) {
             $init = $init + 1;
-            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "<br>(Total Dealer-" . $r->dealer . ")'");
+            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "<br>District: " . $r->description ."<br>Total Dealer: " . $r->dealer . "'");
 
             if ($init < $array_length) {
                 $array_field .= ",";
@@ -3558,7 +3558,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->username == $val->username) {
-                            $qty = $val->target_quantity;
+                            $qty = ($val->target_quantity/1000);
                             break;
                         }
                     }
@@ -3586,7 +3586,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->username == $val->username) {
-                            $qty = $val->quantity;
+                            $qty = ($val->quantity/1000);
                             break;
                         }
                     }
@@ -3841,7 +3841,7 @@ class Reports extends MY_Controller
         $init = 0;
         foreach ($listData as $r) {
             $init = $init + 1;
-            $array_field .= ("'" . $r->name . "<br>(Total Dealer-" . $r->dealer . ")'");
+            $array_field .= ("'" . $r->name . "<br>Total Dealer:" . $r->dealer . "'");
 
             if ($init < $array_length) {
                 $array_field .= ",";
@@ -3862,13 +3862,13 @@ class Reports extends MY_Controller
             foreach ($officerList as $value) {
                 $temp = array();
                 $qty = 0;
-                $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+                $temp['name'] = $value->name ."Total Dealer:" . $value->dealer;
                 $temp['dealer'] = $value->dealer;
                 $category = $officerListWithTarget[$cat->name];
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = $val->target_quantity;
+                            $qty = ($val->target_quantity/1000);
                             break;
                         }
                     }
@@ -3891,13 +3891,13 @@ class Reports extends MY_Controller
             foreach ($officerList as $value) {
                 $temp = array();
                 $qty = 0;
-                $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+                $temp['name'] = $value->name . "Total Dealer: " . $value->dealer . ")";
                 $temp['dealer'] = $value->dealer;
                 $category = $officerListWithTarget[$cat->name];
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = $val->quantity;
+                            $qty = ($val->quantity/1000);
                             break;
                         }
                     }
@@ -3919,13 +3919,13 @@ class Reports extends MY_Controller
             foreach ($officerList as $value) {
                 $temp = array();
                 $qty = 0;
-                $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+                $temp['name'] = $value->name . "Total Dealer: " . $value->dealer . ")";
                 $temp['dealer'] = $value->dealer;
                 $category = $officerListWithTarget[$cat->name];
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = $val->quantity;
+                            $qty = ($val->quantity/1000);
                             break;
                         }
                     }
@@ -3945,12 +3945,12 @@ class Reports extends MY_Controller
         foreach ($officerList as $value) {
             $temp = array();
             $qty = 0;
-            $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+            $temp['name'] = $value->name . "Total Dealer: " . $value->dealer . ")";
             $temp['dealer'] = $value->dealer;
 //                $category = $officerListWithTarget[$cat->name];
             foreach ($officerListWithTarget as $target) {
                 if ($value->name == $target->zone_name) {
-                    $qty = $target->target_quantity;
+                    $qty = ($target->target_quantity/1000);
                     break;
                 }
             }
@@ -3969,12 +3969,12 @@ class Reports extends MY_Controller
         foreach ($officerList as $value) {
             $temp = array();
             $qty = 0;
-            $temp['name'] = $value->name . "(Total Dealer-" . $value->dealer . ")";
+            $temp['name'] = $value->name . "Total Dealer: " . $value->dealer . ")";
             $temp['dealer'] = $value->dealer;
 //                $category = $officerListWithTarget[$cat->name];
             foreach ($officerListWithSales as $target) {
                 if ($value->name == $target->zone_name) {
-                    $qty = $target->quantity;
+                    $qty = ($target->quantity/1000);
                     break;
                 }
             }
