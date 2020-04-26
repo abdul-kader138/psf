@@ -31,10 +31,43 @@ class Welcome extends MY_Controller
         $this->data['total_cate'] = $this->db_model->getTotalCategory();
         $this->data['total_users'] = $this->db_model->getTotalUsers();
         $year = date('Y');
-        $getAllYearTarget = $this->db_model->getAllYearTarget($year);
-        $getAllYearSales = $this->db_model->getAllYearSales($year);
-        $this->data['createYearTarget']  = $this->createYearTarget($getAllYearTarget);
-        $this->data['createYearSales']  = $this->createYearAchv($getAllYearSales);
+//        $getAllYearTarget = $this->db_model->getAllYearTarget($year);
+//        $getAllYearSales = $this->db_model->getAllYearSales($year);
+//        $this->data['createYearTarget'] = $this->createYearTarget($getAllYearTarget);
+//        $this->data['createYearSales'] = $this->createYearAchv($getAllYearSales);
+
+
+//        $this->load->library('Googlemaps');
+//        $config = array();
+//        $config['center']='auto';
+//        $marker = array();
+//        $marker[' position '] = 'Gulshan, Bangladesh';
+//        $marker[' position '] = 'Mirpur, Bangladesh';
+//        $marker[' position '] = 'Dhanmondi, Bangladesh';
+//        $this->googlemaps->initialize($config);
+//        $this->googlemaps->add_marker($marker);
+//        $this->data['maps'] = $this->googlemaps->create_map();
+
+
+        $users = $this->db_model->get_list1();
+
+        $markers = [];
+        $infowindow = [];
+
+        foreach ($users as $value) {
+            $markers[] = [
+                $value->name, $value->latitude, $value->longitude
+            ];
+            $infowindow[] = [
+                "<div class=info_content><h3>" . $value->name . "</h3>
+                                                <p><b>District : " . $value->description . "</b></p>
+                                                <p><b>Total Dealer:" . $value->dealer . "</b></p>
+                                                                </div>"];
+        }
+        $this->data['markers'] = json_encode($markers);
+        $this->data['infowindow'] = json_encode($infowindow);
+
+
         $bc = array(array('link' => '#', 'page' => lang('dashboard')));
         $meta = array('page_title' => lang('dashboard'), 'bc' => $bc);
         $this->page_construct('dashboard', $meta, $this->data);
@@ -154,8 +187,8 @@ class Welcome extends MY_Controller
         $data = ['January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
         foreach ($data as $de) {
-            $val .= $this->getMonthTarget($de,$month_target);
-            if( $de != 'December') $val .= ",";
+            $val .= $this->getMonthTarget($de, $month_target);
+            if ($de != 'December') $val .= ",";
         }
 
         $val .= "]";
@@ -168,7 +201,7 @@ class Welcome extends MY_Controller
         $value = 0;
         foreach ($month_target as $val) {
             if ($val->month == trim($month)) {
-                $value = ($val->target_quantity/1000);
+                $value = ($val->target_quantity / 1000);
                 break;
             }
         }
@@ -182,8 +215,8 @@ class Welcome extends MY_Controller
         $data = ['January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
         foreach ($data as $de) {
-            $val .= $this->getMonthAchv($de,$month_target);
-            if( $de != 'December') $val .= ",";
+            $val .= $this->getMonthAchv($de, $month_target);
+            if ($de != 'December') $val .= ",";
         }
 
         $val .= "]";
@@ -196,7 +229,7 @@ class Welcome extends MY_Controller
         $value = 0;
         foreach ($month_target as $val) {
             if ($val->month == trim($month)) {
-                $value = ($val->quantity/1000);
+                $value = ($val->quantity / 1000);
                 break;
             }
         }

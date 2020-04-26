@@ -1,5 +1,14 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<style>
+    #map_wrapper_div {
+        height: 550px;
+    }
 
+    #map_tuts {
+        width: 100%;
+        height: 100%;
+    }
+</style>
 <div class="row" style="margin-bottom: 15px;">
     <div class="col-sm-12">
         <div class="col-sm-4">
@@ -29,6 +38,27 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row" style="margin-bottom: 15px;">
+    <div class="col-sm-12">
+<!--        --><?php //echo $maps['js'] ?>
+        <div class="box">
+            <div class="box-header">
+                <h2 class="blue"><i
+                            class="fa-fw fa fa-line-chart"></i>
+                </h2>
+            </div>
+            <div class="box-content">
+                <div class="row">
+                    <div id="map_wrapper_div">
+                        <div id="map_tuts"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
 </div>
 
@@ -269,3 +299,11 @@
         </div>
     </div>
 <?php } ?>
+
+
+<script type="application/javascript">
+    $(document).ready(function(){
+        initialize(<?php echo $markers; ?>,<?php echo $infowindow; ?>);
+    })
+</script>
+

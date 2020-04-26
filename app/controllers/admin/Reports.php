@@ -3531,7 +3531,7 @@ class Reports extends MY_Controller
         $init = 0;
         foreach ($listData as $r) {
             $init = $init + 1;
-            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "<br>District: " . $r->description ."<br>Total Dealer: " . $r->dealer . "'");
+            $array_field .= ("'" . $r->first_name . " " . $r->last_name . "<br>District: " . $r->description . "<br>Total Dealer: " . $r->dealer . "'");
 
             if ($init < $array_length) {
                 $array_field .= ",";
@@ -3558,7 +3558,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->username == $val->username) {
-                            $qty = ($val->target_quantity/1000);
+                            $qty = ($val->target_quantity / 1000);
                             break;
                         }
                     }
@@ -3586,7 +3586,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->username == $val->username) {
-                            $qty = ($val->quantity/1000);
+                            $qty = ($val->quantity / 1000);
                             break;
                         }
                     }
@@ -3862,13 +3862,13 @@ class Reports extends MY_Controller
             foreach ($officerList as $value) {
                 $temp = array();
                 $qty = 0;
-                $temp['name'] = $value->name ."Total Dealer:" . $value->dealer;
+                $temp['name'] = $value->name . "Total Dealer:" . $value->dealer;
                 $temp['dealer'] = $value->dealer;
                 $category = $officerListWithTarget[$cat->name];
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = ($val->target_quantity/1000);
+                            $qty = ($val->target_quantity / 1000);
                             break;
                         }
                     }
@@ -3897,7 +3897,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = ($val->quantity/1000);
+                            $qty = ($val->quantity / 1000);
                             break;
                         }
                     }
@@ -3925,7 +3925,7 @@ class Reports extends MY_Controller
                 if ($category) {
                     foreach ($category as $val) {
                         if ($value->name == $val->zone_name) {
-                            $qty = ($val->quantity/1000);
+                            $qty = ($val->quantity / 1000);
                             break;
                         }
                     }
@@ -3950,7 +3950,7 @@ class Reports extends MY_Controller
 //                $category = $officerListWithTarget[$cat->name];
             foreach ($officerListWithTarget as $target) {
                 if ($value->name == $target->zone_name) {
-                    $qty = ($target->target_quantity/1000);
+                    $qty = ($target->target_quantity / 1000);
                     break;
                 }
             }
@@ -3974,7 +3974,7 @@ class Reports extends MY_Controller
 //                $category = $officerListWithTarget[$cat->name];
             foreach ($officerListWithSales as $target) {
                 if ($value->name == $target->zone_name) {
-                    $qty = ($target->quantity/1000);
+                    $qty = ($target->quantity / 1000);
                     break;
                 }
             }
@@ -4158,12 +4158,244 @@ class Reports extends MY_Controller
             }
             if ($total_sales > 0 && $total_expense > 0) {
                 $temp['name'] = $value->name;
-                $temp['cost'] = ($total_expense/$total_sales);
+                $temp['cost'] = ($total_expense / $total_sales);
                 $costHistory[] = $temp;
             }
         }
 
         return $costHistory;
+    }
+
+
+    function farmerAnalysisReport()
+    {
+        if (!$this->Owner && !$this->Admin) {
+            $get_permission = $this->permission_details[0];
+            if ((!$get_permission['reports-farmer_analysis'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['zones'] = $this->site->getAllZones();
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => admin_url('reports'), 'page' => lang('Reports')), array('link' => '#', 'page' => lang('Farmer_Analysis_Report')));
+        $meta = array('page_title' => lang('Farmer_Analysis_Report'), 'bc' => $bc);
+        $this->page_construct('reports/getFarmerAnalysis', $meta, $this->data);
+    }
+
+
+    function getFarmerAnalysis($pdf = NULL, $xls = NULL)
+    {
+//        $this->sma->checkPermissions('sales', TRUE);
+        $type_of_bird = ($this->input->get('type_of_bird') !='None' ? $this->input->get('type_of_bird') : NULL);
+        $zone = $this->input->get('zone') ? $this->input->get('zone') : NULL;
+        $user = $this->input->get('user') ? $this->input->get('user') : NULL;
+        $start_date = $this->input->get('visit_date_start') ? $this->input->get('visit_date_start') : NULL;
+        $end_date = $this->input->get('visit_date_end') ? $this->input->get('visit_date_end') : NULL;
+
+        if ($start_date) {
+            $start_date = $this->sma->fsd($start_date);
+            $end_date = $this->sma->fsd($end_date);
+        }
+        if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
+            $user = $this->session->userdata('user_id');
+        }
+
+        if ($pdf || $xls) {
+
+            $this->db
+                ->select("farmer_analysis.*, zones.name as z_name, users.first_name",false)
+                ->from("farmer_analysis")
+                ->join('zones', 'farmer_analysis.zone_id=zones.id', 'left')
+                ->join('users', 'farmer_analysis.created_by=users.id', 'left');
+
+            if ($user) {
+                $this->db->where('farmer_analysis.created_by', $user);
+            }
+            if ($zone) {
+                $this->db->where('farmer_analysis.zone_id', $zone);
+            }
+            if ($type_of_bird) {
+                $this->db->where('farmer_analysis.type_of_bird', $type_of_bird);
+            }
+            if ($start_date) {
+                $this->db->where($this->db->dbprefix('farmer_analysis') . '.visit_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+            $q = $this->db->get();
+            if ($q->num_rows() > 0) {
+                foreach (($q->result()) as $row) {
+                    $data[] = $row;
+                }
+            } else {
+                $data = NULL;
+            }
+
+            if (!empty($data)) {
+
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle(lang('Farmer_Analysis_Report'));
+                $this->excel->getActiveSheet()->SetCellValue('A1', lang('Bird_Type'));
+                $this->excel->getActiveSheet()->SetCellValue('B1', lang('Farmer'));
+                $this->excel->getActiveSheet()->SetCellValue('C1', lang('Farmer_Mobile'));
+                $this->excel->getActiveSheet()->SetCellValue('D1', lang('Visitor'));
+                $this->excel->getActiveSheet()->SetCellValue('E1', lang('Visit_Date'));
+                $this->excel->getActiveSheet()->SetCellValue('F1', lang('Zone'));
+                $this->excel->getActiveSheet()->SetCellValue('G1', lang('Area'));
+                $this->excel->getActiveSheet()->SetCellValue('H1', lang('Initial_Bird'));
+                $this->excel->getActiveSheet()->SetCellValue('I1', lang('Hatch_Date'));
+                $this->excel->getActiveSheet()->SetCellValue('J1', lang('Age'));
+                $this->excel->getActiveSheet()->SetCellValue('K1', lang('Hatchery_Name'));
+                $this->excel->getActiveSheet()->SetCellValue('L1', lang('Breed'));
+                $this->excel->getActiveSheet()->SetCellValue('M1', lang('Mortality'));
+                $this->excel->getActiveSheet()->SetCellValue('N1', lang('%'));
+                $this->excel->getActiveSheet()->SetCellValue('O1', lang('Feed_Intake'));
+                $this->excel->getActiveSheet()->SetCellValue('P1', lang('Body_Weight'));
+                $this->excel->getActiveSheet()->SetCellValue('Q1', lang('FCR'));
+                $this->excel->getActiveSheet()->SetCellValue('R1', lang('Feed_Mill'));
+                $this->excel->getActiveSheet()->SetCellValue('S1', lang('Feed_Brand'));
+                $this->excel->getActiveSheet()->SetCellValue('T1', lang('Egg_Production'));
+                $this->excel->getActiveSheet()->SetCellValue('U1', lang('Comment'));
+
+                $row = 2;
+                $total = 0;
+                $paid = 0;
+                $balance = 0;
+                foreach ($data as $data_row) {
+                    $text=str_ireplace('<p>','',$data_row->comment);
+                    $text=str_ireplace('</p>','',$text);
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->type_of_bird);
+                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->name);
+                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->mobile_no);
+                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->first_name);
+                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $this->sma->hrsd($data_row->visit_date));
+                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->z_name);
+                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->area);
+                    $this->excel->getActiveSheet()->SetCellValue('H' . $row, $data_row->initial_qty);
+                    $this->excel->getActiveSheet()->SetCellValue('I' . $row, $this->sma->hrsd($data_row->visit_date));
+                    $this->excel->getActiveSheet()->SetCellValue('J' . $row, $data_row->age);
+                    $this->excel->getActiveSheet()->SetCellValue('K' . $row, $data_row->hatchery);
+                    $this->excel->getActiveSheet()->SetCellValue('L' . $row, $data_row->breed);
+                    $this->excel->getActiveSheet()->SetCellValue('M' . $row, $data_row->mortality);
+                    $this->excel->getActiveSheet()->SetCellValue('N' . $row, round($data_row->mortality_per,2));
+                    $this->excel->getActiveSheet()->SetCellValue('O' . $row, $data_row->feed_intake);
+                    $this->excel->getActiveSheet()->SetCellValue('P' . $row, $data_row->body_weight);
+                    $this->excel->getActiveSheet()->SetCellValue('Q' . $row, $data_row->fcr);
+                    $this->excel->getActiveSheet()->SetCellValue('R' . $row, $data_row->feed_mill);
+                    $this->excel->getActiveSheet()->SetCellValue('S' . $row, $data_row->feed_brand);
+                    $this->excel->getActiveSheet()->SetCellValue('T' . $row, $data_row->egg_production);
+                    $this->excel->getActiveSheet()->SetCellValue('U' . $row, $text);
+                    $total += 1;
+                    $paid += 1;
+                    $balance += 1;
+                    $row++;
+                }
+                $this->excel->getActiveSheet()->getStyle("F" . $row . ":H" . $row)->getBorders()
+                    ->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+                $this->excel->getActiveSheet()->SetCellValue('C' . $row, '');
+                $this->excel->getActiveSheet()->SetCellValue('D' . $row, '');
+                $this->excel->getActiveSheet()->SetCellValue('E' . $row, '');
+                $this->excel->getActiveSheet()->SetCellValue('F' . $row, '');
+                $this->excel->getActiveSheet()->SetCellValue('G' . $row, '');
+                $this->excel->getActiveSheet()->SetCellValue('H' . $row, '');
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('R')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('S')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('T')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('U')->setWidth(40);
+                $filename = 'farmer_analysis_report';
+                $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if ($pdf) {
+                    $styleArray = array(
+                        'borders' => array(
+                            'allborders' => array(
+                                'style' => PHPExcel_Style_Border::BORDER_THIN
+                            )
+                        )
+                    );
+                    $this->excel->getDefaultStyle()->applyFromArray($styleArray);
+                    $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+                    require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
+                    $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+                    $rendererLibrary = 'MPDF';
+                    $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
+                    if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+                        die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
+                            PHP_EOL . ' as appropriate for your directory structure');
+                    }
+
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
+                    header('Cache-Control: max-age=0');
+
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
+                    $objWriter->save('php://output');
+                    exit();
+                }
+                if ($xls) {
+                    $this->excel->getActiveSheet()->getStyle('E2:E' . $row)->getAlignment()->setWrapText(true);
+                    ob_clean();
+                    header('Content-Type: application/vnd.ms-excel');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+                    header('Cache-Control: max-age=0');
+                    ob_clean();
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+                    $objWriter->save('php://output');
+                    exit();
+                }
+            }
+            $this->session->set_flashdata('error', lang('nothing_found'));
+            redirect($_SERVER["HTTP_REFERER"]);
+        } else {
+
+
+            $si = "( SELECT sale_id, product_id, serial_no, CONCAT({$this->db->dbprefix('sale_items')}.product_name, '__', {$this->db->dbprefix('sale_items')}.quantity) as item_nane, sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('products')}.cost) as actual_price,sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('sale_items')}.net_unit_price) as sl_price from {$this->db->dbprefix('sale_items')} inner join  {$this->db->dbprefix('products')} on {$this->db->dbprefix('sale_items')}.product_id={$this->db->dbprefix('products')}.id";
+            if ($product) {
+                $si .= " WHERE {$this->db->dbprefix('sale_items')}.product_id = {$product} ";
+            }
+            $si .= " GROUP BY {$this->db->dbprefix('sale_items')}.sale_id,{$this->db->dbprefix('sale_items')}.product_id ) FSI";
+            $this->load->library('datatables');
+            $this->datatables
+                ->select($this->db->dbprefix('farmer_analysis') . ".type_of_bird," . $this->db->dbprefix('farmer_analysis') . ".name," . $this->db->dbprefix('farmer_analysis') . ".mobile_no," . $this->db->dbprefix('users') . ".first_name," . $this->db->dbprefix('farmer_analysis') . ".visit_date," . $this->db->dbprefix('zones') . ".name as names," . $this->db->dbprefix('farmer_analysis') . ".hatch_date," . $this->db->dbprefix('farmer_analysis') . ".Initial_qty," . $this->db->dbprefix('farmer_analysis') . ".mortality,round(" . $this->db->dbprefix('farmer_analysis') . ".mortality_per,2)," . $this->db->dbprefix('farmer_analysis') . ".fcr," . $this->db->dbprefix('farmer_analysis') . ".body_weight", FALSE)
+                ->from("farmer_analysis")
+                ->join('zones', 'farmer_analysis.zone_id=zones.id', 'left')
+                ->join('users', 'farmer_analysis.created_by=users.id', 'left');
+
+            if ($user) {
+                $this->datatables->where('farmer_analysis.created_by', $user);
+            }
+            if ($zone) {
+                $this->datatables->where('farmer_analysis.zone_id', $zone);
+            }
+            if ($type_of_bird) {
+                $this->datatables->where('farmer_analysis.type_of_bird', $type_of_bird);
+            }
+            if ($start_date) {
+                $this->datatables->where($this->db->dbprefix('farmer_analysis') . '.visit_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+
+            echo $this->datatables->generate();
+
+        }
     }
 
 }

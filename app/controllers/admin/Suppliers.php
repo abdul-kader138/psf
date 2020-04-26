@@ -37,10 +37,10 @@ class Suppliers extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-            ->select("id, company, name, email, phone, city, country, vat_no, gst_no")
+            ->select("id, company, name, email, phone, city, country, vat_no")
             ->from("companies")
             ->where('group_name', 'supplier')
-            ->add_column("Actions", "<div class=\"text-center\"><a class=\"tip\" title='" . $this->lang->line("list_products") . "' href='" . admin_url('products?supplier=$1') . "'><i class=\"fa fa-list\"></i></a> <a class=\"tip\" title='" . $this->lang->line("list_users") . "' href='" . admin_url('suppliers/users/$1') . "' data-toggle='modal' data-target='#myModal'><i class=\"fa fa-users\"></i></a> <a class=\"tip\" title='" . $this->lang->line("add_user") . "' href='" . admin_url('suppliers/add_user/$1') . "' data-toggle='modal' data-target='#myModal'><i class=\"fa fa-plus-circle\"></i></a> <a class=\"tip\" title='" . $this->lang->line("edit_supplier") . "' href='" . admin_url('suppliers/edit/$1') . "' data-toggle='modal' data-target='#myModal'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . $this->lang->line("delete_supplier") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('suppliers/delete/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class=\"text-center\"> <a class=\"tip\" title='" . $this->lang->line("edit_supplier") . "' href='" . admin_url('suppliers/edit/$1') . "' data-toggle='modal' data-target='#myModal'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . $this->lang->line("delete_supplier") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('suppliers/delete/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
         //->unset_column('id');
         echo $this->datatables->generate();
     }
@@ -58,6 +58,7 @@ class Suppliers extends MY_Controller
         $this->sma->checkPermissions(false, true);
 
         $this->form_validation->set_rules('email', $this->lang->line("email_address"), 'is_unique[companies.email]');
+        $this->form_validation->set_rules('company', $this->lang->line("Company"), 'is_unique[companies.company]');
 
         if ($this->form_validation->run('companies/add') == true) {
 
@@ -108,6 +109,9 @@ class Suppliers extends MY_Controller
         $company_details = $this->companies_model->getCompanyByID($id);
         if ($this->input->post('email') != $company_details->email) {
             $this->form_validation->set_rules('code', lang("email_address"), 'is_unique[companies.email]');
+        }
+        if ($this->input->post('company') != $company_details->company) {
+            $this->form_validation->set_rules('company', lang("Company"), 'is_unique[companies.company]');
         }
 
         if ($this->form_validation->run('companies/add') == true) {

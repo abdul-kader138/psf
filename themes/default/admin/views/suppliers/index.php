@@ -22,7 +22,7 @@
             "aoColumns": [{
                 "bSortable": false,
                 "mRender": checkbox
-            }, null, null, null, null, null, null, null, null, {"bSortable": false}]
+            }, null, null, null, null, null, null, null,{"bSortable": false}]
         }).dtFilter([
             {column_number: 1, filter_default_label: "[<?=lang('company');?>]", filter_type: "text", data: []},
             {column_number: 2, filter_default_label: "[<?=lang('name');?>]", filter_type: "text", data: []},
@@ -31,7 +31,7 @@
             {column_number: 5, filter_default_label: "[<?=lang('city');?>]", filter_type: "text", data: []},
             {column_number: 6, filter_default_label: "[<?=lang('country');?>]", filter_type: "text", data: []},
             {column_number: 7, filter_default_label: "[<?=lang('vat_no');?>]", filter_type: "text", data: []},
-            {column_number: 8, filter_default_label: "[<?=lang('gst_no');?>]", filter_type: "text", data: []},
+            //{column_number: 8, filter_default_label: "[<?//=lang('gst_no');?>//]", filter_type: "text", data: []},
         ], "footer");
     });
 </script>
@@ -98,7 +98,6 @@
                             <th><?= lang("city"); ?></th>
                             <th><?= lang("country"); ?></th>
                             <th><?= lang("vat_no"); ?></th>
-                            <th><?= lang("gst_no"); ?></th>
                             <th style="min-width:105px; text-align:center;"><?= lang("actions"); ?></th>
                         </tr>
                         </thead>
@@ -112,7 +111,7 @@
                             <th style="min-width:30px; width: 30px; text-align: center;">
                                 <input class="checkbox checkft" type="checkbox" name="check"/>
                             </th>
-                            <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
                             <th style="min-width:105px;"><?= lang("actions"); ?></th>
                         </tr>
                         </tfoot>

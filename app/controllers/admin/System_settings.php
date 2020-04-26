@@ -812,6 +812,12 @@ class system_settings extends MY_Controller
                 'notifications-edit' => $this->input->post('notifications-edit'),
                 'notifications-delete' => $this->input->post('notifications-delete'),
 
+                'farmer_analysis-index' => $this->input->post('farmer_analysis-index'),
+                'farmer_analysis-add' => $this->input->post('farmer_analysis-add'),
+                'farmer_analysis-edit' => $this->input->post('farmer_analysis-edit'),
+                'farmer_analysis-delete' => $this->input->post('farmer_analysis-delete'),
+                'farmer_analysis-status_update' => $this->input->post('farmer_analysis-status_update'),
+
                 'sales_target-zone_add' => $this->input->post('sales_target-zone_add'),
                 'sales_target-zones' => $this->input->post('sales_target-zones'),
                 'sales_target-delete_zone_target' => $this->input->post('sales_target-delete_zone_target'),
@@ -833,6 +839,7 @@ class system_settings extends MY_Controller
                 'reports-achievement_zone_wise' => $this->input->post('reports-achievement_zone_wise'),
                 'reports-achievement_zone' => $this->input->post('reports-achievement_zone'),
                 'reports-achievement_sales_officer' => $this->input->post('reports-achievement_sales_officer'),
+                'reports-farmer_analysis' => $this->input->post('reports_farmer_analysis'),
 
 
                 'purchases-depot_sales' => $this->input->post('purchases-depot_sales'),
@@ -1380,6 +1387,8 @@ class system_settings extends MY_Controller
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
                 'parent_id' => $this->input->post('parent'),
+                'longitude' => $this->input->post('longitude'),
+                'latitude' => $this->input->post('latitude'),
                 'created_by' => $this->session->userdata('user_id'),
                 'created_date' => date("Y-m-d H:i:s")
             );
@@ -1422,6 +1431,8 @@ class system_settings extends MY_Controller
                 'bu' => $this->input->post('bu'),
                 'description' => $this->input->post('description'),
                 'dealer' => $this->input->post('dealer'),
+                'longitude' => $this->input->post('longitude'),
+                'latitude' => $this->input->post('latitude'),
                 'parent_id' => $this->input->post('parent'),
                 'updated_by' => $this->session->userdata('user_id'),
                 'updated_date' => date("Y-m-d H:i:s")

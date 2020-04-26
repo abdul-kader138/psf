@@ -216,7 +216,7 @@ class Db_model extends CI_Model
 
             if ($this->session->userdata('view_right') == '0') $this->db->where('user_code', $this->session->userdata('username'));
         }
-        $this->db->where('year',$year)->group_by('month');
+        $this->db->where('year', $year)->group_by('month');
         $q = $this->db->get_where("sales_officer_achievement", array('year' => $year));
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -235,7 +235,7 @@ class Db_model extends CI_Model
 
             if ($this->session->userdata('view_right') == '0') $this->db->where('user_code', $this->session->userdata('username'));
         }
-        $this->db->where('year',$year)->group_by('month');
+        $this->db->where('year', $year)->group_by('month');
         $q = $this->db->get("zones_target");
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -275,6 +275,32 @@ class Db_model extends CI_Model
             return $q->row();
         }
         return FALSE;
+    }
+
+    public function get_list1()
+    {
+        $this->db->select('name,latitude,longitude,description,dealer', FALSE);
+        $this->db->where('longitude !=','');
+        $query = $this->db->get('zones');
+        if ($query->num_rows() > 0) {
+            foreach (($query->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+
+    }
+
+    public function get_list()
+    {
+        $query = $this->db->get('locations');
+        if ($query->num_rows() > 0) {
+            foreach (($query->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+
     }
 
 }

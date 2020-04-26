@@ -59,6 +59,60 @@ $s2_file_date = $this->parser->parse_string($s2_lang_file, $s2_data, true);
         $('#<?=$m?>_<?=$v?>').addClass('active');
         $('.mm_<?=$m?> a .chevron').removeClass("closed").addClass("opened");
     });
+    function initialize($obj1,$obj2) {
+        var map;
+        var bounds = new google.maps.LatLngBounds();
+        var mapOptions = {
+            mapTypeId: 'roadmap'
+        };
+
+// Display a map on the page
+        map = new google.maps.Map(document.getElementById("map_tuts"), mapOptions);
+        map.setTilt(45);
+
+// Multiple Markers
+        // var markers = JSON.parse($obj1);
+        var markers = ($obj1);
+
+        // var infoWindowContent = JSON.parse($obj2);
+        var infoWindowContent = ($obj2);
+
+// Display multiple markers on a map
+        var infoWindow = new google.maps.InfoWindow(), marker, i;
+
+// Loop through our array of markers &amp; place each one on the map
+        for (i = 0; i < markers.length; i++) {
+            var lang=(Number(markers[i][1]));
+            var long=(Number(markers[i][2]));
+
+            var position = new google.maps.LatLng(lang, long);
+            bounds.extend(position);
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: markers[i][0]
+            });
+
+
+            // Each marker to have an info window
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    infoWindow.setContent(infoWindowContent[i][0]);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
+
+            // Automatically center the map fitting all markers on the screen
+            map.fitBounds(bounds);
+        }
+
+// Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+        var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function (event) {
+            this.setZoom(7);
+            google.maps.event.removeListener(boundsListener);
+        });
+
+    }
 </script>
 <?= (DEMO) ? '<script src="'.$assets.'js/ppp_ad.min.js"></script>' : ''; ?>
 </body>

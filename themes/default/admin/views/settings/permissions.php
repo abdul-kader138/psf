@@ -132,21 +132,23 @@
                                 </tr>
 
 
+                                <tr
+
                                 <tr>
-                                    <td><?= lang("Sales_Achievement"); ?></td>
+                                    <td><?= lang("Farmer_Analysis"); ?></td>
                                     <td class="text-center">
                                         <input type="checkbox" value="1" class="checkbox"
-                                               name="sales_achievement-sales_officer" <?php echo $p->{'sales_achievement-sales_officer'} ? "checked" : ''; ?>>
+                                               name="farmer_analysis-index" <?php echo $p->{'farmer_analysis-index'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
                                         <input type="checkbox" value="1" class="checkbox"
-                                               name="sales_achievement-sales_officer_add" <?php echo $p->{'sales_achievement-sales_officer_add'} ? "checked" : ''; ?>>
+                                               name="farmer_analysis-add" <?php echo $p->{'farmer_analysis-add'} ? "checked" : ''; ?>>
                                     </td>
                                     <td class="text-center">
                                     </td>
                                     <td class="text-center">
                                         <input type="checkbox" value="1" class="checkbox"
-                                               name="sales_achievement-delete_sales_officer" <?php echo $p->{'sales_achievement-delete_sales_officer'} ? "checked" : ''; ?>>
+                                               name="farmer_analysis-delete" <?php echo $p->{'farmer_analysis-delete'} ? "checked" : ''; ?>>
                                     </td>
                                     <td>
                                     </td>
@@ -197,6 +199,13 @@
                                 <tr>
                                     <td><?= lang("reports"); ?></td>
                                     <td colspan="5">
+                                         <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="reports_farmer_analysis"
+                                                   name="reports_farmer_analysis" <?php echo $p->{'reports-farmer_analysis'} ? "checked" : ''; ?>><label
+                                                     for="reports-achievement_sales_officer"
+                                                     class="padding05"><?= lang('Farmer_Analysis_Report') ?></label>
+                                        </span>
                                         <span style="display:inline-block;">
                                             <input type="checkbox" value="1" class="checkbox"
                                                    id="product_quantity_alerts"
@@ -256,7 +265,13 @@
                                             <label for="bulk_actions"
                                                    class="padding05"><?= lang('bulk_actions') ?></label>
                                         </span>
-                                    </td>
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" class="checkbox"
+                                                   id="farmer_analysis-status_update"
+                                                   name="farmer_analysis-status_update" <?php echo $p->{'farmer_analysis-status_update'} ? "checked" : ''; ?>>
+                                            <label for="bulk_actions"
+                                                   class="padding05"><?= lang('Visit_Status_Update') ?></label>
+                                        </span>
                                 </tr>
 
                                 </tbody>

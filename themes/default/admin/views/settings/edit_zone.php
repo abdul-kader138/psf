@@ -34,7 +34,16 @@
                 <?= form_input($att, set_value('dealer', $zone->dealer), 'class="form-control tip" id="dealer" required="required"'); ?>
             </div>
 
-
+            <div class="form-group all">
+                <?= lang('Latitude', 'Latitude'); ?>
+                <?php $att = array('name' => 'latitude', 'type' => 'test');?>
+                <?= form_input($att, set_value('latitude',$zone->latitude), 'class="form-control tip" id="latitude" required="required"'); ?>
+            </div>
+            <div class="form-group all">
+                <?= lang('Longitude', 'Longitude'); ?>
+                <?php $att = array('name' => 'longitude', 'type' => 'test');?>
+                <?= form_input($att, set_value('longitude',$zone->longitude), 'class="form-control tip" id="longitude" required="required"'); ?>
+            </div>
             <div class="form-group all">
                 <?= lang('description', 'description'); ?>
                 <?= form_input('description', set_value('description', $zone->description), 'class="form-control tip" id="description" required="required"'); ?>

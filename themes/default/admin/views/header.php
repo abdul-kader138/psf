@@ -10,6 +10,8 @@
     <link href="<?= $assets ?>styles/style.css" rel="stylesheet"/>
     <script type="text/javascript" src="<?= $assets ?>js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="<?= $assets ?>js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClKYaaVBRyHj6uCOEX8SLQbOCMnweZuag&sensor=false"></script>
+    <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClKYaaVBRyHj6uCOEX8SLQbOCMnweZuag"></script>-->
     <!--[if lt IE 9]>
     <script src="<?= $assets ?>js/jquery.js"></script>
     <![endif]-->
@@ -45,7 +47,7 @@
 </noscript>
 <div id="loading"></div>
 <div id="app_wrapper">
-    <header id="header" class="navbar">
+    <header id="header" class="navbar" style="width: 100%">
         <div class="container">
             <a class="navbar-brand" href="<?= admin_url() ?>"><span class="logo"><?= $Settings->site_name ?></span></a>
 
@@ -251,6 +253,20 @@
                                                                     class="text"> <?= lang('new_user'); ?></span>
                                                         </a>
                                                     </li>
+
+                                                    <li id="suppliers_index">
+                                                        <a class="submenu" href="<?= admin_url('suppliers'); ?>">
+                                                            <i class="fa fa-users"></i><span
+                                                                    class="text"> <?= lang('list_suppliers'); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <li id="suppliers_index">
+                                                        <a class="submenu" href="<?= admin_url('suppliers/add'); ?>"
+                                                           data-toggle="modal" data-target="#myModal">
+                                                            <i class="fa fa-plus-circle"></i><span
+                                                                    class="text"> <?= lang('add_supplier'); ?></span>
+                                                        </a>
+                                                    </li>
                                                 <?php } ?>
                                             </ul>
                                         </li>
@@ -265,6 +281,54 @@
                                                 <i class="fa fa-calendar"></i><span
                                                         class="text"> <?= lang('calendar'); ?></span>
                                             </a>
+                                        </li>
+                                        <li class="mm_supplier_achievement">
+                                            <a class="dropmenu" href="#">
+                                                <i class="fa fa-random"></i>
+                                                <span class="text"> <?= lang('Competitor_Analysis'); ?> </span>
+                                                <span class="chevron closed"></span>
+                                            </a>
+                                            <ul>
+                                                <li id="sales_target_zones">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('competitor_analysis/zones_list'); ?>">
+                                                        <i class="fa fa-heart-o"></i>
+                                                        <span class="text"> <?= lang('Zones_Analysis'); ?></span>
+                                                    </a>
+                                                </li>
+                                                <li id="sales_target_zone_add">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('competitor_analysis/zone_add_sales'); ?>">
+                                                        <i class="fa fa-plus-circle"></i>
+                                                        <span class="text"> <?= lang('Add_Zone_Sales'); ?></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="mm_farmer_analysis">
+                                            <a class="dropmenu" href="#">
+                                                <i class="fa fa-random"></i>
+                                                <span class="text"> <?= lang('Farmer_Analysis'); ?> </span>
+                                                <span class="chevron closed"></span>
+                                            </a>
+                                            <ul>
+                                                <li id="farmer_analysis_index">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('farmer_analysis'); ?>">
+                                                        <i class="fa fa-heart-o"></i>
+                                                        <span class="text"> <?= lang('List Of Visit'); ?></span>
+                                                    </a>
+                                                </li>
+                                                <li id="farmer_analysis_add">
+                                                    <a class="submenu"
+                                                       href="<?= admin_url('farmer_analysis/add'); ?>">
+                                                        <i class="fa fa-plus-circle"></i>
+                                                        <span class="text"> <?= lang('Add'); ?></span>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
                                         </li>
 
                                         <li class="mm_sales_target">
@@ -461,6 +525,13 @@
                                                 <span class="chevron closed"></span>
                                             </a>
                                             <ul>
+
+                                                <li id="reports_farmer_analysis">
+                                                    <a href="<?= admin_url('reports/farmerAnalysisReport') ?>">
+                                                        <i class="fa fa-line-chart"></i><span
+                                                                class="text"> <?= lang('Farmer_Analysis_Report'); ?></span>
+                                                    </a>
+                                                </li>
                                                 <li id="reports_target_zone_wise">
                                                     <a href="<?= admin_url('reports/target_zone_wise') ?>">
                                                         <i class="fa fa-line-chart"></i><span
@@ -515,6 +586,40 @@
                                         <?php
                                     } else { // not owner and not admin
                                         ?>
+
+                                        <!--                                        a.kader-->
+                                        <?php if ($GP['farmer_analysis-index'] || $GP['farmer_analysis-add']) { ?>
+                                            <li class="mm_farmer_analysis">
+                                                <a class="dropmenu" href="#">
+                                                    <i class="fa fa-star-o"></i>
+                                                    <span class="text"> <?= lang('Farmer_Analysis'); ?> </span>
+                                                    <span class="chevron closed"></span>
+                                                </a>
+                                                <ul>
+                                                    <?php if ($GP['farmer_analysis-index']) { ?>
+                                                        <li id="farmer_analysis_index">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('farmer_analysis/index'); ?>">
+                                                                <i class="fa fa-heart-o"></i><span
+                                                                        class="text"> <?= lang('List_Of_Visit'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                    <?php if ($GP['farmer_analysis-add']) { ?>
+                                                        <li id="farmer_analysis_add">
+                                                            <a class="submenu"
+                                                               href="<?= admin_url('farmer_analysis/add'); ?>">
+                                                                <i class="fa fa-plus-circle"></i><span
+                                                                        class="text"> <?= lang('Add'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </li>
+                                        <?php } ?>
+
+
+                                        <!--                                        a.kader-->
 
                                         <?php if ($GP['sales_target-zones'] || $GP['sales_target-zone_add'] || $GP['sales_target-sales_officer'] || $GP['sales_target-sales_officer_add']) { ?>
                                             <li class="mm_sales_target">
@@ -666,7 +771,7 @@
                                             </li>
                                         <?php } ?>
 
-                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-achievement_zone_wise'] || $GP['reports-achievement_zone'] || $GP['reports-achievement_sales_officer'] || $GP['reports-target_zone'] || $GP['reports-target_zone_wise']) { ?>
+                                        <?php if ($GP['reports-sales_officer_zone'] || $GP['reports-achievement_zone_wise'] || $GP['reports-achievement_zone'] || $GP['reports-achievement_sales_officer'] || $GP['reports-target_zone'] || $GP['reports-target_zone_wise'] || $GP['reports-farmer_analysis']) { ?>
                                             <li class="mm_reports">
                                                 <a class="dropmenu" href="#">
                                                     <i class="fa fa-bar-chart-o"></i>
@@ -674,6 +779,14 @@
                                                     <span class="chevron closed"></span>
                                                 </a>
                                                 <ul>
+                                                    <?php if ($GP['reports-farmer_analysis']) { ?>
+                                                        <li id="reports_farmer_analysis">
+                                                            <a href="<?= admin_url('reports/farmerAnalysisReport') ?>">
+                                                                <i class="fa fa-line-chart"></i><span
+                                                                        class="text"> <?= lang('Farmer_Analysis_Report'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
                                                     <?php if ($GP['reports-target_zone_wise']) { ?>
                                                         <li id="reports_target_zone_wise">
                                                             <a href="<?= admin_url('reports/target_zone_wise') ?>">

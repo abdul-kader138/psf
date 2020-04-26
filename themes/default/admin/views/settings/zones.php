@@ -16,11 +16,10 @@
             },"fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var gtotal = 0;
                 for (var i = 0; i < (aaData.length); i++) {
-                    if(aaData[aiDisplay[i]][3])  gtotal += parseFloat(aaData[aiDisplay[i]][3]);
-                    console.log(aaData[aiDisplay[i]][3]);
+                    if(aaData[aiDisplay[i]][4])  gtotal += parseFloat(aaData[aiDisplay[i]][4]);
                 }
                 var nCells = nRow.getElementsByTagName('th');
-                nCells[3].innerHTML = parseFloat(gtotal);
+                nCells[4].innerHTML = parseFloat(gtotal);
             },
             "aoColumns": [{"bSortable": false, "mRender": checkbox},  null,null,null, null, null, null, {"bSortable": false}]
         });
